@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.bootcamp.demo.engine.Resources;
@@ -18,19 +19,17 @@ import jdk.internal.loader.Resource;
 import lombok.Getter;
 import lombok.Setter;
 
+@Getter
 public class GameUI extends ScreenAdapter implements Disposable, EventListener {
 
-    @Getter
     private final Stage stage;
-    @Getter
     private final Table rootUI;
-    @Getter
     private final Cell<APage> mainPageCell;
 
-    @Getter @Setter
+    @Setter
     private boolean buttonPressed;
 
-    public GameUI (Viewport viewport) {
+    public GameUI(Viewport viewport) {
         API.Instance().register(GameUI.class, this);
         API.get(EventModule.class).registerListener(this);
 
@@ -44,10 +43,11 @@ public class GameUI extends ScreenAdapter implements Disposable, EventListener {
         // construct
         mainPageCell = rootUI.add();
 
-        playground();
+        rootUI.add(constructGrid(3, 4));
+//        rootUI.debugAll();
     }
 
-    private void playground () {
+    private void playground() {
         final Table testTable = new Table();
         final Table testTable2 = new Table();
         final Table testTable3 = new Table();
@@ -76,19 +76,48 @@ public class GameUI extends ScreenAdapter implements Disposable, EventListener {
         rootUI.debugAll();
     }
 
+    public Table constructGrid(int rows, int cols) {
+        final Table grid = new Table();
+        grid.defaults().space(20);
+        grid.defaults().size(300);
+        grid.setBackground(Resources.getDrawable("basics/white-squircle-35", Color.WHITE));
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < cols; col++) {
+                Table cell = Pools.get(Table.class).obtain();
+                cell.setBackground(Resources.getDrawable("basics/white-squircle-35", Color.LIGHT_GRAY));
+                Cell<Table> addedCell = grid.add(cell);
+
+                if (col == 0) {
+                    addedCell.padLeft(20);
+                } else if (col == cols - 1) {
+                    addedCell.padRight(20);
+                }
+
+                if (row == 0) {
+                    addedCell.padTop(20);
+                } else if (row == rows - 1) {
+                    addedCell.padBottom(20);
+                }
+
+            }
+            grid.row();
+        }
+        return grid;
+    }
+
     @Override
-    public void render (float delta) {
+    public void render(float delta) {
         stage.act(delta);
         stage.draw();
     }
 
     @Override
-    public void resize (int width, int height) {
+    public void resize(int width, int height) {
         stage.getViewport().update(width, height, true);
     }
 
     @Override
-    public void dispose () {
+    public void dispose() {
         stage.dispose();
     }
 }
