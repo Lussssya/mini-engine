@@ -1,5 +1,7 @@
 package com.bootcamp.demo.presenters;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -14,7 +16,9 @@ import com.bootcamp.demo.engine.Resources;
 import com.bootcamp.demo.events.core.EventListener;
 import com.bootcamp.demo.events.core.EventModule;
 import com.bootcamp.demo.managers.API;
+import com.bootcamp.demo.pages.MissionsPage;
 import com.bootcamp.demo.pages.core.APage;
+import com.bootcamp.demo.pages.core.PageManager;
 import jdk.internal.loader.Resource;
 import lombok.Getter;
 import lombok.Setter;
@@ -41,9 +45,9 @@ public class GameUI extends ScreenAdapter implements Disposable, EventListener {
         stage.addActor(rootUI);
 
         // construct
-        mainPageCell = rootUI.add();
+        mainPageCell = rootUI.add().grow();
 
-        rootUI.add(constructGrid(3, 4));
+
 //        rootUI.debugAll();
     }
 
@@ -78,27 +82,14 @@ public class GameUI extends ScreenAdapter implements Disposable, EventListener {
 
     public Table constructGrid(int rows, int cols) {
         final Table grid = new Table();
-        grid.defaults().space(20);
+        grid.pad(30).defaults().space(30);
         grid.defaults().size(300);
         grid.setBackground(Resources.getDrawable("basics/white-squircle-35", Color.WHITE));
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < cols; col++) {
                 Table cell = Pools.get(Table.class).obtain();
                 cell.setBackground(Resources.getDrawable("basics/white-squircle-35", Color.LIGHT_GRAY));
-                Cell<Table> addedCell = grid.add(cell);
-
-                if (col == 0) {
-                    addedCell.padLeft(20);
-                } else if (col == cols - 1) {
-                    addedCell.padRight(20);
-                }
-
-                if (row == 0) {
-                    addedCell.padTop(20);
-                } else if (row == rows - 1) {
-                    addedCell.padBottom(20);
-                }
-
+                grid.add(cell);
             }
             grid.row();
         }
@@ -107,6 +98,9 @@ public class GameUI extends ScreenAdapter implements Disposable, EventListener {
 
     @Override
     public void render(float delta) {
+        if(Gdx.app.getInput().isKeyJustPressed(Input.Keys.M)) {
+            API.get(PageManager.class).show(MissionsPage.class);
+        }
         stage.act(delta);
         stage.draw();
     }
