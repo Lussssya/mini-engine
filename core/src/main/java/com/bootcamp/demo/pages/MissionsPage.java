@@ -2,13 +2,13 @@ package com.bootcamp.demo.pages;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.Pools;
 import com.bootcamp.demo.engine.Resources;
 import com.bootcamp.demo.engine.Squircle;
 import com.bootcamp.demo.engine.widgets.WidgetsList;
 import com.bootcamp.demo.pages.core.APage;
 
 public class MissionsPage extends APage {
-
     @Override
     protected void constructContent(Table content) {
         content.add(constructUpperSegment()).grow();
@@ -20,44 +20,46 @@ public class MissionsPage extends APage {
     private Table constructUpperSegment() {
         final Table upperSegment = new Table();
         upperSegment.setBackground(Resources.getDrawable("basics/white-pixel", Color.valueOf("#e09e6b")));
+        upperSegment.add(constructBar()).expandY().bottom();
         return upperSegment;
     }
 
-    private Table constructLowerSegment() {
-        final Table lowerSegment = new Table();
-        lowerSegment.setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#f5eae3")));
-
-        lowerSegment.pad(30).defaults().space(30).growX();
-
-        lowerSegment.add(constructInformationSegment());
-        lowerSegment.row();
-        lowerSegment.add(constructEquipmentSegment());
-        lowerSegment.row();
-        lowerSegment.add(constructButtonSegment());
-        return lowerSegment;
+    private Table constructBar() {
+        final Table layout = new Table();
+        final Table bar = new Table();
+        bar.setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#f5eae3")));
+        layout.add(bar).width(600).height(125);
+        return layout;
     }
 
-    // information segment
-    private Table constructInformationSegment() {
-        final Table informationSegment = new Table();
-        informationSegment.setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#b6a89c")));
-        informationSegment.pad(30).defaults().space(30);
+    private Table constructLowerSegment() {
+        final Table segment = new Table();
+        segment.setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#f5eae3")));
 
-        informationSegment.add(constructStatsSegment()).expand().growX();
-        informationSegment.add(constructStatsButtonSegment()).size(150);
-        return informationSegment;
+        segment.pad(30).defaults().space(30).growX();
+
+        segment.add(constructInformationSegment());
+        segment.row();
+        segment.add(constructEquipmentSegment());
+        segment.row();
+        segment.add(constructButtonSegment());
+        return segment;
+    }
+
+    private Table constructInformationSegment() {
+        final Table segment = new Table();
+        segment.setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#b6a89c")));
+        segment.pad(30).defaults().space(30);
+
+        segment.add(constructStatsSegment()).expand().growX();
+        segment.add(constructStatsButtonSegment()).size(150);
+        return segment;
     }
 
     private Table constructStatsSegment() {
-        final WidgetsList<Table> statsSegment = new WidgetsList<>(3);
-        statsSegment.pad(15).defaults().space(30).height(60).growX();
-
-        for (int i = 0; i < 9; i++) {
-            final Table infoCell = new Table();
-            infoCell.setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#504845")));
-            statsSegment.add(infoCell);
-        }
-        return statsSegment;
+        final StatsWidget segment = new StatsWidget();
+        segment.setData();
+        return segment;
     }
 
     private Table constructStatsButtonSegment() {
@@ -66,34 +68,83 @@ public class MissionsPage extends APage {
         return button;
     }
 
-    // gear segment
-    private Table constructEquipmentSegment() {
-        final Table equipmentSegment = new Table();
-        equipmentSegment.setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#f5eae3")));
-        equipmentSegment.pad(30).defaults().space(30);
+    public static class StatsWidget extends WidgetsList<StatWidget> {
+        public StatsWidget() {
+            super(3);
+            pad(15).defaults().space(30).height(60).growX();
+        }
 
-        equipmentSegment.add(constructEquippedGearSegment()).grow();
-        equipmentSegment.add(constructSecondaryGearSegment()).grow();
-        return equipmentSegment;
+        public void setData() {
+            freeChildren();
+
+            for (int i = 0; i < 9; i++) {
+                StatWidget widget = Pools.obtain(StatWidget.class);
+                add(widget);
+            }
+        }
+    }
+
+    public static class StatWidget extends Table {
+        public StatWidget() {
+            setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#504845")));
+        }
+
+        public void setData() {
+        }
+    }
+
+    private Table constructEquipmentSegment() {
+        final Table segment = new Table();
+        segment.setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#f5eae3")));
+        segment.pad(30).defaults().space(30);
+
+        segment.add(constructEquippedGearSegment()).grow();
+        segment.add(constructSecondaryGearSegment()).grow();
+        return segment;
     }
 
     private Table constructEquippedGearSegment() {
-        final Table gearSegment = new Table();
-        gearSegment.setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#d1cecc")));
-        gearSegment.pad(30).defaults().space(30);
+        final Table segment = new Table();
+        segment.setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#d1cecc")));
+        segment.pad(30).defaults().space(30);
 
-        gearSegment.add(constructIncompleteSet()).fillX().center().height(60);
-        gearSegment.row();
-        gearSegment.add(constructEquipment());
-        return gearSegment;
+        segment.add(constructIncompleteSet()).fillX().center().height(60);
+        segment.row();
+        segment.add(constructEquipment());
+        return segment;
+    }
+
+    public static class EquippedGearContainer extends WidgetsList<EquippedGearWidget> {
+        public EquippedGearContainer() {
+            super(3);
+            defaults().space(30).size(200);
+        }
+
+        public void setData() {
+            freeChildren();
+
+            for (int i = 0; i < 6; i++) {
+                EquippedGearWidget widget = Pools.obtain(EquippedGearWidget.class);
+                add(widget);
+            }
+        }
+    }
+
+    public static class EquippedGearWidget extends Table {
+        public EquippedGearWidget() {
+            setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#b9a391")));
+        }
+
+        public void setData() {
+        }
     }
 
     private Table constructIncompleteSet() {
-        final Table incompleteSet = new Table();
-        incompleteSet.setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#a9a29c")));
+        final Table segment = new Table();
+        segment.setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#a9a29c")));
 
-        incompleteSet.addActor(constructSetButtonActor());
-        return incompleteSet;
+        segment.addActor(constructSetButtonActor());
+        return segment;
     }
 
     private Table constructSetButtonActor() {
@@ -107,15 +158,9 @@ public class MissionsPage extends APage {
     }
 
     private Table constructEquipment() {
-        final WidgetsList<Table> gearSegment = new WidgetsList<>(3);
-        gearSegment.defaults().space(30).size(200);
-
-        for (int i = 0; i < 6; i++) {
-            final Table gear = new Table();
-            gear.setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#b9a391")));
-            gearSegment.add(gear);
-        }
-        return gearSegment;
+        final EquippedGearContainer container = new EquippedGearContainer();
+        container.setData();
+        return container;
     }
 
     private Table constructSecondaryGearSegment() {
@@ -138,54 +183,77 @@ public class MissionsPage extends APage {
     }
 
     private Table constructRelicSegment() {
-        final WidgetsList<Table> relicSegment = new WidgetsList<>(2);
-        relicSegment.setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#c8c0b9")));
-        relicSegment.pad(20).defaults().space(20).grow();
+        final RelicContainer container = new RelicContainer();
+        container.setData();
+        return container;
+    }
 
-        for (int i = 0; i < 4; i++) {
-            final Table relic = new Table();
-            relic.setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#a9a29c")));
-            relicSegment.add(relic);
+    public static class RelicContainer extends WidgetsList<Table> {
+        public RelicContainer (){
+            super(2);
+            setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#c8c0b9")));
+            pad(20).defaults().space(20).grow();
         }
 
-        return relicSegment;
+        public void setData() {
+            for (int i = 0; i < 4; i++) {
+                final Table relic = new Table();
+                relic.setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#a9a29c")));
+                add(relic);
+            }
+        }
     }
 
     private Table constructFlagSegment() {
-        final Table flagSegment = new Table();
-        flagSegment.setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#c8c0b9")));
-        return flagSegment;
+        final FlagWidget widget = new FlagWidget();
+        widget.setData();
+        return widget;
+    }
+
+    public static class FlagWidget extends Table {
+        public FlagWidget () {
+            setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#c8c0b9")));
+        }
+
+        public void setData() {}
     }
 
     private Table constructPetSegment() {
-        final Table petSegment = new Table();
-        petSegment.setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#c8c0b9")));
-
-        final Table button = new Table();
-        button.setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#debc7c")));
-
-        petSegment.add(button).expand().bottom().growX().height(100);
-        return petSegment;
+        final PetWidget widget = new PetWidget();
+        widget.setData();
+        return widget;
     }
 
-    // button segment
-    private Table constructButtonSegment() {
-        final Table buttonSegment = new Table();
-        buttonSegment.setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#f5eae3")));
-        buttonSegment.pad(30).defaults().space(30).growX().height(150);
+    public static class PetWidget extends Table {
+        public PetWidget () {
+            setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#c8c0b9")));
+        }
 
+        public void setData() {
+            final Table button = new Table();
+            button.setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#debc7c")));
+
+            add(button).expand().bottom().growX().height(100);
+        }
+    }
+
+    private Table constructButtonSegment() {
         final Table upgradeButton = new Table();
         upgradeButton.setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#debc7c")));
-        buttonSegment.add(upgradeButton);
 
         final Table lootButton = new Table();
         lootButton.setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#a6d890")));
-        buttonSegment.add(lootButton);
 
         final Table autoLootButton = new Table();
         autoLootButton.setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#c2c2c2")));
-        buttonSegment.add(autoLootButton);
 
-        return buttonSegment;
+        final Table segment = new Table();
+        segment.setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#f5eae3")));
+
+        segment.pad(30).defaults().space(30).growX().height(150);
+        segment.add(upgradeButton);
+        segment.add(lootButton);
+        segment.add(autoLootButton);
+        return segment;
     }
 }
