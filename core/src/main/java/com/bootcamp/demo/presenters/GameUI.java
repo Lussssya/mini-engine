@@ -13,13 +13,13 @@ import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.bootcamp.demo.engine.Resources;
+import com.bootcamp.demo.engine.Squircle;
 import com.bootcamp.demo.events.core.EventListener;
 import com.bootcamp.demo.events.core.EventModule;
 import com.bootcamp.demo.managers.API;
-import com.bootcamp.demo.pages.MissionsPage;
+import com.bootcamp.demo.pages.TestPage;
 import com.bootcamp.demo.pages.core.APage;
 import com.bootcamp.demo.pages.core.PageManager;
-import jdk.internal.loader.Resource;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,7 +28,8 @@ public class GameUI extends ScreenAdapter implements Disposable, EventListener {
 
     private final Stage stage;
     private final Table rootUI;
-    private final Cell<APage> mainPageCell;
+    @Getter
+    private Cell<APage> mainPageCell;
 
     @Setter
     private boolean buttonPressed;
@@ -46,38 +47,6 @@ public class GameUI extends ScreenAdapter implements Disposable, EventListener {
 
         // construct
         mainPageCell = rootUI.add().grow();
-
-
-//        rootUI.debugAll();
-    }
-
-    private void playground() {
-        final Table testTable = new Table();
-        final Table testTable2 = new Table();
-        final Table testTable3 = new Table();
-        final Table testTable4 = new Table();
-        final Table testTable5 = new Table();
-
-        final Image gift = new Image(Resources.getDrawable("ui/ui-chat-gift-button-icon", Color.GREEN));
-        gift.setScaling(Scaling.fit);
-
-        final Table playground = new Table();
-        playground.pad(30);
-        playground.defaults().size(300);
-        playground.add(testTable);
-        playground.add(testTable2);
-        playground.row();
-        playground.add(testTable3);
-        playground.add(gift).size(200, 600);
-
-        final Table playground2 = new Table();
-        playground2.setBackground(Resources.getDrawable("basics/white-squircle-35", Color.GREEN));
-        final Image testImage = new Image();
-        testImage.setDrawable(Resources.getDrawable("basics/white-squircle-35", Color.GREEN));
-        playground2.add(testImage).size(300);
-
-        rootUI.add(playground2);
-        rootUI.debugAll();
     }
 
     public Table constructGrid(int rows, int cols) {
@@ -103,6 +72,10 @@ public class GameUI extends ScreenAdapter implements Disposable, EventListener {
         }
         stage.act(delta);
         stage.draw();
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.T)) {
+            API.get(PageManager.class).show(TestPage.class);
+        }
     }
 
     @Override
