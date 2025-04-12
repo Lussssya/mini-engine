@@ -6,7 +6,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pools;
 import com.bootcamp.demo.engine.Resources;
 import com.bootcamp.demo.engine.Squircle;
-import com.bootcamp.demo.engine.widgets.WidgetsList;
+import com.bootcamp.demo.engine.widgets.WidgetsContainer;
 import com.bootcamp.demo.pages.core.APage;
 
 public class MissionsPage extends APage {
@@ -32,6 +32,7 @@ public class MissionsPage extends APage {
         final Table upperSegment = new Table();
         upperSegment.setBackground(Resources.getDrawable("basics/white-pixel", Color.valueOf("#e09e6b")));
         upperSegment.add(powerSegment).expandY().bottom();
+
         return upperSegment;
     }
 
@@ -73,7 +74,7 @@ public class MissionsPage extends APage {
         return segment;
     }
 
-    public static class StatsContainer extends WidgetsList<StatWidget> {
+    public static class StatsContainer extends WidgetsContainer<StatWidget> {
 
         public StatsContainer() {
             super(3);
@@ -106,12 +107,15 @@ public class MissionsPage extends APage {
     }
 
     private Table constructEquipmentsSegment() {
+        final Table equippedGearSegment = constructEquippedGearSegment();
+        final Table secondaryGearSegment = constructSecondaryGearSegment();
+
         final Table segment = new Table();
         segment.setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#f5eae3")));
         segment.pad(30).defaults().space(30);
 
-        segment.add(constructEquippedGearSegment()).grow();
-        segment.add(constructSecondaryGearSegment()).grow();
+        segment.add(equippedGearSegment).grow();
+        segment.add(secondaryGearSegment).grow();
         return segment;
     }
 
@@ -144,7 +148,7 @@ public class MissionsPage extends APage {
         return layout;
     }
 
-    public static class EquippedGearsContainer extends WidgetsList<EquippedGearContainer> {
+    public static class EquippedGearsContainer extends WidgetsContainer<EquippedGearContainer> {
         public EquippedGearsContainer() {
             super(3);
             defaults().space(30).size(200);
@@ -196,7 +200,7 @@ public class MissionsPage extends APage {
         return secondaryGearSegment;
     }
 
-    public static class TacticalsContainer extends WidgetsList<TacticalContainer> {
+    public static class TacticalsContainer extends WidgetsContainer<TacticalContainer> {
         public TacticalsContainer() {
             super(2);
             setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#c8c0b9")));
@@ -231,7 +235,8 @@ public class MissionsPage extends APage {
             setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#c8c0b9")));
         }
 
-        public void setData() {}
+        public void setData() {
+        }
     }
 
     public static class PetWidget extends Table {
@@ -244,7 +249,8 @@ public class MissionsPage extends APage {
             add(button).expand().bottom().growX().height(100);
         }
 
-        public void setData() {}
+        public void setData() {
+        }
     }
 
     private Table constructButtonsSegment() {
