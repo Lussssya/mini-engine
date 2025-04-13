@@ -122,6 +122,7 @@ public class MissionsPage extends APage {
     private Table constructEquippedGearSegment() {
         final Table setInformationButton = constructSetInformationButton();
 
+        // TODO: 13.04.25 this can be renamed into setTitleWrapper
         final Table setTitleSegment = new Table();
         setTitleSegment.setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#a9a29c")));
         setTitleSegment.addActor(setInformationButton);
@@ -132,12 +133,17 @@ public class MissionsPage extends APage {
         segment.setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#d1cecc")));
         segment.pad(30).defaults().space(30);
 
+        // TODO: 13.04.25 no need to center it
         segment.add(setTitleSegment).fillX().center().height(60);
         segment.row();
         segment.add(equippedGearsContainer);
         return segment;
     }
 
+    // TODO: 13.04.25 why does the button construction method return layout, maybe instead remove this method,
+    //  make the button and its wrapper in the constructEquippedGearSegment method?
+    // the perfect solution is making a constructSetInfoSegment ()
+    // that constructs the segment, adds the title, adds constructs and adds set info button layer with addActor()
     private Table constructSetInformationButton() {
         final Table button = new Table();
         button.setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#cfb6a3")));
@@ -230,6 +236,8 @@ public class MissionsPage extends APage {
         }
     }
 
+    // naming is weird, cause you named tacitcal container, EquippedGearContainer but named flags and pets widget
+    // it should have been FlagContainer, PetContainer
     public static class FlagWidget extends Table {
         public FlagWidget() {
             setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#c8c0b9")));
