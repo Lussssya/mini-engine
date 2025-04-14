@@ -1,11 +1,14 @@
 package com.bootcamp.demo.pages;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pools;
+import com.badlogic.gdx.utils.Scaling;
 import com.bootcamp.demo.engine.Resources;
 import com.bootcamp.demo.engine.Squircle;
+import com.bootcamp.demo.engine.widgets.BorderedTable;
 import com.bootcamp.demo.engine.widgets.WidgetsContainer;
 import com.bootcamp.demo.pages.core.APage;
 
@@ -63,7 +66,7 @@ public class MissionsPage extends APage {
 
     private Table constructStatsSegment() {
         statsContainer = new StatsContainer();
-        final Table statsDetailedInfoButton = new Table();
+        final BorderedTable statsDetailedInfoButton = new BorderedTable();
         statsDetailedInfoButton.setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#cfb6a3")));
 
         final Table segment = new Table();
@@ -120,11 +123,7 @@ public class MissionsPage extends APage {
     }
 
     private Table constructEquippedGearSegment() {
-        final Table setInformationButton = constructSetInformationButton();
-
-        final Table setTitleSegment = new Table();
-        setTitleSegment.setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#a9a29c")));
-        setTitleSegment.addActor(setInformationButton);
+        final Table setInfoSegment = constructSetInfoSegment();
 
         equippedGearsContainer = new EquippedGearsContainer();
 
@@ -132,20 +131,25 @@ public class MissionsPage extends APage {
         segment.setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#d1cecc")));
         segment.pad(30).defaults().space(30);
 
-        segment.add(setTitleSegment).fillX().center().height(60);
+        segment.add(setInfoSegment).fillX().height(60);
         segment.row();
         segment.add(equippedGearsContainer);
         return segment;
     }
 
-    private Table constructSetInformationButton() {
-        final Table button = new Table();
+    private Table constructSetInfoSegment () {
+        final BorderedTable button = new BorderedTable();
         button.setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#cfb6a3")));
 
-        final Table layout = new Table();
-        layout.setFillParent(true);
-        layout.add(button).expand().right().size(80);
-        return layout;
+        final Table setInformationButton = new Table();
+        setInformationButton.setFillParent(true);
+        setInformationButton.add(button).expand().right().size(80);
+
+        final Table setTitleWrapper = new Table();
+        setTitleWrapper.setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#a9a29c")));
+        setTitleWrapper.addActor(setInformationButton);
+
+        return setTitleWrapper;
     }
 
     public static class EquippedGearsContainer extends WidgetsContainer<EquippedGearContainer> {
@@ -168,9 +172,12 @@ public class MissionsPage extends APage {
         }
     }
 
-    public static class EquippedGearContainer extends Table {
+    public static class EquippedGearContainer extends BorderedTable {
         public EquippedGearContainer() {
             setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#b9a391")));
+            Image image = new Image(Resources.getDrawable("ui/default-square"));
+            image.setScaling(Scaling.stretch);
+            add(image).expand().center().size(150);
         }
 
         public void setData() {
@@ -179,23 +186,19 @@ public class MissionsPage extends APage {
 
     private Table constructSecondaryGearSegment() {
         tacticalsContainer = new TacticalsContainer();
-        final FlagWidget flagWidget = new FlagWidget();
+        final FlagContainer flagContainer = new FlagContainer();
+        final PetContainer petContainer = new PetContainer();
 
         final Table tacticalsFlagWrapper = new Table();
         tacticalsFlagWrapper.defaults().space(30);
         tacticalsFlagWrapper.add(tacticalsContainer).size(200);
         tacticalsFlagWrapper.row();
-        tacticalsFlagWrapper.add(flagWidget).size(200);
-        final PetWidget petWidget = new PetWidget();
-
-        final Table tacticalsFlagPetWrapper = new Table();
-        tacticalsFlagPetWrapper.defaults().space(30);
-        tacticalsFlagPetWrapper.add(tacticalsFlagWrapper);
-        tacticalsFlagPetWrapper.add(petWidget).growY().width(200);
+        tacticalsFlagWrapper.add(flagContainer).size(200);
 
         final Table secondaryGearSegment = new Table();
-        secondaryGearSegment.pad(30);
-        secondaryGearSegment.add(tacticalsFlagPetWrapper);
+        secondaryGearSegment.defaults().space(30);
+        secondaryGearSegment.add(tacticalsFlagWrapper);
+        secondaryGearSegment.add(petContainer).fillY().width(200);
 
         return secondaryGearSegment;
     }
@@ -221,7 +224,7 @@ public class MissionsPage extends APage {
         }
     }
 
-    public static class TacticalContainer extends Table {
+    public static class TacticalContainer extends BorderedTable {
         public TacticalContainer() {
             setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#a9a29c")));
         }
@@ -230,8 +233,8 @@ public class MissionsPage extends APage {
         }
     }
 
-    public static class FlagWidget extends Table {
-        public FlagWidget() {
+    public static class FlagContainer extends BorderedTable {
+        public FlagContainer() {
             setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#c8c0b9")));
         }
 
@@ -239,8 +242,8 @@ public class MissionsPage extends APage {
         }
     }
 
-    public static class PetWidget extends Table {
-        public PetWidget() {
+    public static class PetContainer extends BorderedTable {
+        public PetContainer() {
             setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#c8c0b9")));
 
             final Table button = new Table();
@@ -254,13 +257,13 @@ public class MissionsPage extends APage {
     }
 
     private Table constructButtonsSegment() {
-        final Table upgradeButton = new Table();
+        final BorderedTable upgradeButton = new BorderedTable();
         upgradeButton.setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#debc7c")));
 
-        final Table lootButton = new Table();
+        final BorderedTable lootButton = new BorderedTable();
         lootButton.setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#a6d890")));
 
-        final Table autoLootButton = new Table();
+        final BorderedTable autoLootButton = new BorderedTable();
         autoLootButton.setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#c2c2c2")));
 
         final Table segment = new Table();
