@@ -4,6 +4,8 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.Value;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.Scaling;
@@ -215,19 +217,20 @@ public class MissionsPage extends APage {
     }
 
     public static class EquippedGearContainer extends BorderedTable {
-        private Image image;
+
+        private final Image image;
 
         public EquippedGearContainer() {
             setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#b9a391")));
+
+            image = new Image();
+            image.setScaling(Scaling.fit);
+            add(image).grow().pad(10);
         }
 
-        public void setData(String path) {
-            final Table container = new Table();
-            removeActor(container);
-            image = new Image(Resources.getDrawable("lootPage/" + path));
-            container.add(image).expand().size(150);
-            container.setFillParent(true);
-            addActor(container);
+        public void setData (String path) {
+            final Drawable iconDrawable = Resources.getDrawable("lootPage/" + path);
+            image.setDrawable(iconDrawable);
         }
     }
 
@@ -328,7 +331,7 @@ public class MissionsPage extends APage {
         final Table segment = new Table();
         segment.setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#f5eae3")));
 
-        segment.pad(30).defaults().space(30).height(150).growX();
+        segment.pad(30).defaults().uniform().space(30).height(150).growX();
         segment.add(upgradeButton);
         segment.add(lootButton);
         segment.add(autoLootButton);
