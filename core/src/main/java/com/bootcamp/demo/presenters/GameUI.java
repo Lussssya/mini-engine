@@ -12,6 +12,7 @@ import com.bootcamp.demo.events.core.EventListener;
 import com.bootcamp.demo.events.core.EventModule;
 import com.bootcamp.demo.managers.API;
 import com.bootcamp.demo.pages.MissionsPage;
+import com.bootcamp.demo.pages.TestPage;
 import com.bootcamp.demo.pages.core.APage;
 import com.bootcamp.demo.pages.core.PageManager;
 import lombok.Getter;
@@ -40,8 +41,6 @@ public class GameUI extends ScreenAdapter implements Disposable, EventListener {
 
         // construct
         mainPageCell = rootUI.add().grow();
-
-        API.get(PageManager.class).show(TestPage.class);
     }
 
     @Override
@@ -49,8 +48,11 @@ public class GameUI extends ScreenAdapter implements Disposable, EventListener {
         stage.act(delta);
         stage.draw();
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.T)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
             API.get(PageManager.class).show(MissionsPage.class);
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.T)) {
+            API.get(PageManager.class).show(TestPage.class);
         }
     }
 

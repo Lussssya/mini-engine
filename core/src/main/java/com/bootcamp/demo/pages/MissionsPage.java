@@ -2,14 +2,18 @@ package com.bootcamp.demo.pages;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.Scaling;
+import com.bootcamp.demo.engine.Labels;
 import com.bootcamp.demo.engine.Resources;
 import com.bootcamp.demo.engine.Squircle;
 import com.bootcamp.demo.engine.widgets.BorderedTable;
+import com.bootcamp.demo.engine.widgets.OffsetButton;
 import com.bootcamp.demo.engine.widgets.WidgetsContainer;
+import com.bootcamp.demo.localization.GameFont;
 import com.bootcamp.demo.pages.core.APage;
 
 public class MissionsPage extends APage {
@@ -27,6 +31,7 @@ public class MissionsPage extends APage {
         content.add(gameUIOverlay).grow();
         content.row();
         content.add(mainUISegment).growX();
+        content.debugAll();
     }
 
     private Table constructGameUIOverlay() {
@@ -40,8 +45,20 @@ public class MissionsPage extends APage {
     }
 
     private Table constructPowerSegment() {
+        final Table powerBorder = new Table();
+        powerBorder.setBackground(Squircle.SQUIRCLE_35_BORDER_TOP.getDrawable(Color.valueOf("#f5eae3")));
+        powerBorder.setFillParent(true);
+
+        final Image powerImage = new Image(Resources.getDrawable("lootPage/punch-icon"));
+
+        final Label totalPower = Labels.make(GameFont.BOLD_32, Color.valueOf("#f5eae3"));
+        totalPower.setText("217k");
+
         final Table power = new Table();
-        power.setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#f5eae3")));
+        power.setBackground(Squircle.SQUIRCLE_35_TOP.getDrawable(Color.valueOf("#a18d7b")));
+        power.addActor(powerBorder);
+        power.add(powerImage).size(75).space(20);
+        power.add(totalPower);
 
         final Table segment = new Table();
         segment.add(power).width(600).height(125);
@@ -66,8 +83,13 @@ public class MissionsPage extends APage {
 
     private Table constructStatsSegment() {
         statsContainer = new StatsContainer();
+
+        final Image infoButtonImage = new Image(Resources.getDrawable("lootPage/stats-button"));
+        infoButtonImage.setScaling(Scaling.stretch);
+
         final BorderedTable statsDetailedInfoButton = new BorderedTable();
         statsDetailedInfoButton.setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#cfb6a3")));
+        statsDetailedInfoButton.add(infoButtonImage).size(100);
 
         final Table segment = new Table();
         segment.setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#b6a89c")));
@@ -78,6 +100,8 @@ public class MissionsPage extends APage {
     }
 
     public static class StatsContainer extends WidgetsContainer<StatWidget> {
+        private static final String[] TITLES = {"HP:", "ATK:", "DODGE:", "COMBO:", "CRIT:", "STUN:", "REGEN:", "STEAL:", "POISON:"};
+        private static final String[] VALUES = {"33k", "12.3k", "34.49%", "17.3%", "6.06%", "19.56%", "12.29%", "10.53%", "9.92%"};
 
         public StatsContainer() {
             super(3);
@@ -92,20 +116,24 @@ public class MissionsPage extends APage {
         public void setData() {
             final Array<StatWidget> widgets = getWidgets();
 
-            for (StatWidget widget : widgets) {
-                widget.setData();
+            for (int i = 0; i < widgets.size; i++) {
+                widgets.get(i).setData(TITLES[i], VALUES[i]);
             }
         }
     }
 
     public static class StatWidget extends Table {
+        final private Label title = Labels.make(GameFont.BOLD_24, Color.valueOf("#52483f"));
+        final private Label value = Labels.make(GameFont.BOLD_24, Color.valueOf("#f5eae3"));
 
         public StatWidget() {
-            setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#504845")));
+            add(title).expandX().left();
+            add(value);
         }
 
-        public void setData() {
-
+        public void setData(String title, String value) {
+            this.title.setText(title);
+            this.value.setText(value);
         }
     }
 
@@ -137,9 +165,16 @@ public class MissionsPage extends APage {
         return segment;
     }
 
-    private Table constructSetInfoSegment () {
+    private Table constructSetInfoSegment() {
+        final Label infoSegmentText = Labels.make(GameFont.BOLD_20, Color.valueOf("#483f3a"));
+        infoSegmentText.setText("Incomplete Set");
+
+        final Image infoButtonImage = new Image(Resources.getDrawable("lootPage/stats-button"));
+        infoButtonImage.setScaling(Scaling.fit);
+
         final BorderedTable button = new BorderedTable();
         button.setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#cfb6a3")));
+        button.add(infoButtonImage).size(60);
 
         final Table setInformationButton = new Table();
         setInformationButton.setFillParent(true);
@@ -148,11 +183,15 @@ public class MissionsPage extends APage {
         final Table setTitleWrapper = new Table();
         setTitleWrapper.setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#a9a29c")));
         setTitleWrapper.addActor(setInformationButton);
+        setTitleWrapper.add(infoSegmentText);
 
         return setTitleWrapper;
     }
 
     public static class EquippedGearsContainer extends WidgetsContainer<EquippedGearContainer> {
+        private static final String[] EQUIPMENT_PATH = {"star-staff", "angel-bow", "hard-armor", "magic-ring"};
+        private static final String defaultPath = "empty-gear";
+
         public EquippedGearsContainer() {
             super(3);
             defaults().space(30).size(200);
@@ -165,22 +204,30 @@ public class MissionsPage extends APage {
 
         public void setData() {
             final Array<EquippedGearContainer> widgets = getWidgets();
-
-            for (EquippedGearContainer widget : widgets) {
-                widget.setData();
+            for (int i = 0; i < 6; i++) {
+                if (i < EQUIPMENT_PATH.length) {
+                    widgets.get(i).setData(EQUIPMENT_PATH[i]);
+                } else {
+                    widgets.get(i).setData(defaultPath);
+                }
             }
         }
     }
 
     public static class EquippedGearContainer extends BorderedTable {
+        private Image image;
+
         public EquippedGearContainer() {
             setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#b9a391")));
-            Image image = new Image(Resources.getDrawable("ui/default-square"));
-            image.setScaling(Scaling.stretch);
-            add(image).expand().center().size(150);
         }
 
-        public void setData() {
+        public void setData(String path) {
+            final Table container = new Table();
+            removeActor(container);
+            image = new Image(Resources.getDrawable("lootPage/" + path));
+            container.add(image).expand().size(150);
+            container.setFillParent(true);
+            addActor(container);
         }
     }
 
@@ -224,7 +271,7 @@ public class MissionsPage extends APage {
         }
     }
 
-    public static class TacticalContainer extends BorderedTable {
+    public static class TacticalContainer extends Table {
         public TacticalContainer() {
             setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#a9a29c")));
         }
@@ -236,6 +283,11 @@ public class MissionsPage extends APage {
     public static class FlagContainer extends BorderedTable {
         public FlagContainer() {
             setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#c8c0b9")));
+
+            final Image flag = new Image(Resources.getDrawable("lootPage/flag-icon"));
+            flag.setScaling(Scaling.stretch);
+
+            add(flag);
         }
 
         public void setData() {
@@ -246,34 +298,112 @@ public class MissionsPage extends APage {
         public PetContainer() {
             setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#c8c0b9")));
 
-            final Table button = new Table();
-            button.setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#debc7c")));
+            final Image cat = new Image(Resources.getDrawable("lootPage/pet-cat-orange"));
+            cat.setScaling(Scaling.stretch);
 
-            add(button).expand().bottom().growX().height(100);
+            final Image home = new Image(Resources.getDrawable("lootPage/home-icon"));
+            home.setScaling(Scaling.stretch);
+
+            final OffsetButton button = new OffsetButton(OffsetButton.Style.ORANGE_35) {
+                protected void buildInner(Table container) {
+                    super.buildInner(container);
+                    container.add(home).size(80);
+                }
+            };
+
+            add(cat).expand().bottom().fillX();
+            row();
+            add(button).growX().height(150);
         }
 
         public void setData() {
         }
     }
 
-    private Table constructButtonsSegment() {
-        final BorderedTable upgradeButton = new BorderedTable();
-        upgradeButton.setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#debc7c")));
-
-        final BorderedTable lootButton = new BorderedTable();
-        lootButton.setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#a6d890")));
-
-        final BorderedTable autoLootButton = new BorderedTable();
-        autoLootButton.setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#c2c2c2")));
+    private static Table constructButtonsSegment() {
+        final OffsetButton upgradeButton = constructUpgradeButton();
+        final OffsetButton lootButton = constructLootButton();
+        final OffsetButton autoLootButton = constructAutoLootButton();
 
         final Table segment = new Table();
         segment.setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#f5eae3")));
 
-        segment.pad(30).defaults().space(30).growX().height(150);
+        segment.pad(30).defaults().space(30).height(150).growX();
         segment.add(upgradeButton);
         segment.add(lootButton);
         segment.add(autoLootButton);
         return segment;
+    }
+
+    private static OffsetButton constructUpgradeButton() {
+        final Label bladeText = Labels.make(GameFont.BOLD_20, Color.valueOf("#f5eae3"));
+        bladeText.setText("Lvl 17");
+
+        final Label handleText = Labels.make(GameFont.BOLD_20, Color.valueOf("#f5eae3"));
+        handleText.setText("Lvl 3");
+
+        final Table bladeLevel = new Table();
+        bladeLevel.setBackground(Squircle.SQUIRCLE_15.getDrawable(Color.valueOf("#9c7e5a")));
+        bladeLevel.add(bladeText);
+
+        final Table handleLevel = new Table();
+        handleLevel.setBackground(Squircle.SQUIRCLE_15.getDrawable(Color.valueOf("#9c7e5a")));
+        handleLevel.add(handleText);
+
+        final Table bladeHandleWrapper = new Table();
+        bladeHandleWrapper.defaults().space(10).height(45).growX();
+        bladeHandleWrapper.add(bladeLevel);
+        bladeHandleWrapper.row();
+        bladeHandleWrapper.add(handleLevel);
+
+        final Image shovel = new Image(Resources.getDrawable("lootPage/shovel-icon"));
+        shovel.setScaling(Scaling.fit);
+
+        final OffsetButton upgradeButton = new OffsetButton(OffsetButton.Style.ORANGE_35) {
+            @Override
+            protected void buildInner(Table container) {
+                super.buildInner(container);
+                container.pad(10);
+                container.add(shovel);
+                container.add(bladeHandleWrapper).growX().padRight(10);
+            }
+        };
+        return upgradeButton;
+    }
+
+    private static OffsetButton constructLootButton() {
+        final Label lootButtonText = Labels.make(GameFont.BOLD_22, Color.valueOf("#f5eae3"));
+        lootButtonText.setText("LOOT");
+
+        final Image shovel = new Image(Resources.getDrawable("lootPage/shovel-icon"));
+        shovel.setScaling(Scaling.fit);
+
+        final OffsetButton lootButton = new OffsetButton(OffsetButton.Style.GREEN_35) {
+            protected void buildInner(Table container) {
+                super.buildInner(container);
+                container.add(lootButtonText).expandX().right();
+                container.add(shovel);
+            }
+        };
+        return lootButton;
+    }
+
+    private static OffsetButton constructAutoLootButton() {
+        final Label autoLootButtonText = Labels.make(GameFont.BOLD_22, Color.valueOf("#f5eae3"));
+        autoLootButtonText.setText("Auto Loot");
+
+        final Image shovel = new Image(Resources.getDrawable("lootPage/shovel-icon"));
+        shovel.setScaling(Scaling.fit);
+
+        final OffsetButton autoLootButton = new OffsetButton(OffsetButton.Style.ORANGE_35) {
+            protected void buildInner(Table container) {
+                super.buildInner(container);
+                container.add(autoLootButtonText).expandX().right();
+                container.add(shovel);
+            }
+        };
+
+        return autoLootButton;
     }
 
     @Override
