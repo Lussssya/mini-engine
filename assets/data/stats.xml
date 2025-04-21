@@ -1,0 +1,11 @@
+<root>
+    <stats name="hp" title="HP:" />
+    <stats name="atk" title="ATK:" />
+    <stats name="dodge" title="DODGE:" />
+    <stats name="combo" title="COMBO:" />
+    <stats name="crit" title="CRIT:" />
+    <stats name="stun" title="STUN:" />
+    <stats name="regen" title="REGEN:" />
+    <stats name="steal" title="STEAL:" />
+    <stats name="poison" title="POISON:" />
+</root>

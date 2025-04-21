@@ -1,0 +1,8 @@
+<root>
+    <militaries type="weapon" icon="lootPage/angel-bow"/>
+    <militaries type="melee" icon="lootPage/hard-armor"/>
+    <militaries type="head" icon="lootPage/magic-ring"/>
+    <militaries type="body" icon="lootPage/star-staff"/>
+    <militaries type="gloves" icon="lootPage/angel-bow"/>
+    <militaries type="shoes" icon="lootPage/hard-armor"/>
+</root>
