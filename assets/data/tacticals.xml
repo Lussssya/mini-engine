@@ -1,6 +1,6 @@
 <root>
-    <tactical name="present" icon="ui/ui-chat-gift-button-icon"/>
-    <tactical name="present" icon="ui/ui-chat-gift-button-icon"/>
-    <tactical name="present" icon="ui/ui-chat-gift-button-icon"/>
-    <tactical name="present" icon="ui/ui-chat-gift-button-icon"/>
+    <tacticals name="tactical1" icon="lootPage/chidori-icon"/>
+    <tacticals name="tactical2" icon="lootPage/rassengan-icon"/>
+    <tacticals name="tactical3" icon="lootPage/kunai-icon"/>
+    <tacticals name="tactical4" icon="lootPage/shuriken-icon"/>
 </root>

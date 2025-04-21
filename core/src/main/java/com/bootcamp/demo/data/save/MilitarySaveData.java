@@ -2,6 +2,7 @@ package com.bootcamp.demo.data.save;
 
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
+import com.bootcamp.demo.data.Rarity;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,6 +16,10 @@ public class MilitarySaveData implements Json.Serializable {
     private int level;
     @Getter @Setter
     private char tier;
+    @Getter @Setter
+    private float power;
+    @Getter @Setter
+    private Rarity rarity;
 
     @Override
     public void write(Json json) {
@@ -22,6 +27,8 @@ public class MilitarySaveData implements Json.Serializable {
         json.writeValue("stars", starCount);
         json.writeValue("level", level);
         json.writeValue("tier", tier);
+        json.writeValue("power", power);
+        json.writeValue("rarity", rarity);
     }
 
     @Override
@@ -30,5 +37,7 @@ public class MilitarySaveData implements Json.Serializable {
         starCount = jsonValue.getInt("stars");
         level = jsonValue.getInt("level");
         tier = jsonValue.getChar("tier");
+        power = jsonValue.getFloat("power");
+        rarity = Rarity.valueOf(jsonValue.getString("rarity"));
     }
 }

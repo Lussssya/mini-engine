@@ -5,9 +5,9 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.XmlReader;
 import lombok.Getter;
 
+@Getter
 public class StatsGameData implements IGameData {
 
-    @Getter
     private final ObjectMap<String, StatGameData> stats = new ObjectMap<>();
 
     @Override

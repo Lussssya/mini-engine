@@ -3,7 +3,6 @@ package com.bootcamp.demo.pages;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
@@ -222,12 +221,10 @@ public class MissionsPage extends APage {
         }
     }
 
-    //nah
     public static class MilitaryGearContainer extends BorderedTable {
-
         private final Image iconImage;
         private final Label levelLabel;
-        private final Label tierImage;
+        private final Label tierLabel;
         private final Table starsTable;
 
         public MilitaryGearContainer() {
@@ -236,16 +233,22 @@ public class MissionsPage extends APage {
             iconImage = new Image();
             iconImage.setScaling(Scaling.fit);
 
-            levelLabel = Labels.make(GameFont.BOLD_20, Color.WHITE);
-            tierImage = Labels.make(GameFont.BOLD_20, Color.WHITE);
+            levelLabel = Labels.make(GameFont.BOLD_18, Color.valueOf("#f5eae3"));
+            tierLabel = Labels.make(GameFont.BOLD_18, Color.valueOf("#f5eae3"));
             starsTable = new Table();
 
             add(iconImage);
-//            add(starsTable).size(80).expand().top().left();
-//            row();
-//            add(levelLabel).expandX().left();
-//            add(tierImage);
 
+            // create layout with stars, level and tier
+            final Table layout = new Table();
+            layout.pad(15);
+            layout.add(starsTable).expand().top().left();
+            layout.row();
+            layout.add(levelLabel).expand().bottom().left();
+            layout.add(tierLabel).bottom();
+            layout.setFillParent(true);
+
+            addActor(layout);
         }
 
         public void setData(MilitarySaveData militarySaveData) {
@@ -260,7 +263,7 @@ public class MissionsPage extends APage {
 
             iconImage.setDrawable(militaryGameData.getIcon());
             levelLabel.setText("Lv." + militarySaveData.getLevel());
-            tierImage.setText("tier/" + militarySaveData.getTier()); // assuming path
+            tierLabel.setText(String.valueOf(militarySaveData.getTier()));
             updateStars(militarySaveData.getStarCount());
         }
 
@@ -269,18 +272,17 @@ public class MissionsPage extends APage {
             for (int i = 0; i < count; i++) {
                 Image star = new Image(Resources.getDrawable("lootPage/star-icon"));
                 star.setScaling(Scaling.none);
-                starsTable.add(star).padRight(2);
+                starsTable.add(star).size(30);
             }
         }
 
         public void setEmpty() {
             iconImage.setDrawable(Resources.getDrawable("empty-gear"));
             levelLabel.setText("");
-            tierImage.setText("");
+            tierLabel.setText("");
             starsTable.clear();
         }
     }
-
 
     private Table constructSecondaryGearSegment() {
         tacticalsContainer = new TacticalsContainer();
@@ -302,35 +304,57 @@ public class MissionsPage extends APage {
     }
 
     public static class TacticalsContainer extends BorderedTable {
-        WidgetsContainer<TacticalContainer> container = new WidgetsContainer<>(2);
+        final WidgetsContainer<TacticalContainer> container = new WidgetsContainer<>(2);
 
         public TacticalsContainer() {
             container.setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#c8c0b9")));
             container.pad(20).defaults().space(20).grow();
 
             for (int i = 0; i < 4; i++) {
-                TacticalContainer widget = new TacticalContainer();
+                final TacticalContainer widget = new TacticalContainer();
                 container.add(widget);
             }
 
             add(container);
         }
 
-        public void setData() {
+        public void setData(TacticalsSaveData tacticalsSaveData) {
             final Array<TacticalContainer> widgets = container.getWidgets();
 
-            for (TacticalContainer widget : widgets) {
-                widget.setData();
+            for (int i = 0; i < widgets.size; i++) {
+                final TacticalContainer widget = widgets.get(i);
+                final TacticalSaveData tacticalSaveData = tacticalsSaveData.getTacticals().get(i);
+                widget.setData(tacticalSaveData);
             }
         }
     }
 
     public static class TacticalContainer extends Table {
+
+        private final Image iconImage;
+
         public TacticalContainer() {
             setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#a9a29c")));
+
+            iconImage = new Image();
+            iconImage.setScaling(Scaling.fit);
+            add(iconImage).grow().pad(10);
         }
 
-        public void setData() {
+        public void setData(TacticalSaveData tacticalSaveData) {
+            if (tacticalSaveData == null) {
+                setEmpty();
+                return;
+            }
+
+            final TacticalsGameData tacticalsGameData = API.get(GameData.class).getTacticalsGameData();
+            final ObjectMap<String, TacticalGameData> tacticals = tacticalsGameData.getTacticals();
+            final TacticalGameData tacticalGameData = tacticals.get(tacticalSaveData.getName());
+            iconImage.setDrawable(tacticalGameData.getIcon());
+        }
+
+        private void setEmpty() {
+            iconImage.setDrawable(null);
         }
     }
 
@@ -465,6 +489,6 @@ public class MissionsPage extends APage {
         super.show(onComplete);
         statsContainer.setData(API.get(SaveData.class).getStatsSaveData());
         militaryGearsContainer.setData(API.get(SaveData.class).getMilitariesSaveData());
-        tacticalsContainer.setData();
+        tacticalsContainer.setData(API.get(SaveData.class).getTacticalsSaveData());
     }
 }

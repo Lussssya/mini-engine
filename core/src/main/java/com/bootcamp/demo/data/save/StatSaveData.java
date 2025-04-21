@@ -5,11 +5,10 @@ import com.badlogic.gdx.utils.JsonValue;
 import lombok.Getter;
 import lombok.Setter;
 
+@Setter
+@Getter
 public class StatSaveData implements Json.Serializable {
-
-    @Getter @Setter
     private String name;
-    @Getter @Setter
     private String value;
 
     @Override

@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.*;
+import com.bootcamp.demo.data.Rarity;
 import com.bootcamp.demo.data.game.GameData;
 import com.bootcamp.demo.data.save.*;
 import com.bootcamp.demo.events.GameStartedEvent;
@@ -23,14 +24,9 @@ public class DemoGame extends Game {
 
         loadSaveData();
 
-        final TacticalSaveData tacticalSaveData = new TacticalSaveData();
-        tacticalSaveData.setName("present");
-        tacticalSaveData.setLevel(3);
-        API.get(SaveData.class).getTacticalsSaveData().getTacticals().put(0, tacticalSaveData);
-
         setupStats();
-
         setupMilitaryGears();
+        setupTacticals();
 
         savePlayerData();
 
@@ -60,29 +56,49 @@ public class DemoGame extends Game {
         return stat;
     }
 
-
     private void setupMilitaryGears() {
         final MilitariesSaveData militariesSaveData = new MilitariesSaveData();
 
-        militariesSaveData.getMilitaries().put(0, createMilitary("weapon", 1, 28, 'D'));
-        militariesSaveData.getMilitaries().put(1, createMilitary("melee", 2, 28, 'D'));
-        militariesSaveData.getMilitaries().put(2, createMilitary("head", 1, 25, 'A'));
-        militariesSaveData.getMilitaries().put(3, createMilitary("body", 1, 29, 'C'));
-        militariesSaveData.getMilitaries().put(4, createMilitary("gloves", 1, 23, 'C'));
-        militariesSaveData.getMilitaries().put(5, createMilitary("shoes", 2, 24, 'B'));
+        militariesSaveData.getMilitaries().put(0, createMilitary("weapon", 1, 28, 'D', 8.95f, Rarity.ELITE));
+        militariesSaveData.getMilitaries().put(1, createMilitary("melee", 2, 28, 'D', 7.76f, Rarity.HARDENED));
+        militariesSaveData.getMilitaries().put(2, createMilitary("head", 1, 25, 'A', 7.8f, Rarity.ELITE));
+        militariesSaveData.getMilitaries().put(3, createMilitary("body", 1, 29, 'C', 8.94f, Rarity.ELITE));
+        militariesSaveData.getMilitaries().put(4, createMilitary("gloves", 1, 23, 'C', 8.4f, Rarity.ELITE));
+        militariesSaveData.getMilitaries().put(5, createMilitary("shoes", 2, 24, 'B', 8.14f, Rarity.ELITE));
 
         API.get(SaveData.class).setMilitariesSaveData(militariesSaveData);
     }
 
-    private MilitarySaveData createMilitary(String type, int starCount, int level, char tier) {
+    private MilitarySaveData createMilitary(String type, int starCount, int level, char tier, float power, Rarity rarity) {
         MilitarySaveData military = new MilitarySaveData();
         military.setType(type);
         military.setStarCount(starCount);
         military.setLevel(level);
         military.setTier(tier);
+        military.setPower(power);
+        military.setRarity(rarity);
         return military;
     }
 
+    private void setupTacticals() {
+        final TacticalsSaveData tacticalsSaveData = new TacticalsSaveData();
+
+        tacticalsSaveData.getTacticals().put(0, createTactical("tactical1", 4, 1, Rarity.EPIC));
+        tacticalsSaveData.getTacticals().put(1, createTactical("tactical2", 3, 1, Rarity.EPIC));
+        tacticalsSaveData.getTacticals().put(2, createTactical("tactical3", 6, 2, Rarity.EPIC));
+        tacticalsSaveData.getTacticals().put(3, createTactical("tactical4", 3, 1, Rarity.EPIC));
+
+        API.get(SaveData.class).setTacticalsSaveData(tacticalsSaveData);
+    }
+
+    private TacticalSaveData createTactical(String name, int level, int starCount, Rarity rarity) {
+        TacticalSaveData tactical = new TacticalSaveData();
+        tactical.setName(name);
+        tactical.setLevel(level);
+        tactical.setStarCount(starCount);
+        tactical.setRarity(rarity);
+        return tactical;
+    }
 
     private void loadSaveData() {
         final FileHandle file = getPlayerDataFileHandler();

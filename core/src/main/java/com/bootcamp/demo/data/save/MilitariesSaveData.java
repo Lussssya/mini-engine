@@ -5,8 +5,8 @@ import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 import lombok.Getter;
 
+@Getter
 public class MilitariesSaveData implements Json.Serializable {
-    @Getter
     private final IntMap<MilitarySaveData> militaries = new IntMap<>();
 
     @Override

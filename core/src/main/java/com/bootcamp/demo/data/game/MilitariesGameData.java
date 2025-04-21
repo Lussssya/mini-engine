@@ -5,8 +5,8 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.XmlReader;
 import lombok.Getter;
 
+@Getter
 public class MilitariesGameData implements IGameData {
-    @Getter
     private final ObjectMap<String, MilitaryGameData> militaries = new ObjectMap<>();
 
     @Override

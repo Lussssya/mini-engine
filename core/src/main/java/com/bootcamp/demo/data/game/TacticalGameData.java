@@ -5,10 +5,9 @@ import com.badlogic.gdx.utils.XmlReader;
 import com.bootcamp.demo.engine.Resources;
 import lombok.Getter;
 
+@Getter
 public class TacticalGameData implements IGameData {
-    @Getter
     private String name;
-    @Getter
     private Drawable icon;
 
     @Override
