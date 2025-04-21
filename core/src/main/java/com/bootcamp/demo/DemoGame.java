@@ -36,20 +36,20 @@ public class DemoGame extends Game {
 
     private void setupStats() {
         final StatsSaveData statsSaveData = new StatsSaveData();
-        statsSaveData.getStats().put(0, createStat("hp", "33k"));
-        statsSaveData.getStats().put(1, createStat("atk", "12.3k"));
-        statsSaveData.getStats().put(2, createStat("dodge", "34.49%"));
-        statsSaveData.getStats().put(3, createStat("combo", "17.3%"));
-        statsSaveData.getStats().put(4, createStat("crit", "6.06%"));
-        statsSaveData.getStats().put(5, createStat("stun", "19.56%"));
-        statsSaveData.getStats().put(6, createStat("regen", "12.29%"));
-        statsSaveData.getStats().put(7, createStat("steal", "10.53%"));
-        statsSaveData.getStats().put(8, createStat("poison", "9.92%"));
+        statsSaveData.getStats().put(0, createStat("hp", 33f));
+        statsSaveData.getStats().put(1, createStat("atk", 12.3f));
+        statsSaveData.getStats().put(2, createStat("dodge", 34.49f));
+        statsSaveData.getStats().put(3, createStat("combo", 17.3f));
+        statsSaveData.getStats().put(4, createStat("crit", 6.06f));
+        statsSaveData.getStats().put(5, createStat("stun", 19.56f));
+        statsSaveData.getStats().put(6, createStat("regen", 12.29f));
+        statsSaveData.getStats().put(7, createStat("steal", 10.53f));
+        statsSaveData.getStats().put(8, createStat("poison", 9.92f));
 
         API.get(SaveData.class).setStatsSaveData(statsSaveData);
     }
 
-    private StatSaveData createStat(String name, String value) {
+    private StatSaveData createStat(String name, float value) {
         StatSaveData stat = new StatSaveData();
         stat.setName(name);
         stat.setValue(value);

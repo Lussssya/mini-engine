@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
+import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.Scaling;
 import com.bootcamp.demo.data.game.*;
 import com.bootcamp.demo.data.save.*;
@@ -143,7 +144,7 @@ public class MissionsPage extends APage {
             final StatGameData statGameData = statsGameData.getStats().get(statSaveData.getName());
 
             title.setText(statGameData.getTitle());
-            value.setText(statSaveData.getValue());
+            value.setText(statSaveData.getValue() + statGameData.getIdentifier());
         }
 
     }
@@ -239,16 +240,21 @@ public class MissionsPage extends APage {
 
             add(iconImage);
 
-            // create layout with stars, level and tier
-            final Table layout = new Table();
-            layout.pad(15);
-            layout.add(starsTable).expand().top().left();
-            layout.row();
-            layout.add(levelLabel).expand().bottom().left();
-            layout.add(tierLabel).bottom();
-            layout.setFillParent(true);
+            final Table starsLayout = new Table();
+            starsLayout.pad(15).add(starsTable).expand().top().left();
+            starsLayout.setFillParent(true);
 
-            addActor(layout);
+            final Table levelLayout = new Table();
+            levelLayout.pad(15).add(levelLabel).expand().bottom().left();
+            levelLayout.setFillParent(true);
+
+            final Table tierLayout = new Table();
+            tierLayout.pad(15).add(tierLabel).expand().bottom().right();
+            tierLayout.setFillParent(true);
+
+            addActor(starsLayout);
+            addActor(levelLayout);
+            addActor(tierLayout);
         }
 
         public void setData(MilitarySaveData militarySaveData) {
@@ -270,7 +276,8 @@ public class MissionsPage extends APage {
         private void updateStars(int count) {
             starsTable.clear();
             for (int i = 0; i < count; i++) {
-                Image star = new Image(Resources.getDrawable("lootPage/star-icon"));
+                Image star = Pools.obtain(Image.class);
+                star.setDrawable(Resources.getDrawable("lootPage/star-icon"));
                 star.setScaling(Scaling.none);
                 starsTable.add(star).size(30);
             }
@@ -389,9 +396,12 @@ public class MissionsPage extends APage {
                 }
             };
 
-            add(cat).expand().bottom().fillX();
-            row();
-            add(button).growX().height(150);
+            final Table buttonLayout = new Table();
+            buttonLayout.add(button).expand().bottom().growX().height(150);
+            buttonLayout.setFillParent(true);
+
+            addActor(buttonLayout);
+            add(cat).expandX().fillX().padTop(30);
         }
 
         public void setData() {

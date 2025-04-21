@@ -1,11 +1,16 @@
 package com.bootcamp.demo.data;
 
 public enum Rarity {
-    COMMON,
-    GREAT,
-    RARE,
+    RUSTED,
+    SCRAP,
     HARDENED,
     EPIC,
     ELITE,
-    EXOTIC
+    ASCENDANT,
+    NUCLEAR,
+    JUGGERNAUT,
+    DOMINION,
+    OBLIVION,
+    IMMORTAL,
+    ETHEREAL
 }

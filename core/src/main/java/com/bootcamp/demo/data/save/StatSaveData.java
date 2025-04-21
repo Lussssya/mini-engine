@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 public class StatSaveData implements Json.Serializable {
     private String name;
-    private String value;
+    private float value;
 
     @Override
     public void write (Json json) {
@@ -20,7 +20,7 @@ public class StatSaveData implements Json.Serializable {
     @Override
     public void read (Json json, JsonValue jsonValue) {
         name = jsonValue.getString("name");
-        value = jsonValue.getString("value");
+        value = jsonValue.getFloat("value");
     }
 }
 
