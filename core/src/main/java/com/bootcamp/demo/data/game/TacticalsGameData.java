@@ -13,7 +13,7 @@ public class TacticalsGameData implements IGameData {
     @Override
     public void load (XmlReader.Element rootXml) {
         tacticals.clear();
-        final Array<XmlReader.Element> tacticalsXml = rootXml.getChildrenByName("tacticals");
+        final Array<XmlReader.Element> tacticalsXml = rootXml.getChildrenByName("tactical");
         for (XmlReader.Element tacticalXml : tacticalsXml) {
             final TacticalGameData tacticalGameData = new TacticalGameData();
             tacticalGameData.load(tacticalXml);

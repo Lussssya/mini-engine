@@ -1,6 +1,6 @@
 <root>
-    <tacticals name="tactical1" icon="lootPage/chidori-icon"/>
-    <tacticals name="tactical2" icon="lootPage/rassengan-icon"/>
-    <tacticals name="tactical3" icon="lootPage/kunai-icon"/>
-    <tacticals name="tactical4" icon="lootPage/shuriken-icon"/>
+    <tactical name="chidori" icon="lootPage/chidori-icon"/>
+    <tactical name="rassengan" icon="lootPage/rassengan-icon"/>
+    <tactical name="kunai" icon="lootPage/kunai-icon"/>
+    <tactical name="shuriken" icon="lootPage/shuriken-icon"/>
 </root>

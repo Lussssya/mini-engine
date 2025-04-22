@@ -44,7 +44,7 @@ public class TestPage extends APage {
 
             for (int i = 0; i < widgets.size; i++) {
                 final TacticalContainer widget = widgets.get(i);
-                final TacticalSaveData tacticalSaveData = tacticalsSaveData.getTacticals().get(i);
+                final TacticalSaveData tacticalSaveData = new TacticalSaveData();
                 widget.setData(tacticalSaveData);
             }
         }

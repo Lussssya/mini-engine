@@ -4,15 +4,16 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.XmlReader;
 import com.bootcamp.demo.engine.Resources;
 import lombok.Getter;
+import lombok.Setter;
 
-@Getter
-public class MilitaryGameData implements IGameData {
-    private String type;
+@Getter @Setter
+public class MilitaryGearGameData implements IGameData {
+    private String name;
     private Drawable icon;
 
     @Override
-    public void load (XmlReader.Element rootXml) {
-        type = rootXml.getAttribute("type");
+    public void load(XmlReader.Element rootXml) {
+        name = rootXml.getAttribute("name");
         icon = Resources.getDrawable(rootXml.getAttribute("icon"));
     }
 }

@@ -19,6 +19,12 @@ import com.bootcamp.demo.engine.widgets.WidgetsContainer;
 import com.bootcamp.demo.localization.GameFont;
 import com.bootcamp.demo.managers.API;
 import com.bootcamp.demo.pages.core.APage;
+import com.bootcamp.demo.data.save.StatSaveData.StatType;
+import com.bootcamp.demo.data.save.MilitaryGearSaveData.MilitarySlot;
+import lombok.Getter;
+import com.bootcamp.demo.data.save.TacticalSaveData.TacticalSlot;
+
+
 
 public class MissionsPage extends APage {
 
@@ -108,7 +114,7 @@ public class MissionsPage extends APage {
             super(3);
             pad(15).defaults().space(30).height(60).growX();
 
-            for (int i = 0; i < 9; i++) {
+            for (int i = 0; i < StatType.values().length; i++) {
                 final StatWidget widget = new StatWidget();
                 add(widget);
             }
@@ -117,9 +123,10 @@ public class MissionsPage extends APage {
         public void setData(StatsSaveData statsSaveData) {
             final Array<StatWidget> widgets = getWidgets();
 
-            for (int i = 0; i < widgets.size; i++) {
-                final StatWidget widget = widgets.get(i);
-                final StatSaveData statSaveData = statsSaveData.getStats().get(i);
+            int i = 0;
+            for (StatType type : StatType.values()) {
+                final StatSaveData statSaveData = statsSaveData.getStats().get(type);
+                final StatWidget widget = widgets.get(i++);
 
                 widget.setData(statSaveData);
             }
@@ -137,16 +144,20 @@ public class MissionsPage extends APage {
 
         public void setData(StatSaveData statSaveData) {
             if (statSaveData == null) {
+                setEmpty();
                 return;
             }
 
-            final StatsGameData statsGameData = API.get(GameData.class).getStatsGameData();
-            final StatGameData statGameData = statsGameData.getStats().get(statSaveData.getName());
+            final StatType type = statSaveData.getName();
 
-            title.setText(statGameData.getTitle());
-            value.setText(statSaveData.getValue() + statGameData.getIdentifier());
+            title.setText(type.getTitle());
+            value.setText(statSaveData.getValue() + type.getIdentifier());
         }
 
+        public void setEmpty() {
+            title.setText(null);
+            value.setText(null);
+        }
     }
 
     private Table constructMilitariesSegment() {
@@ -205,19 +216,22 @@ public class MissionsPage extends APage {
             super(3);
             defaults().space(30).size(200);
 
-            for (int i = 0; i < 6; i++) {
+            for (MilitarySlot slot : MilitarySlot.values()) {
                 final MilitaryGearContainer widget = new MilitaryGearContainer();
                 add(widget);
             }
         }
 
-        public void setData(MilitariesSaveData militariesSaveData) {
+        public void setData(MilitaryGearsSaveData militariesSaveData) {
             final Array<MilitaryGearContainer> widgets = getWidgets();
+            final ObjectMap<MilitarySlot, MilitaryGearSaveData> saveDataMap = militariesSaveData.getMilitaries();
 
             for (int i = 0; i < widgets.size; i++) {
-                final MilitaryGearContainer widget = widgets.get(i);
-                final MilitarySaveData militarySaveData = militariesSaveData.getMilitaries().get(i);
-                widget.setData(militarySaveData);
+                MilitaryGearContainer widget = widgets.get(i);
+                MilitarySlot slot = MilitarySlot.values()[i];
+
+                MilitaryGearSaveData gearSave = saveDataMap.get(slot);
+                widget.setData(gearSave);
             }
         }
     }
@@ -229,8 +243,6 @@ public class MissionsPage extends APage {
         private final Table starsTable;
 
         public MilitaryGearContainer() {
-            setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#b9a391")));
-
             iconImage = new Image();
             iconImage.setScaling(Scaling.fit);
 
@@ -257,19 +269,23 @@ public class MissionsPage extends APage {
             addActor(tierLayout);
         }
 
-        public void setData(MilitarySaveData militarySaveData) {
+        public void setData(MilitaryGearSaveData militarySaveData) {
             if (militarySaveData == null) {
                 setEmpty();
                 return;
             }
 
-            final MilitariesGameData militariesGameData = API.get(GameData.class).getMilitariesGameData();
-            final ObjectMap<String, MilitaryGameData> militaries = militariesGameData.getMilitaries();
-            final MilitaryGameData militaryGameData = militaries.get(militarySaveData.getType());
+            final MilitaryGearsGameData militariesGameData = API.get(GameData.class).getMilitaryGearsGameData();
+            final MilitaryGearGameData militaryGameData = militariesGameData.getMilitaries().get(militarySaveData.getName());
+
+            System.out.println(militariesGameData.getMilitaries());
+            System.out.println(militarySaveData.getName());
 
             iconImage.setDrawable(militaryGameData.getIcon());
             levelLabel.setText("Lv." + militarySaveData.getLevel());
             tierLabel.setText(String.valueOf(militarySaveData.getTier()));
+
+            setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf(militarySaveData.getRarity().getBackgroundHex())));
             updateStars(militarySaveData.getStarCount());
         }
 
@@ -315,7 +331,7 @@ public class MissionsPage extends APage {
 
         public TacticalsContainer() {
             container.setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#c8c0b9")));
-            container.pad(20).defaults().space(20).grow();
+            container.pad(20).defaults().uniform().space(20).grow();
 
             for (int i = 0; i < 4; i++) {
                 final TacticalContainer widget = new TacticalContainer();
@@ -327,22 +343,20 @@ public class MissionsPage extends APage {
 
         public void setData(TacticalsSaveData tacticalsSaveData) {
             final Array<TacticalContainer> widgets = container.getWidgets();
+            TacticalSlot[] slots = TacticalSlot.values();
 
             for (int i = 0; i < widgets.size; i++) {
                 final TacticalContainer widget = widgets.get(i);
-                final TacticalSaveData tacticalSaveData = tacticalsSaveData.getTacticals().get(i);
+                final TacticalSaveData tacticalSaveData = tacticalsSaveData.getTacticals().get(slots[i]);
                 widget.setData(tacticalSaveData);
             }
         }
     }
 
     public static class TacticalContainer extends Table {
-
         private final Image iconImage;
 
         public TacticalContainer() {
-            setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#a9a29c")));
-
             iconImage = new Image();
             iconImage.setScaling(Scaling.fit);
             add(iconImage).grow().pad(10);
@@ -358,6 +372,7 @@ public class MissionsPage extends APage {
             final ObjectMap<String, TacticalGameData> tacticals = tacticalsGameData.getTacticals();
             final TacticalGameData tacticalGameData = tacticals.get(tacticalSaveData.getName());
             iconImage.setDrawable(tacticalGameData.getIcon());
+            setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf(tacticalSaveData.getRarity().getBackgroundHex())));
         }
 
         private void setEmpty() {
@@ -447,7 +462,7 @@ public class MissionsPage extends APage {
         final Image shovel = new Image(Resources.getDrawable("lootPage/shovel-icon"));
         shovel.setScaling(Scaling.fit);
 
-        final OffsetButton upgradeButton = new OffsetButton(OffsetButton.Style.ORANGE_35) {
+        return new OffsetButton(OffsetButton.Style.ORANGE_35) {
             @Override
             protected void buildInner(Table container) {
                 super.buildInner(container);
@@ -456,7 +471,6 @@ public class MissionsPage extends APage {
                 container.add(bladeHandleWrapper).growX().padRight(10);
             }
         };
-        return upgradeButton;
     }
 
     private static OffsetButton constructLootButton() {
@@ -466,14 +480,13 @@ public class MissionsPage extends APage {
         final Image shovel = new Image(Resources.getDrawable("lootPage/shovel-icon"));
         shovel.setScaling(Scaling.fit);
 
-        final OffsetButton lootButton = new OffsetButton(OffsetButton.Style.GREEN_35) {
+        return new OffsetButton(OffsetButton.Style.GREEN_35) {
             protected void buildInner(Table container) {
                 super.buildInner(container);
                 container.add(lootButtonText).expandX().right();
                 container.add(shovel);
             }
         };
-        return lootButton;
     }
 
     private static OffsetButton constructAutoLootButton() {
@@ -483,15 +496,13 @@ public class MissionsPage extends APage {
         final Image shovel = new Image(Resources.getDrawable("lootPage/shovel-icon"));
         shovel.setScaling(Scaling.fit);
 
-        final OffsetButton autoLootButton = new OffsetButton(OffsetButton.Style.ORANGE_35) {
+        return new OffsetButton(OffsetButton.Style.ORANGE_35) {
             protected void buildInner(Table container) {
                 super.buildInner(container);
                 container.add(autoLootButtonText).expandX().right();
                 container.add(shovel);
             }
         };
-
-        return autoLootButton;
     }
 
     @Override

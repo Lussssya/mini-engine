@@ -1,8 +1,8 @@
 <root>
-    <militaries type="weapon" icon="lootPage/angel-bow"/>
-    <militaries type="melee" icon="lootPage/hard-armor"/>
-    <militaries type="head" icon="lootPage/magic-ring"/>
-    <militaries type="body" icon="lootPage/star-staff"/>
-    <militaries type="gloves" icon="lootPage/angel-bow"/>
-    <militaries type="shoes" icon="lootPage/hard-armor"/>
+    <military name="angel-bow" icon="lootPage/angel-bow"/>
+    <military name="hard-armor" icon="lootPage/hard-armor"/>
+    <military name="magic-ring" icon="lootPage/magic-ring"/>
+    <military name="star-staff" icon="lootPage/star-staff"/>
+    <military name="bloody-grail" icon="lootPage/bloody-grail"/>
+    <military name="mystic-staff" icon="lootPage/mystic-staff"/>
 </root>

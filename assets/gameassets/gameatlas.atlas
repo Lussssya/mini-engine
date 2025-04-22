@@ -6,7 +6,7 @@ filter: Linear, Linear
 repeat: none
 basics/ui-white-squircle-10
   rotate: false
-  xy: 244, 5
+  xy: 1608, 813
   size: 23, 23
   split: 11, 11, 11, 11
   pad: 0, 0, 0, 0
@@ -24,7 +24,7 @@ basics/ui-white-squircle-12
   index: -1
 basics/ui-white-squircle-15
   rotate: false
-  xy: 1723, 748
+  xy: 844, 528
   size: 33, 33
   split: 16, 16, 16, 16
   pad: 0, 0, 0, 0
@@ -33,7 +33,7 @@ basics/ui-white-squircle-15
   index: -1
 basics/ui-white-squircle-16
   rotate: false
-  xy: 1758, 726
+  xy: 1670, 565
   size: 35, 35
   split: 17, 17, 17, 17
   pad: 0, 0, 0, 0
@@ -51,7 +51,7 @@ basics/ui-white-squircle-19
   index: -1
 basics/ui-white-squircle-20
   rotate: false
-  xy: 610, 241
+  xy: 1625, 642
   size: 43, 43
   split: 21, 21, 21, 21
   pad: 0, 0, 0, 0
@@ -60,7 +60,7 @@ basics/ui-white-squircle-20
   index: -1
 basics/ui-white-squircle-25
   rotate: false
-  xy: 1926, 774
+  xy: 1040, 553
   size: 53, 53
   split: 26, 26, 26, 26
   pad: 0, 0, 0, 0
@@ -69,7 +69,7 @@ basics/ui-white-squircle-25
   index: -1
 basics/ui-white-squircle-30
   rotate: false
-  xy: 1597, 718
+  xy: 1479, 565
   size: 63, 63
   split: 31, 31, 31, 31
   pad: 0, 0, 0, 0
@@ -78,7 +78,7 @@ basics/ui-white-squircle-30
   index: -1
 basics/ui-white-squircle-35
   rotate: false
-  xy: 1120, 640
+  xy: 587, 93
   size: 73, 73
   split: 36, 36, 36, 36
   pad: 0, 0, 0, 0
@@ -87,7 +87,7 @@ basics/ui-white-squircle-35
   index: -1
 basics/ui-white-squircle-40
   rotate: false
-  xy: 917, 559
+  xy: 610, 323
   size: 83, 83
   split: 41, 41, 41, 41
   pad: 0, 0, 0, 0
@@ -96,7 +96,7 @@ basics/ui-white-squircle-40
   index: -1
 basics/ui-white-squircle-40-top
   rotate: false
-  xy: 1182, 415
+  xy: 1946, 752
   size: 85, 45
   split: 40, 41, 40, 1
   pad: 0, 0, 0, 0
@@ -105,7 +105,7 @@ basics/ui-white-squircle-40-top
   index: -1
 basics/ui-white-squircle-50
   rotate: false
-  xy: 1002, 500
+  xy: 1780, 728
   size: 103, 103
   split: 51, 51, 51, 51
   pad: 0, 0, 0, 0
@@ -114,7 +114,7 @@ basics/ui-white-squircle-50
   index: -1
 basics/ui-white-squircle-60
   rotate: false
-  xy: 1471, 687
+  xy: 1544, 687
   size: 124, 124
   split: 60, 60, 60, 60
   pad: 0, 0, 0, 0
@@ -132,7 +132,7 @@ basics/ui-white-squircle-70
   index: -1
 basics/ui-white-squircle-8
   rotate: false
-  xy: 2019, 908
+  xy: 515, 558
   size: 19, 19
   split: 9, 9, 9, 9
   pad: 0, 0, 0, 0
@@ -150,7 +150,7 @@ basics/ui-white-squircle-90
   index: -1
 basics/ui-white-squircle-border-10
   rotate: false
-  xy: 560, 1
+  xy: 1734, 617
   size: 38, 38
   split: 18, 18, 18, 18
   pad: 0, 0, 0, 0
@@ -159,7 +159,7 @@ basics/ui-white-squircle-border-10
   index: -1
 basics/ui-white-squircle-border-16
   rotate: false
-  xy: 1795, 725
+  xy: 914, 530
   size: 31, 31
   split: 15, 15, 15, 15
   pad: 0, 0, 0, 0
@@ -168,7 +168,7 @@ basics/ui-white-squircle-border-16
   index: -1
 basics/ui-white-squircle-border-20
   rotate: false
-  xy: 1269, 421
+  xy: 1885, 731
   size: 39, 39
   split: 19, 19, 19, 19
   pad: 0, 0, 0, 0
@@ -177,7 +177,7 @@ basics/ui-white-squircle-border-20
   index: -1
 basics/ui-white-squircle-border-25
   rotate: false
-  xy: 764, 507
+  xy: 1574, 636
   size: 49, 49
   split: 24, 24, 24, 24
   pad: 0, 0, 0, 0
@@ -186,7 +186,7 @@ basics/ui-white-squircle-border-25
   index: -1
 basics/ui-white-squircle-border-30
   rotate: false
-  xy: 1662, 722
+  xy: 1885, 772
   size: 59, 59
   split: 29, 29, 29, 29
   pad: 0, 0, 0, 0
@@ -195,7 +195,7 @@ basics/ui-white-squircle-border-30
   index: -1
 basics/ui-white-squircle-border-35
   rotate: false
-  xy: 610, 353
+  xy: 1333, 584
   size: 69, 69
   split: 34, 34, 34, 34
   pad: 0, 0, 0, 0
@@ -204,7 +204,7 @@ basics/ui-white-squircle-border-35
   index: -1
 basics/ui-white-squircle-border-40
   rotate: false
-  xy: 1107, 484
+  xy: 602, 498
   size: 79, 79
   split: 39, 39, 39, 39
   pad: 0, 0, 0, 0
@@ -213,7 +213,7 @@ basics/ui-white-squircle-border-40
   index: -1
 basics/ui-white-squircle-border-42
   rotate: false
-  xy: 917, 474
+  xy: 704, 418
   size: 83, 83
   split: 41, 41, 41, 41
   pad: 0, 0, 0, 0
@@ -222,7 +222,7 @@ basics/ui-white-squircle-border-42
   index: -1
 basics/ui-white-squircle-border-50
   rotate: false
-  xy: 1300, 569
+  xy: 1085, 614
   size: 99, 99
   split: 49, 49, 49, 49
   pad: 0, 0, 0, 0
@@ -231,14 +231,14 @@ basics/ui-white-squircle-border-50
   index: -1
 basics/ui-white-squircle-border-50.9 copy
   rotate: false
-  xy: 1010, 605
+  xy: 1670, 728
   size: 108, 108
   orig: 108, 108
   offset: 0, 0
   index: -1
 basics/ui-white-squircle-border-bottom-35
   rotate: false
-  xy: 1946, 829
+  xy: 1170, 555
   size: 71, 50
   split: 35, 35, 10, 38
   pad: 0, 0, 0, 0
@@ -256,7 +256,7 @@ basics/ui-white-squircle-border-bottom-62
   index: -1
 basics/ui-white-squircle-border-right-35
   rotate: false
-  xy: 1120, 565
+  xy: 587, 18
   size: 73, 73
   split: 14, 58, 36, 36
   pad: 0, 0, 0, 0
@@ -265,7 +265,7 @@ basics/ui-white-squircle-border-right-35
   index: -1
 basics/ui-white-squircle-border-thick-25
   rotate: false
-  xy: 602, 500
+  xy: 610, 244
   size: 75, 77
   split: 36, 36, 37, 37
   pad: 0, 0, 0, 0
@@ -274,7 +274,7 @@ basics/ui-white-squircle-border-thick-25
   index: -1
 basics/ui-white-squircle-border-top-35
   rotate: false
-  xy: 1107, 429
+  xy: 1404, 575
   size: 73, 53
   split: 36, 36, 42, 9
   pad: 0, 0, 0, 0
@@ -283,7 +283,7 @@ basics/ui-white-squircle-border-top-35
   index: -1
 basics/ui-white-squircle-border-top-50
   rotate: false
-  xy: 1195, 607
+  xy: 1186, 607
   size: 103, 61
   split: 51, 51, 50, 9
   pad: 0, 0, 0, 0
@@ -301,7 +301,7 @@ basics/ui-white-squircle-border-top-62
   index: -1
 basics/ui-white-squircle-bottom-25
   rotate: false
-  xy: 1981, 774
+  xy: 1519, 630
   size: 53, 53
   split: 26, 26, 26, 26
   pad: 0, 0, 0, 0
@@ -310,7 +310,7 @@ basics/ui-white-squircle-bottom-25
   index: -1
 basics/ui-white-squircle-bottom-35
   rotate: false
-  xy: 1608, 783
+  xy: 965, 553
   size: 73, 53
   split: 36, 36, 12, 40
   pad: 0, 0, 0, 0
@@ -319,7 +319,7 @@ basics/ui-white-squircle-bottom-35
   index: -1
 basics/ui-white-squircle-bottom-40
   rotate: false
-  xy: 679, 503
+  xy: 880, 563
   size: 83, 53
   split: 41, 41, 9, 43
   pad: 0, 0, 0, 0
@@ -328,7 +328,7 @@ basics/ui-white-squircle-bottom-40
   index: -1
 basics/ui-white-squircle-bottom-50
   rotate: false
-  xy: 1195, 552
+  xy: 1414, 630
   size: 103, 53
   split: 51, 51, 4, 48
   pad: 0, 0, 0, 0
@@ -346,7 +346,7 @@ basics/ui-white-squircle-bottom-95
   index: -1
 basics/ui-white-squircle-bottom-left-35
   rotate: false
-  xy: 1758, 763
+  xy: 1291, 595
   size: 40, 73
   split: 37, 2, 13, 59
   pad: 0, 0, 0, 0
@@ -355,7 +355,7 @@ basics/ui-white-squircle-bottom-left-35
   index: -1
 basics/ui-white-squircle-bottom-right-35
   rotate: false
-  xy: 1800, 758
+  xy: 1544, 555
   size: 40, 73
   split: 10, 29, 22, 50
   pad: 0, 0, 0, 0
@@ -364,7 +364,7 @@ basics/ui-white-squircle-bottom-right-35
   index: -1
 basics/ui-white-squircle-corners-35
   rotate: false
-  xy: 602, 424
+  xy: 593, 168
   size: 74, 74
   split: 35, 35, 35, 35
   pad: 0, 0, 0, 0
@@ -373,7 +373,7 @@ basics/ui-white-squircle-corners-35
   index: -1
 basics/ui-white-squircle-left
   rotate: false
-  xy: 1946, 881
+  xy: 514, 41
   size: 71, 142
   split: 55, 14, 70, 70
   pad: 0, 0, 0, 0
@@ -382,7 +382,7 @@ basics/ui-white-squircle-left
   index: -1
 basics/ui-white-squircle-left-20
   rotate: false
-  xy: 2019, 977
+  xy: 788, 510
   size: 26, 46
   split: 21, 1, 0, 0
   pad: 0, 0, 21, 21
@@ -391,7 +391,7 @@ basics/ui-white-squircle-left-20
   index: -1
 basics/ui-white-squircle-left-25
   rotate: false
-  xy: 593, 186
+  xy: 1670, 602
   size: 30, 53
   split: 26, 3, 26, 26
   pad: 0, 0, 0, 0
@@ -400,7 +400,7 @@ basics/ui-white-squircle-left-25
   index: -1
 basics/ui-white-squircle-left-35
   rotate: false
-  xy: 1842, 758
+  xy: 1586, 561
   size: 40, 73
   split: 36, 3, 36, 36
   pad: 0, 0, 0, 0
@@ -409,7 +409,7 @@ basics/ui-white-squircle-left-35
   index: -1
 basics/ui-white-squircle-right
   rotate: false
-  xy: 514, 41
+  xy: 1341, 655
   size: 71, 142
   split: 14, 55, 70, 70
   pad: 0, 0, 0, 0
@@ -418,7 +418,7 @@ basics/ui-white-squircle-right
   index: -1
 basics/ui-white-squircle-right-20
   rotate: false
-  xy: 2019, 929
+  xy: 816, 515
   size: 26, 46
   split: 1, 21, 21, 21
   pad: 0, 0, 0, 0
@@ -427,7 +427,7 @@ basics/ui-white-squircle-right-20
   index: -1
 basics/ui-white-squircle-right-25
   rotate: false
-  xy: 625, 186
+  xy: 1702, 602
   size: 30, 53
   split: 2, 27, 26, 26
   pad: 0, 0, 0, 0
@@ -436,7 +436,7 @@ basics/ui-white-squircle-right-25
   index: -1
 basics/ui-white-squircle-right-35
   rotate: false
-  xy: 1884, 758
+  xy: 1628, 567
   size: 40, 73
   split: 4, 35, 36, 36
   pad: 0, 0, 0, 0
@@ -463,7 +463,7 @@ basics/ui-white-squircle-strock
   index: -1
 basics/ui-white-squircle-strock-1
   rotate: false
-  xy: 610, 286
+  xy: 815, 563
   size: 63, 65
   split: 30, 32, 32, 32
   pad: 0, 0, 0, 0
@@ -472,7 +472,7 @@ basics/ui-white-squircle-strock-1
   index: -1
 basics/ui-white-squircle-top-20
   rotate: false
-  xy: 515, 551
+  xy: 1243, 579
   size: 46, 26
   split: 22, 22, 22, 2
   pad: 0, 0, 0, 0
@@ -481,7 +481,7 @@ basics/ui-white-squircle-top-20
   index: -1
 basics/ui-white-squircle-top-35
   rotate: false
-  xy: 1683, 783
+  xy: 1095, 559
   size: 73, 53
   split: 36, 36, 44, 8
   pad: 0, 0, 0, 0
@@ -490,7 +490,7 @@ basics/ui-white-squircle-top-35
   index: -1
 basics/ui-white-squircle-top-50
   rotate: false
-  xy: 1002, 445
+  xy: 683, 503
   size: 103, 53
   split: 51, 51, 50, 2
   pad: 0, 0, 0, 0
@@ -499,7 +499,7 @@ basics/ui-white-squircle-top-50
   index: -1
 basics/ui-white-squircle-top-62
   rotate: false
-  xy: 881, 644
+  xy: 1670, 657
   size: 127, 69
   split: 63, 63, 65, 3
   pad: 0, 0, 0, 0
@@ -508,7 +508,7 @@ basics/ui-white-squircle-top-62
   index: -1
 basics/white-pixel
   rotate: false
-  xy: 1407, 801
+  xy: 881, 723
   size: 10, 10
   split: 3, 3, 3, 3
   pad: 0, 0, 0, 0
@@ -517,9 +517,16 @@ basics/white-pixel
   index: -1
 lootPage/angel-bow
   rotate: false
-  xy: 815, 526
+  xy: 1946, 799
   size: 100, 102
   orig: 100, 102
+  offset: 0, 0
+  index: -1
+lootPage/bloody-grail
+  rotate: false
+  xy: 1946, 903
+  size: 100, 120
+  orig: 100, 120
   offset: 0, 0
   index: -1
 lootPage/chidori-icon
@@ -545,7 +552,7 @@ lootPage/flag-icon
   index: -1
 lootPage/hard-armor
   rotate: false
-  xy: 1401, 571
+  xy: 1799, 628
   size: 100, 98
   orig: 100, 98
   offset: 0, 0
@@ -566,9 +573,16 @@ lootPage/kunai-icon
   index: -1
 lootPage/magic-ring
   rotate: false
-  xy: 1503, 590
+  xy: 881, 618
   size: 100, 95
   orig: 100, 95
+  offset: 0, 0
+  index: -1
+lootPage/mystic-staff
+  rotate: false
+  xy: 983, 608
+  size: 100, 105
+  orig: 100, 105
   offset: 0, 0
   index: -1
 lootPage/pet-cat-orange
@@ -587,7 +601,7 @@ lootPage/punch-icon
   index: -1
 lootPage/rassengan-icon
   rotate: false
-  xy: 1341, 671
+  xy: 1414, 685
   size: 128, 126
   orig: 150, 150
   offset: 10, 14
@@ -608,14 +622,14 @@ lootPage/shuriken-icon
   index: -1
 lootPage/star-icon
   rotate: false
-  xy: 1723, 715
+  xy: 879, 530
   size: 33, 31
   orig: 41, 36
   offset: 4, 3
   index: -1
 lootPage/star-staff
   rotate: false
-  xy: 1188, 462
+  xy: 602, 408
   size: 100, 88
   orig: 100, 88
   offset: 0, 0
