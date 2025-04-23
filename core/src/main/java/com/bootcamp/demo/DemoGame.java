@@ -65,7 +65,7 @@ public class DemoGame extends Game {
         final MilitaryGearsSaveData militariesSaveData = new MilitaryGearsSaveData();
 
         MilitaryGearSaveData gear1 = createMilitary("angel-bow", MilitarySlot.WEAPON, 1, 28, 'D', MilitaryRarity.ELITE);
-        setStats(gear1, new Object[][]{
+        setMilitaryStats(gear1, new Object[][]{
             {"hp", 2.5f},
             {"atk", 918f},
             {"dodge", 5.67f},
@@ -74,22 +74,22 @@ public class DemoGame extends Game {
         });
 
         MilitaryGearSaveData gear2 = createMilitary("hard-armor", MilitarySlot.MELEE, 2, 28, 'D', MilitaryRarity.HARDENED);
-        setStats(gear2, new Object[][]{
+        setMilitaryStats(gear2, new Object[][]{
             {"regen", 1.5f}
         });
 
         MilitaryGearSaveData gear3 = createMilitary("magic-ring", MilitarySlot.HEAD, 1, 25, 'A', MilitaryRarity.OBLIVION);
-        setStats(gear3, new Object[][]{
+        setMilitaryStats(gear3, new Object[][]{
             {"combo", 2f}
         });
 
         MilitaryGearSaveData gear4 = createMilitary("star-staff", MilitarySlot.BODY, 1, 29, 'C', MilitaryRarity.ETHEREAL);
-        setStats(gear4, new Object[][]{
+        setMilitaryStats(gear4, new Object[][]{
             {"stun", 2f}
         });
 
         MilitaryGearSaveData gear5 = createMilitary("bloody-grail", MilitarySlot.GLOVES, 1, 23, 'C', MilitaryRarity.NUCLEAR);
-        setStats(gear5, new Object[][]{
+        setMilitaryStats(gear5, new Object[][]{
             {"dodge", 2.5f}
         });
 
@@ -116,7 +116,7 @@ public class DemoGame extends Game {
         return military;
     }
 
-    private void setStats(MilitaryGearSaveData gear, Object[][] values) {
+    private void setMilitaryStats(MilitaryGearSaveData gear, Object[][] values) {
         for (Object[] pair : values) {
             StatSaveData.StatType statType = StatSaveData.StatType.valueOf(((String) pair[0]).toUpperCase());
             float value = (float) pair[1];
@@ -133,25 +133,25 @@ public class DemoGame extends Game {
         final TacticalsSaveData tacticalsSaveData = new TacticalsSaveData();
 
         TacticalSaveData tactical1 = createTactical("chidori", TacticalSlot.SLOT_1, 4, 1, TacticalRarity.EPIC);
-        setStats(tactical1, new Object[][]{
+        setTacticalStats(tactical1, new Object[][]{
             {"hp", 648f},
             {"atk", 226f}
         });
 
         TacticalSaveData tactical2 = createTactical("rassengan", TacticalSlot.SLOT_2, 3, 1, TacticalRarity.COMMON);
-        setStats(tactical2, new Object[][]{
+        setTacticalStats(tactical2, new Object[][]{
             {"hp", 586f},
             {"atk", 202f}
         });
 
         TacticalSaveData tactical3 = createTactical("kunai", TacticalSlot.SLOT_3, 6, 2, TacticalRarity.EXOTIC);
-        setStats(tactical3, new Object[][]{
+        setTacticalStats(tactical3, new Object[][]{
             {"hp", 713f},
             {"atk", 261f}
         });
 
         TacticalSaveData tactical4 = createTactical("shuriken", TacticalSlot.SLOT_4, 3, 1, TacticalRarity.LEGENDARY);
-        setStats(tactical4, new Object[][]{
+        setTacticalStats(tactical4, new Object[][]{
             {"hp", 586f},
             {"atk", 202f}
         });
@@ -174,7 +174,7 @@ public class DemoGame extends Game {
         return tactical;
     }
 
-    private void setStats(TacticalSaveData tactical, Object[][] values) {
+    private void setTacticalStats(TacticalSaveData tactical, Object[][] values) {
         for (Object[] pair : values) {
             StatSaveData.StatType statType = StatSaveData.StatType.valueOf(((String) pair[0]).toUpperCase());
             float value = (float) pair[1];

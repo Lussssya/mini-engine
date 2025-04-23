@@ -10,6 +10,8 @@ import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.Scaling;
 import com.bootcamp.demo.data.game.*;
 import com.bootcamp.demo.data.save.*;
+import com.bootcamp.demo.dialogs.TestDialog;
+import com.bootcamp.demo.dialogs.core.DialogManager;
 import com.bootcamp.demo.engine.Labels;
 import com.bootcamp.demo.engine.Resources;
 import com.bootcamp.demo.engine.Squircle;
@@ -21,9 +23,10 @@ import com.bootcamp.demo.managers.API;
 import com.bootcamp.demo.pages.core.APage;
 import com.bootcamp.demo.data.save.StatSaveData.StatType;
 import com.bootcamp.demo.data.save.MilitaryGearSaveData.MilitarySlot;
-import lombok.Getter;
 import com.bootcamp.demo.data.save.TacticalSaveData.TacticalSlot;
-
+import com.bootcamp.demo.pages.core.PageManager;
+import lombok.Getter;
+import sun.jvm.hotspot.debugger.win32.coff.TestParser;
 
 
 public class MissionsPage extends APage {
@@ -241,6 +244,8 @@ public class MissionsPage extends APage {
         private final Label levelLabel;
         private final Label tierLabel;
         private final Table starsTable;
+        @Getter
+        private final ObjectMap<StatType, StatSaveData> militaryStats;
 
         public MilitaryGearContainer() {
             iconImage = new Image();
@@ -249,6 +254,7 @@ public class MissionsPage extends APage {
             levelLabel = Labels.make(GameFont.BOLD_18, Color.valueOf("#f5eae3"));
             tierLabel = Labels.make(GameFont.BOLD_18, Color.valueOf("#f5eae3"));
             starsTable = new Table();
+            militaryStats = new ObjectMap<>();
 
             add(iconImage);
 
@@ -267,6 +273,63 @@ public class MissionsPage extends APage {
             addActor(starsLayout);
             addActor(levelLayout);
             addActor(tierLayout);
+
+            setOnClick(() -> {
+                final DialogManager dialogManager = API.get(DialogManager.class);
+                final TestDialog dialog = API.get(DialogManager.class).getDialog(TestDialog.class);
+
+                dialogManager.show(TestDialog.class);
+
+                final Table currentGear = this.cloneToTable();
+
+                final Table statsTable = new Table();
+                statsTable.padBottom(30).defaults().pad(5);
+                for (ObjectMap.Entry<StatType, StatSaveData> entry : militaryStats.entries()) {
+                    final StatType type = entry.key;
+                    final StatSaveData stat = entry.value;
+
+                    final String text = type.name() + ": " + stat.getValue();
+
+                    Label statLabel = Labels.make(GameFont.BOLD_18, Color.BLACK, text);
+                    statsTable.row();
+                    statsTable.add(statLabel).left();
+                }
+
+                final Label exit = Labels.make(GameFont.BOLD_20, Color.valueOf("#f5eae3"), "EXIT");
+
+                final OffsetButton button = new OffsetButton(OffsetButton.Style.GREEN_35) {
+                    @Override
+                    protected void buildInner(Table container) {
+                        super.buildInner(container);
+                        container.add(exit);
+                    }
+                };
+
+                final Table gearStatsWrapper = new Table();
+                gearStatsWrapper.pad(20).defaults().space(30);
+                gearStatsWrapper.add(currentGear).size(300);
+                gearStatsWrapper.add(statsTable);
+
+                final Table window = new Table();
+                window.setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#f5eae3")));
+                window.pad(20).defaults().space(30);
+                window.add(gearStatsWrapper).grow();
+                window.row();
+                window.add(button).expandY().bottom().height(200).growX();
+
+                final Table layout = new Table();
+                layout.pad(150);
+                layout.add(window).expand();
+                layout.setFillParent(true);
+
+                dialog.pad(20);
+                dialog.addActor(layout);
+
+                button.setOnClick(() -> {
+                    dialogManager.hide(TestDialog.class);
+                    dialogManager.dispose();
+                });
+            });
         }
 
         public void setData(MilitaryGearSaveData militarySaveData) {
@@ -278,12 +341,13 @@ public class MissionsPage extends APage {
             final MilitaryGearsGameData militariesGameData = API.get(GameData.class).getMilitaryGearsGameData();
             final MilitaryGearGameData militaryGameData = militariesGameData.getMilitaries().get(militarySaveData.getName());
 
-            System.out.println(militariesGameData.getMilitaries());
-            System.out.println(militarySaveData.getName());
-
             iconImage.setDrawable(militaryGameData.getIcon());
             levelLabel.setText("Lv." + militarySaveData.getLevel());
             tierLabel.setText(String.valueOf(militarySaveData.getTier()));
+            for (StatType statType : militarySaveData.getStats().getStats().keys()) {
+                StatSaveData stat = militarySaveData.getStats().getStats().get(statType);
+                militaryStats.put(statType, stat);
+            }
 
             setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf(militarySaveData.getRarity().getBackgroundHex())));
             updateStars(militarySaveData.getStarCount());
@@ -304,6 +368,47 @@ public class MissionsPage extends APage {
             levelLabel.setText("");
             tierLabel.setText("");
             starsTable.clear();
+        }
+
+        public Table cloneToTable() {
+            final Table clone = new Table();
+
+            Image clonedIcon = new Image(iconImage.getDrawable());
+            clonedIcon.setScaling(Scaling.fit);
+
+            Label clonedLevel = Labels.make(GameFont.BOLD_18, Color.valueOf("#f5eae3"), levelLabel.getText().toString());
+            Label clonedTier = Labels.make(GameFont.BOLD_18, Color.valueOf("#f5eae3"), tierLabel.getText().toString());
+
+            Table clonedStarsTable = new Table();
+            for (int i = 0; i < starsTable.getChildren().size; i++) {
+                Image star = new Image(Resources.getDrawable("lootPage/star-icon"));
+                star.setScaling(Scaling.none);
+                clonedStarsTable.add(star).size(30);
+            }
+
+            if (getBackground() != null) {
+                clone.setBackground(getBackground());
+            }
+
+            clone.add(clonedIcon).pad(5).row();
+
+            Table starsLayout = new Table();
+            starsLayout.pad(15).add(clonedStarsTable).expand().top().left();
+            starsLayout.setFillParent(true);
+
+            Table levelLayout = new Table();
+            levelLayout.pad(15).add(clonedLevel).expand().bottom().left();
+            levelLayout.setFillParent(true);
+
+            Table tierLayout = new Table();
+            tierLayout.pad(15).add(clonedTier).expand().bottom().right();
+            tierLayout.setFillParent(true);
+
+            clone.addActor(starsLayout);
+            clone.addActor(levelLayout);
+            clone.addActor(tierLayout);
+
+            return clone;
         }
     }
 
@@ -474,8 +579,7 @@ public class MissionsPage extends APage {
     }
 
     private static OffsetButton constructLootButton() {
-        final Label lootButtonText = Labels.make(GameFont.BOLD_22, Color.valueOf("#f5eae3"));
-        lootButtonText.setText("LOOT");
+        final Label lootButtonText = Labels.make(GameFont.BOLD_22, Color.valueOf("#f5eae3"), "LOOT");
 
         final Image shovel = new Image(Resources.getDrawable("lootPage/shovel-icon"));
         shovel.setScaling(Scaling.fit);
@@ -490,8 +594,7 @@ public class MissionsPage extends APage {
     }
 
     private static OffsetButton constructAutoLootButton() {
-        final Label autoLootButtonText = Labels.make(GameFont.BOLD_22, Color.valueOf("#f5eae3"));
-        autoLootButtonText.setText("Auto Loot");
+        final Label autoLootButtonText = Labels.make(GameFont.BOLD_22, Color.valueOf("#f5eae3"), "Auto Loot");
 
         final Image shovel = new Image(Resources.getDrawable("lootPage/shovel-icon"));
         shovel.setScaling(Scaling.fit);
@@ -499,7 +602,7 @@ public class MissionsPage extends APage {
         return new OffsetButton(OffsetButton.Style.ORANGE_35) {
             protected void buildInner(Table container) {
                 super.buildInner(container);
-                container.add(autoLootButtonText).expandX().right();
+                container.add(autoLootButtonText);
                 container.add(shovel);
             }
         };
