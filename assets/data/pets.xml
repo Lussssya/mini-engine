@@ -1,0 +1,5 @@
+<root>
+    <pet name="cat" icon="lootPage/pet-cat-orange"/>
+    <pet name="beetle" icon="lootPage/pet-beetle"/>
+    <pet name="dragon" icon="lootPage/pet-baby-dragon"/>
+</root>

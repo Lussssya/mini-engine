@@ -15,9 +15,9 @@ public class MilitaryGearsGameData implements IGameData {
 
         final Array<XmlReader.Element> militaryGearsXml = rootXml.getChildrenByName("military");
 
-        for (XmlReader.Element tacticalXml : militaryGearsXml) {
+        for (XmlReader.Element militaryXml : militaryGearsXml) {
             final MilitaryGearGameData militaryGearGameData = new MilitaryGearGameData();
-            militaryGearGameData.load(tacticalXml);
+            militaryGearGameData.load(militaryXml);
             militaries.put(militaryGearGameData.getName(), militaryGearGameData);
         }
     }

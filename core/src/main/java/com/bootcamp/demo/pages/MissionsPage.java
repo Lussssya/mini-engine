@@ -10,8 +10,6 @@ import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.Scaling;
 import com.bootcamp.demo.data.game.*;
 import com.bootcamp.demo.data.save.*;
-import com.bootcamp.demo.dialogs.TestDialog;
-import com.bootcamp.demo.dialogs.core.DialogManager;
 import com.bootcamp.demo.engine.Labels;
 import com.bootcamp.demo.engine.Resources;
 import com.bootcamp.demo.engine.Squircle;
@@ -21,19 +19,15 @@ import com.bootcamp.demo.engine.widgets.WidgetsContainer;
 import com.bootcamp.demo.localization.GameFont;
 import com.bootcamp.demo.managers.API;
 import com.bootcamp.demo.pages.core.APage;
-import com.bootcamp.demo.data.save.StatSaveData.StatType;
-import com.bootcamp.demo.data.save.MilitaryGearSaveData.MilitarySlot;
-import com.bootcamp.demo.data.save.TacticalSaveData.TacticalSlot;
-import com.bootcamp.demo.pages.core.PageManager;
 import lombok.Getter;
-import sun.jvm.hotspot.debugger.win32.coff.TestParser;
-
 
 public class MissionsPage extends APage {
 
     private StatsContainer statsContainer;
     private MilitaryGearsContainer militaryGearsContainer;
     private TacticalsContainer tacticalsContainer;
+    private PetContainer petContainer;
+    private FlagContainer flagContainer;
 
     @Override
     protected void constructContent(Table content) {
@@ -117,7 +111,7 @@ public class MissionsPage extends APage {
             super(3);
             pad(15).defaults().space(30).height(60).growX();
 
-            for (int i = 0; i < StatType.values().length; i++) {
+            for (int i = 0; i < Stat.values().length; i++) {
                 final StatWidget widget = new StatWidget();
                 add(widget);
             }
@@ -127,7 +121,7 @@ public class MissionsPage extends APage {
             final Array<StatWidget> widgets = getWidgets();
 
             int i = 0;
-            for (StatType type : StatType.values()) {
+            for (Stat type : Stat.values()) {
                 final StatSaveData statSaveData = statsSaveData.getStats().get(type);
                 final StatWidget widget = widgets.get(i++);
 
@@ -151,10 +145,11 @@ public class MissionsPage extends APage {
                 return;
             }
 
-            final StatType type = statSaveData.getName();
+            final Stat type = statSaveData.getName();
+            final String identifier = type.getType() == Stat.StatType.ADDITIVE ? "" : "%";
 
             title.setText(type.getTitle());
-            value.setText(statSaveData.getValue() + type.getIdentifier());
+            value.setText(statSaveData.getValue() + identifier);
         }
 
         public void setEmpty() {
@@ -219,7 +214,7 @@ public class MissionsPage extends APage {
             super(3);
             defaults().space(30).size(200);
 
-            for (MilitarySlot slot : MilitarySlot.values()) {
+            for (MilitaryGearGameData.Slot slot : MilitaryGearGameData.Slot.values()) {
                 final MilitaryGearContainer widget = new MilitaryGearContainer();
                 add(widget);
             }
@@ -227,11 +222,11 @@ public class MissionsPage extends APage {
 
         public void setData(MilitaryGearsSaveData militariesSaveData) {
             final Array<MilitaryGearContainer> widgets = getWidgets();
-            final ObjectMap<MilitarySlot, MilitaryGearSaveData> saveDataMap = militariesSaveData.getMilitaries();
+            final ObjectMap<MilitaryGearGameData.Slot, MilitaryGearSaveData> saveDataMap = militariesSaveData.getMilitaries();
 
             for (int i = 0; i < widgets.size; i++) {
                 MilitaryGearContainer widget = widgets.get(i);
-                MilitarySlot slot = MilitarySlot.values()[i];
+                MilitaryGearGameData.Slot slot = MilitaryGearGameData.Slot.values()[i];
 
                 MilitaryGearSaveData gearSave = saveDataMap.get(slot);
                 widget.setData(gearSave);
@@ -245,7 +240,7 @@ public class MissionsPage extends APage {
         private final Label tierLabel;
         private final Table starsTable;
         @Getter
-        private final ObjectMap<StatType, StatSaveData> militaryStats;
+        private final ObjectMap<Stat, StatSaveData> militaryStats;
 
         public MilitaryGearContainer() {
             iconImage = new Image();
@@ -273,63 +268,6 @@ public class MissionsPage extends APage {
             addActor(starsLayout);
             addActor(levelLayout);
             addActor(tierLayout);
-
-            setOnClick(() -> {
-                final DialogManager dialogManager = API.get(DialogManager.class);
-                final TestDialog dialog = API.get(DialogManager.class).getDialog(TestDialog.class);
-
-                dialogManager.show(TestDialog.class);
-
-                final Table currentGear = this.cloneToTable();
-
-                final Table statsTable = new Table();
-                statsTable.padBottom(30).defaults().pad(5);
-                for (ObjectMap.Entry<StatType, StatSaveData> entry : militaryStats.entries()) {
-                    final StatType type = entry.key;
-                    final StatSaveData stat = entry.value;
-
-                    final String text = type.name() + ": " + stat.getValue();
-
-                    Label statLabel = Labels.make(GameFont.BOLD_18, Color.BLACK, text);
-                    statsTable.row();
-                    statsTable.add(statLabel).left();
-                }
-
-                final Label exit = Labels.make(GameFont.BOLD_20, Color.valueOf("#f5eae3"), "EXIT");
-
-                final OffsetButton button = new OffsetButton(OffsetButton.Style.GREEN_35) {
-                    @Override
-                    protected void buildInner(Table container) {
-                        super.buildInner(container);
-                        container.add(exit);
-                    }
-                };
-
-                final Table gearStatsWrapper = new Table();
-                gearStatsWrapper.pad(20).defaults().space(30);
-                gearStatsWrapper.add(currentGear).size(300);
-                gearStatsWrapper.add(statsTable);
-
-                final Table window = new Table();
-                window.setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#f5eae3")));
-                window.pad(20).defaults().space(30);
-                window.add(gearStatsWrapper).grow();
-                window.row();
-                window.add(button).expandY().bottom().height(200).growX();
-
-                final Table layout = new Table();
-                layout.pad(150);
-                layout.add(window).expand();
-                layout.setFillParent(true);
-
-                dialog.pad(20);
-                dialog.addActor(layout);
-
-                button.setOnClick(() -> {
-                    dialogManager.hide(TestDialog.class);
-                    dialogManager.dispose();
-                });
-            });
         }
 
         public void setData(MilitaryGearSaveData militarySaveData) {
@@ -344,7 +282,7 @@ public class MissionsPage extends APage {
             iconImage.setDrawable(militaryGameData.getIcon());
             levelLabel.setText("Lv." + militarySaveData.getLevel());
             tierLabel.setText(String.valueOf(militarySaveData.getTier()));
-            for (StatType statType : militarySaveData.getStats().getStats().keys()) {
+            for (Stat statType : militarySaveData.getStats().getStats().keys()) {
                 StatSaveData stat = militarySaveData.getStats().getStats().get(statType);
                 militaryStats.put(statType, stat);
             }
@@ -364,58 +302,17 @@ public class MissionsPage extends APage {
         }
 
         public void setEmpty() {
-            iconImage.setDrawable(Resources.getDrawable("empty-gear"));
+            iconImage.setDrawable(Resources.getDrawable("lootPage/empty-gear"));
             levelLabel.setText("");
             tierLabel.setText("");
             starsTable.clear();
-        }
-
-        public Table cloneToTable() {
-            final Table clone = new Table();
-
-            Image clonedIcon = new Image(iconImage.getDrawable());
-            clonedIcon.setScaling(Scaling.fit);
-
-            Label clonedLevel = Labels.make(GameFont.BOLD_18, Color.valueOf("#f5eae3"), levelLabel.getText().toString());
-            Label clonedTier = Labels.make(GameFont.BOLD_18, Color.valueOf("#f5eae3"), tierLabel.getText().toString());
-
-            Table clonedStarsTable = new Table();
-            for (int i = 0; i < starsTable.getChildren().size; i++) {
-                Image star = new Image(Resources.getDrawable("lootPage/star-icon"));
-                star.setScaling(Scaling.none);
-                clonedStarsTable.add(star).size(30);
-            }
-
-            if (getBackground() != null) {
-                clone.setBackground(getBackground());
-            }
-
-            clone.add(clonedIcon).pad(5).row();
-
-            Table starsLayout = new Table();
-            starsLayout.pad(15).add(clonedStarsTable).expand().top().left();
-            starsLayout.setFillParent(true);
-
-            Table levelLayout = new Table();
-            levelLayout.pad(15).add(clonedLevel).expand().bottom().left();
-            levelLayout.setFillParent(true);
-
-            Table tierLayout = new Table();
-            tierLayout.pad(15).add(clonedTier).expand().bottom().right();
-            tierLayout.setFillParent(true);
-
-            clone.addActor(starsLayout);
-            clone.addActor(levelLayout);
-            clone.addActor(tierLayout);
-
-            return clone;
         }
     }
 
     private Table constructSecondaryGearSegment() {
         tacticalsContainer = new TacticalsContainer();
-        final FlagContainer flagContainer = new FlagContainer();
-        final PetContainer petContainer = new PetContainer();
+        petContainer = new PetContainer();
+        flagContainer = new FlagContainer();
 
         final Table tacticalsFlagWrapper = new Table();
         tacticalsFlagWrapper.defaults().space(30);
@@ -448,12 +345,11 @@ public class MissionsPage extends APage {
 
         public void setData(TacticalsSaveData tacticalsSaveData) {
             final Array<TacticalContainer> widgets = container.getWidgets();
-            TacticalSlot[] slots = TacticalSlot.values();
 
             for (int i = 0; i < widgets.size; i++) {
                 final TacticalContainer widget = widgets.get(i);
-                final TacticalSaveData tacticalSaveData = tacticalsSaveData.getTacticals().get(slots[i]);
-                widget.setData(tacticalSaveData);
+                final String name = tacticalsSaveData.getEquipped().get(i);
+                widget.setData(tacticalsSaveData.getInventory().get(name));
             }
         }
     }
@@ -486,25 +382,30 @@ public class MissionsPage extends APage {
     }
 
     public static class FlagContainer extends BorderedTable {
+        private final Image icon;
+
         public FlagContainer() {
             setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#c8c0b9")));
 
-            final Image flag = new Image(Resources.getDrawable("lootPage/flag-icon"));
-            flag.setScaling(Scaling.fit);
+            icon = new Image();
+            icon.setScaling(Scaling.fit);
 
-            add(flag);
+            add(icon);
         }
 
-        public void setData() {
+        public void setData(FlagsSaveData flagsSaveData) {
+            final FlagsGameData flagsGameData = API.get(GameData.class).getFlagsGameData();
+            final FlagGameData flagGameData = flagsGameData.getFlags().get(flagsSaveData.getEquipped()[0]);
+
+            icon.setDrawable(flagGameData.getIcon());
         }
     }
 
     public static class PetContainer extends BorderedTable {
+        private final Image icon;
+
         public PetContainer() {
             setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#c8c0b9")));
-
-            final Image cat = new Image(Resources.getDrawable("lootPage/pet-cat-orange"));
-            cat.setScaling(Scaling.fit);
 
             final Image home = new Image(Resources.getDrawable("lootPage/home-icon"));
             home.setScaling(Scaling.fit);
@@ -520,11 +421,18 @@ public class MissionsPage extends APage {
             buttonLayout.add(button).expand().bottom().growX().height(150);
             buttonLayout.setFillParent(true);
 
+            icon = new Image();
+            icon.setScaling(Scaling.fit);
+
             addActor(buttonLayout);
-            add(cat).expandX().fillX().padTop(30);
+            add(icon).expandX().fillX().padTop(30);
         }
 
-        public void setData() {
+        public void setData(PetsSaveData petsSaveData) {
+            final PetsGameData petsGameData = API.get(GameData.class).getPetsGameData();
+            final PetGameData petGameData = petsGameData.getPets().get(petsSaveData.getEquipped()[0]);
+
+            icon.setDrawable(petGameData.getIcon());
         }
     }
 
@@ -614,5 +522,7 @@ public class MissionsPage extends APage {
         statsContainer.setData(API.get(SaveData.class).getStatsSaveData());
         militaryGearsContainer.setData(API.get(SaveData.class).getMilitariesSaveData());
         tacticalsContainer.setData(API.get(SaveData.class).getTacticalsSaveData());
+        petContainer.setData(API.get(SaveData.class).getPetsSaveData());
+        flagContainer.setData(API.get(SaveData.class).getFlagsSaveData());
     }
 }

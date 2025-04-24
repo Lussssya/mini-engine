@@ -1,30 +1,48 @@
 package com.bootcamp.demo.data.save;
 
+import com.badlogic.gdx.utils.IntMap;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.bootcamp.demo.data.save.TacticalSaveData.TacticalSlot;
 import lombok.Getter;
 
 @Getter
 public class TacticalsSaveData implements Json.Serializable {
-    private final ObjectMap<TacticalSlot, TacticalSaveData> tacticals = new ObjectMap<>();
+    private final ObjectMap<String, TacticalSaveData> inventory = new ObjectMap<>();
+    private final IntMap<String> equipped = new IntMap<>();
 
     @Override
     public void write(Json json) {
-        for (ObjectMap.Entry<TacticalSlot, TacticalSaveData> entry : tacticals.entries()) {
-            json.writeValue(entry.key.name(), entry.value);
+        json.writeObjectStart("inventory");
+        for (ObjectMap.Entry<String, TacticalSaveData> entry : inventory.entries()) {
+            json.writeValue(entry.key, entry.value);
         }
+        json.writeObjectEnd();
+
+        json.writeObjectStart("equipped");
+        for (IntMap.Entry<String> entry : equipped.entries()) {
+            json.writeValue(String.valueOf(entry.key), entry.value);
+        }
+        json.writeObjectEnd();
     }
 
     @Override
     public void read(Json json, JsonValue jsonValue) {
-        tacticals.clear();
+        inventory.clear();
+        equipped.clear();
 
-        for (JsonValue value : jsonValue) {
-            TacticalSlot slot = TacticalSlot.valueOf(value.name);
-            TacticalSaveData tacticalSaveData = json.readValue(TacticalSaveData.class, value);
-            tacticals.put(slot, tacticalSaveData);
+        JsonValue inventoryJson = jsonValue.get("inventory");
+        for (JsonValue item : inventoryJson) {
+            String name = item.name();
+            TacticalSaveData data = json.readValue(TacticalSaveData.class, item);
+            inventory.put(name, data);
+        }
+
+        JsonValue equippedJson = jsonValue.get("equipped");
+        for (JsonValue item : equippedJson) {
+            int index = Integer.parseInt(item.name());
+            String name = item.asString();
+            equipped.put(index, name);
         }
     }
 }

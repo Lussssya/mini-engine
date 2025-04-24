@@ -10,7 +10,7 @@ import java.util.Locale;
 
 @Getter
 @Setter
-public class TacticalSaveData implements Json.Serializable {
+public class PetSaveData implements Json.Serializable {
     private String name;
     private int level;
     private int starCount;
@@ -28,7 +28,7 @@ public class TacticalSaveData implements Json.Serializable {
 
     @Override
     public void read(Json json, JsonValue jsonValue) {
-        name = jsonValue.getString("n", "shuriken");
+        name = jsonValue.getString("n", "pet-orange-cat");
         level = jsonValue.getInt("l", 0);
         starCount = jsonValue.getInt("sc", 0);
         rarity = Rarity.valueOf(jsonValue.getString("r").toUpperCase(Locale.ENGLISH));
