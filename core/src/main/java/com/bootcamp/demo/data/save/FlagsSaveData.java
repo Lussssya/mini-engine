@@ -4,11 +4,13 @@ import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.ObjectMap;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 public class FlagsSaveData implements Json.Serializable {
     private final ObjectMap<String, FlagSaveData> inventory = new ObjectMap<>();
-    private final String[] equipped = new String[1];
+    @Setter
+    private String equipped;
 
     @Override
     public void write(Json json) {
@@ -22,8 +24,8 @@ public class FlagsSaveData implements Json.Serializable {
         inventory.clear();
 
         for (JsonValue item : jsonValue) {
-            String name = item.name();
-            FlagSaveData data = json.readValue(FlagSaveData.class, item);
+            final String name = item.name();
+            final FlagSaveData data = json.readValue(FlagSaveData.class, item);
             inventory.put(name, data);
         }
     }

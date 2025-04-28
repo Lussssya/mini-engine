@@ -4,10 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.ObjectMap;
-import com.badlogic.gdx.utils.Pools;
-import com.badlogic.gdx.utils.Scaling;
+import com.badlogic.gdx.utils.*;
 import com.bootcamp.demo.data.game.*;
 import com.bootcamp.demo.data.save.*;
 import com.bootcamp.demo.engine.Labels;
@@ -22,7 +19,6 @@ import com.bootcamp.demo.pages.core.APage;
 import lombok.Getter;
 
 public class MissionsPage extends APage {
-
     private StatsContainer statsContainer;
     private MilitaryGearsContainer militaryGearsContainer;
     private TacticalsContainer tacticalsContainer;
@@ -31,6 +27,8 @@ public class MissionsPage extends APage {
 
     @Override
     protected void constructContent(Table content) {
+        setBackground(Resources.getDrawable("basics/white-pixel", Color.valueOf("#e09e6b")));
+
         final Table gameUIOverlay = constructGameUIOverlay();
         final Table mainUISegment = constructMainUISegment();
 
@@ -44,7 +42,6 @@ public class MissionsPage extends APage {
         final Table powerSegment = constructPowerSegment();
 
         final Table upperSegment = new Table();
-        upperSegment.setBackground(Resources.getDrawable("basics/white-pixel", Color.valueOf("#e09e6b")));
         upperSegment.add(powerSegment).expandY().bottom();
 
         return upperSegment;
@@ -222,20 +219,20 @@ public class MissionsPage extends APage {
 
         public void setData(MilitaryGearsSaveData militariesSaveData) {
             final Array<MilitaryGearContainer> widgets = getWidgets();
-            final ObjectMap<MilitaryGearGameData.Slot, MilitaryGearSaveData> saveDataMap = militariesSaveData.getMilitaries();
+            final ObjectMap<MilitaryGearGameData.Slot, MilitaryGearSaveData> saveData = militariesSaveData.getMilitaries();
 
             for (int i = 0; i < widgets.size; i++) {
                 MilitaryGearContainer widget = widgets.get(i);
                 MilitaryGearGameData.Slot slot = MilitaryGearGameData.Slot.values()[i];
 
-                MilitaryGearSaveData gearSave = saveDataMap.get(slot);
+                MilitaryGearSaveData gearSave = saveData.get(slot);
                 widget.setData(gearSave);
             }
         }
     }
 
     public static class MilitaryGearContainer extends BorderedTable {
-        private final Image iconImage;
+        private final Image icon;
         private final Label levelLabel;
         private final Label tierLabel;
         private final Table starsTable;
@@ -243,15 +240,16 @@ public class MissionsPage extends APage {
         private final ObjectMap<Stat, StatSaveData> militaryStats;
 
         public MilitaryGearContainer() {
-            iconImage = new Image();
-            iconImage.setScaling(Scaling.fit);
+            militaryStats = new ObjectMap<>();
+
+            icon = new Image();
+            icon.setScaling(Scaling.fit);
 
             levelLabel = Labels.make(GameFont.BOLD_18, Color.valueOf("#f5eae3"));
             tierLabel = Labels.make(GameFont.BOLD_18, Color.valueOf("#f5eae3"));
             starsTable = new Table();
-            militaryStats = new ObjectMap<>();
 
-            add(iconImage);
+            add(icon);
 
             final Table starsLayout = new Table();
             starsLayout.pad(15).add(starsTable).expand().top().left();
@@ -270,7 +268,7 @@ public class MissionsPage extends APage {
             addActor(tierLayout);
         }
 
-        public void setData(MilitaryGearSaveData militarySaveData) {
+        public void setData(@Null MilitaryGearSaveData militarySaveData) {
             if (militarySaveData == null) {
                 setEmpty();
                 return;
@@ -279,7 +277,7 @@ public class MissionsPage extends APage {
             final MilitaryGearsGameData militariesGameData = API.get(GameData.class).getMilitaryGearsGameData();
             final MilitaryGearGameData militaryGameData = militariesGameData.getMilitaries().get(militarySaveData.getName());
 
-            iconImage.setDrawable(militaryGameData.getIcon());
+            icon.setDrawable(militaryGameData.getIcon());
             levelLabel.setText("Lv." + militarySaveData.getLevel());
             tierLabel.setText(String.valueOf(militarySaveData.getTier()));
             for (Stat statType : militarySaveData.getStats().getStats().keys()) {
@@ -301,11 +299,14 @@ public class MissionsPage extends APage {
             }
         }
 
+        @Override
         public void setEmpty() {
-            iconImage.setDrawable(Resources.getDrawable("lootPage/empty-gear"));
+            super.setEmpty();
+            icon.setDrawable(Resources.getDrawable("lootPage/empty-gear"));
             levelLabel.setText("");
             tierLabel.setText("");
             starsTable.clear();
+            militaryStats.clear();
         }
     }
 
@@ -355,36 +356,50 @@ public class MissionsPage extends APage {
     }
 
     public static class TacticalContainer extends Table {
-        private final Image iconImage;
+        private final Image icon;
+        @Getter
+        private final ObjectMap<Stat, StatSaveData> tacticalStats;
 
         public TacticalContainer() {
-            iconImage = new Image();
-            iconImage.setScaling(Scaling.fit);
-            add(iconImage).grow().pad(10);
+            tacticalStats = new ObjectMap<>();
+
+            icon = new Image();
+            icon.setScaling(Scaling.fit);
+            add(icon).grow().pad(10);
         }
 
-        public void setData(TacticalSaveData tacticalSaveData) {
+        public void setData(@Null TacticalSaveData tacticalSaveData) {
             if (tacticalSaveData == null) {
                 setEmpty();
                 return;
             }
 
             final TacticalsGameData tacticalsGameData = API.get(GameData.class).getTacticalsGameData();
-            final ObjectMap<String, TacticalGameData> tacticals = tacticalsGameData.getTacticals();
-            final TacticalGameData tacticalGameData = tacticals.get(tacticalSaveData.getName());
-            iconImage.setDrawable(tacticalGameData.getIcon());
+            final TacticalGameData tacticalGameData = tacticalsGameData.getTacticals().get(tacticalSaveData.getName());
+
+            icon.setDrawable(tacticalGameData.getIcon());
             setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf(tacticalSaveData.getRarity().getBackgroundHex())));
+
+            for (Stat statType : tacticalSaveData.getStats().getStats().keys()) {
+                StatSaveData stat = tacticalSaveData.getStats().getStats().get(statType);
+                tacticalStats.put(statType, stat);
+            }
         }
 
         private void setEmpty() {
-            iconImage.setDrawable(null);
+            icon.setDrawable(null);
+            tacticalStats.clear();
         }
     }
 
     public static class FlagContainer extends BorderedTable {
         private final Image icon;
+        @Getter
+        private final ObjectMap<Stat, StatSaveData> flagStats;
 
         public FlagContainer() {
+            flagStats = new ObjectMap<>();
+
             setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#c8c0b9")));
 
             icon = new Image();
@@ -393,18 +408,38 @@ public class MissionsPage extends APage {
             add(icon);
         }
 
-        public void setData(FlagsSaveData flagsSaveData) {
+        public void setData(@Null FlagsSaveData flagsSaveData) {
+            if (flagsSaveData == null) {
+                setEmpty();
+                return;
+            }
             final FlagsGameData flagsGameData = API.get(GameData.class).getFlagsGameData();
-            final FlagGameData flagGameData = flagsGameData.getFlags().get(flagsSaveData.getEquipped()[0]);
-
+            final FlagGameData flagGameData = flagsGameData.getFlags().get(flagsSaveData.getEquipped());
             icon.setDrawable(flagGameData.getIcon());
+
+            final FlagSaveData flagSaveData = flagsSaveData.getInventory().get(flagsSaveData.getEquipped());
+            for (Stat statType : flagSaveData.getStats().getStats().keys()) {
+                StatSaveData stat = flagSaveData.getStats().getStats().get(statType);
+                flagStats.put(statType, stat);
+            }
+        }
+
+        @Override
+        public void setEmpty() {
+            super.setEmpty();
+            icon.setDrawable(null);
+            flagStats.clear();
         }
     }
 
     public static class PetContainer extends BorderedTable {
         private final Image icon;
+        @Getter
+        private final ObjectMap<Stat, StatSaveData> petStats;
 
         public PetContainer() {
+            petStats = new ObjectMap<>();
+
             setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#c8c0b9")));
 
             final Image home = new Image(Resources.getDrawable("lootPage/home-icon"));
@@ -423,16 +458,37 @@ public class MissionsPage extends APage {
 
             icon = new Image();
             icon.setScaling(Scaling.fit);
+            final Table imageLayout = new Table();
+            imageLayout.add(icon).growX();
+            imageLayout.setPosition(button.getOriginX() + button.getWidth(), button.getOriginY() + button.getHeight());
+            imageLayout.setFillParent(true);
 
             addActor(buttonLayout);
-            add(icon).expandX().fillX().padTop(30);
+            addActor(imageLayout);
         }
 
-        public void setData(PetsSaveData petsSaveData) {
+        public void setData(@Null PetsSaveData petsSaveData) {
+            if (petsSaveData == null) {
+                setEmpty();
+                return;
+            }
             final PetsGameData petsGameData = API.get(GameData.class).getPetsGameData();
-            final PetGameData petGameData = petsGameData.getPets().get(petsSaveData.getEquipped()[0]);
+            final PetGameData petGameData = petsGameData.getPets().get(petsSaveData.getEquipped());
+
+            final PetSaveData petSaveData = petsSaveData.getInventory().get(petsSaveData.getEquipped());
+            for (Stat statType : petSaveData.getStats().getStats().keys()) {
+                StatSaveData stat = petSaveData.getStats().getStats().get(statType);
+                petStats.put(statType, stat);
+            }
 
             icon.setDrawable(petGameData.getIcon());
+        }
+
+        @Override
+        public void setEmpty() {
+            super.setEmpty();
+            icon.setDrawable(null);
+            petStats.clear();
         }
     }
 

@@ -9,14 +9,14 @@ import lombok.Setter;
 @Getter
 public class PetsSaveData implements Json.Serializable {
     private final ObjectMap<String, PetSaveData> inventory = new ObjectMap<>();
-    private final String[] equipped = new String[1];
+    @Setter
+    private String equipped;
 
     @Override
     public void write(Json json) {
         for (ObjectMap.Entry<String, PetSaveData> entry : inventory.entries()) {
             json.writeValue(entry.key, entry.value);
         }
-        json.writeObjectEnd();
     }
 
     @Override
@@ -24,8 +24,8 @@ public class PetsSaveData implements Json.Serializable {
         inventory.clear();
 
         for (JsonValue item : jsonValue) {
-            String name = item.name();
-            PetSaveData data = json.readValue(PetSaveData.class, item);
+            final String name = item.name();
+            final PetSaveData data = json.readValue(PetSaveData.class, item);
             inventory.put(name, data);
         }
     }

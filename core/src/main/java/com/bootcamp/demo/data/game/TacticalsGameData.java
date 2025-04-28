@@ -7,13 +7,14 @@ import lombok.Getter;
 
 @Getter
 public class TacticalsGameData implements IGameData {
-
     private final ObjectMap<String, TacticalGameData> tacticals = new ObjectMap<>();
 
     @Override
     public void load (XmlReader.Element rootXml) {
         tacticals.clear();
+
         final Array<XmlReader.Element> tacticalsXml = rootXml.getChildrenByName("tactical");
+
         for (XmlReader.Element tacticalXml : tacticalsXml) {
             final TacticalGameData tacticalGameData = new TacticalGameData();
             tacticalGameData.load(tacticalXml);

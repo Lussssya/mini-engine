@@ -20,9 +20,10 @@ public class MilitaryGearsSaveData implements Json.Serializable {
     @Override
     public void read(Json json, JsonValue jsonValue) {
         militaries.clear();
+
         for (JsonValue entry : jsonValue) {
-            Slot slot = Slot.valueOf(entry.name);
-            MilitaryGearSaveData gear = json.readValue(MilitaryGearSaveData.class, entry);
+            final Slot slot = Slot.valueOf(entry.name);
+            final MilitaryGearSaveData gear = json.readValue(MilitaryGearSaveData.class, entry);
             militaries.put(slot, gear);
         }
     }

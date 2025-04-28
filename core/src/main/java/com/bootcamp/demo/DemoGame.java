@@ -194,11 +194,31 @@ public class DemoGame extends Game {
     private void setupPets() {
         final PetsSaveData petsSaveData = new PetsSaveData();
 
-        petsSaveData.getInventory().put("pet-cat-orange", createPet("pet-cat-orange", 24, 1, Rarity.EPIC));
-        petsSaveData.getInventory().put("pet-beetle", createPet("pet-beetle", 36, 2, Rarity.EXOTIC));
-        petsSaveData.getInventory().put("pet-baby-dragon", createPet("pet-baby-dragon", 19, 0, Rarity.LEGENDARY));
+        PetSaveData pet1 = createPet("cat", 24, 1, Rarity.EPIC);
+        petsSaveData.getInventory().put("cat", pet1);
+        setPetStats(pet1, new Object[][]{
+            {"hp", 5.79f},
+            {"atk", 2.39f},
+            {"dodge", 16.5f}
+        });
 
-        petsSaveData.getEquipped()[0] = "pet-baby-dragon";
+        PetSaveData pet2 = createPet("beetle", 36, 2, Rarity.EXOTIC);
+        petsSaveData.getInventory().put("beetle", pet2);
+        setPetStats(pet2, new Object[][] {
+            {"hp", 600f},
+            {"atk", 875f},
+            {"combo", 10.3f}
+        });
+
+        final PetSaveData pet3 = createPet("dragon", 19, 0, Rarity.LEGENDARY);
+        petsSaveData.getInventory().put("dragon", pet3);
+        setPetStats(pet3, new Object[][]{
+            {"hp", 300f},
+            {"atk", 700f},
+            {"crit", 8f}
+        });
+
+        petsSaveData.setEquipped("dragon");
 
         API.get(SaveData.class).setPetsSaveData(petsSaveData);
     }
@@ -212,15 +232,51 @@ public class DemoGame extends Game {
         return pet;
     }
 
+    private void setPetStats(PetSaveData pet, Object[][] values) {
+        for (Object[] pair : values) {
+            Stat statType = Stat.valueOf(((String) pair[0]).toUpperCase(Locale.ENGLISH));
+            float value = (float) pair[1];
+
+            StatSaveData statSaveData = new StatSaveData();
+            statSaveData.setName(statType);
+            statSaveData.setValue(value);
+
+            pet.getStats().getStats().put(statType, statSaveData);
+        }
+    }
+
     private void setupFlags() {
         final FlagsSaveData flagsSaveData = new FlagsSaveData();
 
-        flagsSaveData.getInventory().put("common", createFlag("common"));
-        flagsSaveData.getInventory().put("fight", createFlag("fight"));
-        flagsSaveData.getInventory().put("ghost", createFlag("ghost"));
-        flagsSaveData.getInventory().put("star", createFlag("star"));
+        final FlagSaveData common = createFlag("common");
+        flagsSaveData.getInventory().put("common", common);
+        setFlagStats(common, new Object[][]{
+            {"hp", 2.14f},
+            {"atk", 345f}
+        });
 
-        flagsSaveData.getEquipped()[0] = "star";
+        final FlagSaveData fight = createFlag("fight");
+        flagsSaveData.getInventory().put("fight", fight);
+        setFlagStats(fight, new Object[][]{
+            {"hp", 2.14f},
+            {"atk", 345f}
+        });
+
+        final FlagSaveData ghost = createFlag("ghost");
+        flagsSaveData.getInventory().put("ghost", ghost);
+        setFlagStats(common, new Object[][]{
+            {"hp", 2.14f},
+            {"atk", 345f}
+        });
+
+        final FlagSaveData star = createFlag("star");
+        flagsSaveData.getInventory().put("star", star);
+        setFlagStats(common, new Object[][]{
+            {"hp", 2.14f},
+            {"atk", 345f}
+        });
+
+        flagsSaveData.setEquipped("star");
 
         API.get(SaveData.class).setFlagsSaveData(flagsSaveData);
     }
@@ -229,6 +285,19 @@ public class DemoGame extends Game {
         FlagSaveData flag = new FlagSaveData();
         flag.setName(name);
         return flag;
+    }
+
+    private void setFlagStats(FlagSaveData flag, Object[][] values) {
+        for (Object[] pair : values) {
+            Stat statType = Stat.valueOf(((String) pair[0]).toUpperCase(Locale.ENGLISH));
+            float value = (float) pair[1];
+
+            StatSaveData statSaveData = new StatSaveData();
+            statSaveData.setName(statType);
+            statSaveData.setValue(value);
+
+            flag.getStats().getStats().put(statType, statSaveData);
+        }
     }
 
     private void loadSaveData() {

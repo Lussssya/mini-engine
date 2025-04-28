@@ -22,7 +22,6 @@ public class MilitaryGearGameData implements IGameData {
         RUSTED("#b19986"),
         SCRAP("#6495ca"),
         HARDENED("#b693c7"),
-        EPIC("Color.GREEN"),
         ELITE("#e4ab56"),
         ASCENDANT("#d85959"),
         NUCLEAR("#aad448"),

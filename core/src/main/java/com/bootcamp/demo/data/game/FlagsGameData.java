@@ -15,9 +15,9 @@ public class FlagsGameData implements IGameData {
 
         final Array<XmlReader.Element> flagsXml = rootXml.getChildrenByName("flag");
 
-        for (XmlReader.Element petXml : flagsXml) {
+        for (XmlReader.Element flagXml : flagsXml) {
             final FlagGameData flagGameData = new FlagGameData();
-            flagGameData.load(petXml);
+            flagGameData.load(flagXml);
             flags.put(flagGameData.getName(), flagGameData);
         }
     }
