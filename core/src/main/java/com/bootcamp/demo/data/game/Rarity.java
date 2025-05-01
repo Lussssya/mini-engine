@@ -2,7 +2,6 @@ package com.bootcamp.demo.data.game;
 
 import lombok.Getter;
 
-@Getter
 public enum Rarity {
     COMMON("#b19986"),
     RARE("#6495ca"),
@@ -10,6 +9,7 @@ public enum Rarity {
     LEGENDARY("#e4ab56"),
     EXOTIC("#d85959");
 
+    @Getter
     private final String backgroundHex;
 
     Rarity(String backgroundHex) {

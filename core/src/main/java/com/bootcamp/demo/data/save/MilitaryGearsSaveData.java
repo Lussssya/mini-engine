@@ -6,8 +6,8 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.bootcamp.demo.data.game.MilitaryGearGameData.Slot;
 import lombok.Getter;
 
-@Getter
 public class MilitaryGearsSaveData implements Json.Serializable {
+    @Getter
     private final ObjectMap<Slot, MilitaryGearSaveData> militaries = new ObjectMap<>();
 
     @Override

@@ -8,14 +8,22 @@ import lombok.Setter;
 
 import java.util.Locale;
 
-@Getter
-@Setter
 public class TacticalSaveData implements Json.Serializable {
+    @Getter
+    @Setter
     private String name;
+    @Getter
+    @Setter
     private int level;
+    @Getter
+    @Setter
     private int starCount;
+    @Getter
+    @Setter
     private Rarity rarity;
-    private StatsSaveData stats = new StatsSaveData();
+    @Getter
+    @Setter
+    private StatsSaveData tacticalStats = new StatsSaveData();
 
     @Override
     public void write(Json json) {
@@ -23,7 +31,7 @@ public class TacticalSaveData implements Json.Serializable {
         json.writeValue("l", level);
         json.writeValue("sc", starCount);
         json.writeValue("r", rarity.name());
-        json.writeValue("s", stats);
+        json.writeValue("s", tacticalStats);
     }
 
     @Override
@@ -32,6 +40,6 @@ public class TacticalSaveData implements Json.Serializable {
         level = jsonValue.getInt("l", 0);
         starCount = jsonValue.getInt("sc", 0);
         rarity = Rarity.valueOf(jsonValue.getString("r").toUpperCase(Locale.ENGLISH));
-        stats = json.readValue(StatsSaveData.class, jsonValue.get("s"));
+        tacticalStats = json.readValue(StatsSaveData.class, jsonValue.get("s"));
     }
 }

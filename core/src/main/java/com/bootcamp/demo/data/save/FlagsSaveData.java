@@ -6,10 +6,10 @@ import com.badlogic.gdx.utils.ObjectMap;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
 public class FlagsSaveData implements Json.Serializable {
+    @Getter
     private final ObjectMap<String, FlagSaveData> inventory = new ObjectMap<>();
-    @Setter
+    @Getter @Setter
     private String equipped;
 
     @Override

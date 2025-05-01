@@ -6,9 +6,10 @@ import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.ObjectMap;
 import lombok.Getter;
 
-@Getter
 public class TacticalsSaveData implements Json.Serializable {
+    @Getter
     private final ObjectMap<String, TacticalSaveData> inventory = new ObjectMap<>();
+    @Getter
     private final IntMap<String> equipped = new IntMap<>();
 
     @Override

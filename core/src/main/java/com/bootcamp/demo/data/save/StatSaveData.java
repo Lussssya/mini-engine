@@ -8,9 +8,10 @@ import lombok.Setter;
 
 import java.util.Locale;
 
-@Setter @Getter
 public class StatSaveData implements Json.Serializable {
+    @Setter @Getter
     private Stat name;
+    @Setter @Getter
     private float value;
 
     @Override

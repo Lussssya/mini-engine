@@ -2,7 +2,6 @@ package com.bootcamp.demo.data.game;
 
 import lombok.Getter;
 
-@Getter
 public enum Stat {
     HP("HP:", StatType.ADDITIVE),
     ATK("ATK:", StatType.ADDITIVE),
@@ -14,7 +13,9 @@ public enum Stat {
     STEAL("STEAL:", StatType.MULTIPLICATIVE),
     POISON("POISON:", StatType.MULTIPLICATIVE);
 
+    @Getter
     private final String title;
+    @Getter
     private final StatType type;
 
     Stat(String title, StatType type) {

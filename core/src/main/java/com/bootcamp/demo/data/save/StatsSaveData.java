@@ -9,8 +9,8 @@ import lombok.Setter;
 
 import java.util.Locale;
 
-@Getter @Setter
 public class StatsSaveData implements Json.Serializable {
+    @Getter @Setter
     private final ObjectMap<Stat, StatSaveData> stats = new ObjectMap<>();
 
     @Override

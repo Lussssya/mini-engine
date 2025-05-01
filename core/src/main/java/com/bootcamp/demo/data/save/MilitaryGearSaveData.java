@@ -9,16 +9,28 @@ import lombok.Setter;
 
 import java.util.Locale;
 
-@Setter
-@Getter
 public class MilitaryGearSaveData implements Json.Serializable {
+    @Setter
+    @Getter
     private String name;
+    @Setter
+    @Getter
     private Slot slot;
+    @Setter
+    @Getter
     private int starCount;
+    @Setter
+    @Getter
     private int level;
+    @Setter
+    @Getter
     private char tier;
+    @Setter
+    @Getter
     private Rarity rarity;
-    private StatsSaveData stats = new StatsSaveData();
+    @Setter
+    @Getter
+    private StatsSaveData gearStats = new StatsSaveData();
 
     @Override
     public void write(Json json) {
@@ -28,7 +40,7 @@ public class MilitaryGearSaveData implements Json.Serializable {
         json.writeValue("l", level);
         json.writeValue("t", tier);
         json.writeValue("r", rarity.name());
-        json.writeValue("st", stats);
+        json.writeValue("st", gearStats);
     }
 
     @Override
@@ -39,6 +51,6 @@ public class MilitaryGearSaveData implements Json.Serializable {
         level = jsonValue.getInt("l", 0);
         tier = jsonValue.getChar("t", 'F');
         rarity = Rarity.valueOf(jsonValue.getString("r").toUpperCase(Locale.ENGLISH));
-        stats = json.readValue(StatsSaveData.class, jsonValue.get("st"));
+        gearStats = json.readValue(StatsSaveData.class, jsonValue.get("st"));
     }
 }

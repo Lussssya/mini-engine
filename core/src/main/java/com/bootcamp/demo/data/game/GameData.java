@@ -4,13 +4,17 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.XmlReader;
 import lombok.Getter;
 
-@Getter
 public class GameData {
+    @Getter
     private final XmlReader xmlReader = new XmlReader();
 
+    @Getter
     private final TacticalsGameData tacticalsGameData;
+    @Getter
     private final MilitaryGearsGameData militaryGearsGameData;
+    @Getter
     private final PetsGameData petsGameData;
+    @Getter
     private final FlagsGameData flagsGameData;
 
     public GameData () {

@@ -26,7 +26,6 @@ public class DemoGame extends Game {
 
         loadSaveData();
 
-        setupStats();
         setupMilitaryGears();
         setupTacticals();
         setupPets();
@@ -125,7 +124,7 @@ public class DemoGame extends Game {
             statSaveData.setName(statType);
             statSaveData.setValue(value);
 
-            gear.getStats().getStats().put(statType, statSaveData);
+            gear.getGearStats().getStats().put(statType, statSaveData);
         }
     }
 
@@ -187,7 +186,7 @@ public class DemoGame extends Game {
             statSaveData.setName(statType);
             statSaveData.setValue(value);
 
-            tactical.getStats().getStats().put(statType, statSaveData);
+            tactical.getTacticalStats().getStats().put(statType, statSaveData);
         }
     }
 
@@ -241,7 +240,7 @@ public class DemoGame extends Game {
             statSaveData.setName(statType);
             statSaveData.setValue(value);
 
-            pet.getStats().getStats().put(statType, statSaveData);
+            pet.getPetStats().getStats().put(statType, statSaveData);
         }
     }
 
@@ -296,7 +295,7 @@ public class DemoGame extends Game {
             statSaveData.setName(statType);
             statSaveData.setValue(value);
 
-            flag.getStats().getStats().put(statType, statSaveData);
+            flag.getFlagStats().getStats().put(statType, statSaveData);
         }
     }
 

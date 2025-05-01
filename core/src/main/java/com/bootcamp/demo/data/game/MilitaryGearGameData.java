@@ -6,7 +6,6 @@ import com.bootcamp.demo.engine.Resources;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter @Setter
 public class MilitaryGearGameData implements IGameData {
     public enum Slot {
         WEAPON,
@@ -17,7 +16,6 @@ public class MilitaryGearGameData implements IGameData {
         SHOES
     }
 
-    @Getter
     public enum Rarity {
         RUSTED("#b19986"),
         SCRAP("#6495ca"),
@@ -31,6 +29,7 @@ public class MilitaryGearGameData implements IGameData {
         IMMORTAL("#6cfee3"),
         ETHEREAL("#fcfecd");
 
+        @Getter
         private final String backgroundHex;
 
         Rarity(String backgroundHex) {
@@ -38,7 +37,9 @@ public class MilitaryGearGameData implements IGameData {
         }
     }
 
+    @Getter @Setter
     private String name;
+    @Getter @Setter
     private Drawable icon;
 
     @Override

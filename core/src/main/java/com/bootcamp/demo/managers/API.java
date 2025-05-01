@@ -36,6 +36,7 @@ public class API implements Disposable {
         register(Localization.class);
         register(PageManager.class);
         register(DialogManager.class);
+        register(MissionsManager.class);
     }
 
     public <T> void register (Class<T> key, T object) {
