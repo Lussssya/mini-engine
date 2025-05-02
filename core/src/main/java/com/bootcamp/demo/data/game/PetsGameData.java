@@ -10,7 +10,7 @@ public class PetsGameData implements IGameData {
     private final ObjectMap<String, PetGameData> pets = new ObjectMap<>();
 
     @Override
-    public void load(XmlReader.Element rootXml) {
+    public void load (XmlReader.Element rootXml) {
         pets.clear();
 
         final Array<XmlReader.Element> petsXml = rootXml.getChildrenByName("pet");

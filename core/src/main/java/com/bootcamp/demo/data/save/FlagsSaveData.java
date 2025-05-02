@@ -9,18 +9,19 @@ import lombok.Setter;
 public class FlagsSaveData implements Json.Serializable {
     @Getter
     private final ObjectMap<String, FlagSaveData> inventory = new ObjectMap<>();
-    @Getter @Setter
+    @Getter
+    @Setter
     private String equipped;
 
     @Override
-    public void write(Json json) {
+    public void write (Json json) {
         for (ObjectMap.Entry<String, FlagSaveData> entry : inventory.entries()) {
             json.writeValue(entry.key, entry.value);
         }
     }
 
     @Override
-    public void read(Json json, JsonValue jsonValue) {
+    public void read (Json json, JsonValue jsonValue) {
         inventory.clear();
 
         for (JsonValue item : jsonValue) {

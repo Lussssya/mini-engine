@@ -17,7 +17,7 @@ import java.util.Locale;
 public class DemoGame extends Game {
 
     @Override
-    public void create() {
+    public void create () {
         Gdx.input.setInputProcessor(new InputMultiplexer());
 
         final GameData gameData = new GameData();
@@ -37,30 +37,7 @@ public class DemoGame extends Game {
         API.get(EventModule.class).fireEvent(GameStartedEvent.class);
     }
 
-    private void setupStats() {
-        StatsSaveData statsSaveData = new StatsSaveData();
-
-        statsSaveData.getStats().put(Stat.HP, createStat(Stat.HP, 33f));
-        statsSaveData.getStats().put(Stat.ATK, createStat(Stat.ATK, 12.3f));
-        statsSaveData.getStats().put(Stat.DODGE, createStat(Stat.DODGE, 34.49f));
-        statsSaveData.getStats().put(Stat.COMBO, createStat(Stat.COMBO, 17.3f));
-        statsSaveData.getStats().put(Stat.CRIT, createStat(Stat.CRIT, 6.06f));
-        statsSaveData.getStats().put(Stat.STUN, createStat(Stat.STUN, 19.56f));
-        statsSaveData.getStats().put(Stat.REGEN, createStat(Stat.REGEN, 12.29f));
-        statsSaveData.getStats().put(Stat.STEAL, createStat(Stat.STEAL, 10.53f));
-        statsSaveData.getStats().put(Stat.POISON, createStat(Stat.POISON, 9.92f));
-
-        API.get(SaveData.class).setStatsSaveData(statsSaveData);
-    }
-
-    private StatSaveData createStat(Stat type, float value) {
-        StatSaveData stat = new StatSaveData();
-        stat.setName(type);
-        stat.setValue(value);
-        return stat;
-    }
-
-    private void setupMilitaryGears() {
+    private void setupMilitaryGears () {
         final MilitaryGearsSaveData militariesSaveData = new MilitaryGearsSaveData();
 
         MilitaryGearSaveData gear1 = createMilitary("angel-bow", Slot.WEAPON, 1, 28, 'D', MilitaryGearGameData.Rarity.ELITE);
@@ -104,7 +81,7 @@ public class DemoGame extends Game {
         API.get(SaveData.class).setMilitariesSaveData(militariesSaveData);
     }
 
-    private MilitaryGearSaveData createMilitary(String name, Slot slot, int starCount, int level, char tier, MilitaryGearGameData.Rarity rarity) {
+    private MilitaryGearSaveData createMilitary (String name, Slot slot, int starCount, int level, char tier, MilitaryGearGameData.Rarity rarity) {
         MilitaryGearSaveData military = new MilitaryGearSaveData();
         military.setName(name);
         military.setSlot(slot);
@@ -115,7 +92,7 @@ public class DemoGame extends Game {
         return military;
     }
 
-    private void setMilitaryStats(MilitaryGearSaveData gear, Object[][] values) {
+    private void setMilitaryStats (MilitaryGearSaveData gear, Object[][] values) {
         for (Object[] pair : values) {
             Stat statType = Stat.valueOf(((String) pair[0]).toUpperCase(Locale.ENGLISH));
             float value = (float) pair[1];
@@ -128,7 +105,7 @@ public class DemoGame extends Game {
         }
     }
 
-    private void setupTacticals() {
+    private void setupTacticals () {
         final TacticalsSaveData tacticalsSaveData = new TacticalsSaveData();
 
         TacticalSaveData tactical1 = createTactical("chidori", 4, 1, Rarity.EPIC);
@@ -168,7 +145,7 @@ public class DemoGame extends Game {
         API.get(SaveData.class).setTacticalsSaveData(tacticalsSaveData);
     }
 
-    private TacticalSaveData createTactical(String name, int level, int starCount, Rarity rarity) {
+    private TacticalSaveData createTactical (String name, int level, int starCount, Rarity rarity) {
         TacticalSaveData tactical = new TacticalSaveData();
         tactical.setName(name);
         tactical.setLevel(level);
@@ -177,7 +154,7 @@ public class DemoGame extends Game {
         return tactical;
     }
 
-    private void setTacticalStats(TacticalSaveData tactical, Object[][] values) {
+    private void setTacticalStats (TacticalSaveData tactical, Object[][] values) {
         for (Object[] pair : values) {
             Stat statType = Stat.valueOf(((String) pair[0]).toUpperCase(Locale.ENGLISH));
             float value = (float) pair[1];
@@ -190,7 +167,7 @@ public class DemoGame extends Game {
         }
     }
 
-    private void setupPets() {
+    private void setupPets () {
         final PetsSaveData petsSaveData = new PetsSaveData();
 
         PetSaveData pet1 = createPet("cat", 24, 1, Rarity.EPIC);
@@ -203,7 +180,7 @@ public class DemoGame extends Game {
 
         PetSaveData pet2 = createPet("beetle", 36, 2, Rarity.EXOTIC);
         petsSaveData.getInventory().put("beetle", pet2);
-        setPetStats(pet2, new Object[][] {
+        setPetStats(pet2, new Object[][]{
             {"hp", 600f},
             {"atk", 875f},
             {"combo", 10.3f}
@@ -222,7 +199,7 @@ public class DemoGame extends Game {
         API.get(SaveData.class).setPetsSaveData(petsSaveData);
     }
 
-    private PetSaveData createPet(String name, int level, int starCount, Rarity rarity) {
+    private PetSaveData createPet (String name, int level, int starCount, Rarity rarity) {
         PetSaveData pet = new PetSaveData();
         pet.setName(name);
         pet.setLevel(level);
@@ -231,7 +208,7 @@ public class DemoGame extends Game {
         return pet;
     }
 
-    private void setPetStats(PetSaveData pet, Object[][] values) {
+    private void setPetStats (PetSaveData pet, Object[][] values) {
         for (Object[] pair : values) {
             Stat statType = Stat.valueOf(((String) pair[0]).toUpperCase(Locale.ENGLISH));
             float value = (float) pair[1];
@@ -244,7 +221,7 @@ public class DemoGame extends Game {
         }
     }
 
-    private void setupFlags() {
+    private void setupFlags () {
         final FlagsSaveData flagsSaveData = new FlagsSaveData();
 
         final FlagSaveData common = createFlag("common");
@@ -280,13 +257,13 @@ public class DemoGame extends Game {
         API.get(SaveData.class).setFlagsSaveData(flagsSaveData);
     }
 
-    private FlagSaveData createFlag(String name) {
+    private FlagSaveData createFlag (String name) {
         FlagSaveData flag = new FlagSaveData();
         flag.setName(name);
         return flag;
     }
 
-    private void setFlagStats(FlagSaveData flag, Object[][] values) {
+    private void setFlagStats (FlagSaveData flag, Object[][] values) {
         for (Object[] pair : values) {
             Stat statType = Stat.valueOf(((String) pair[0]).toUpperCase(Locale.ENGLISH));
             float value = (float) pair[1];
@@ -299,7 +276,7 @@ public class DemoGame extends Game {
         }
     }
 
-    private void loadSaveData() {
+    private void loadSaveData () {
         final FileHandle file = getPlayerDataFileHandler();
         if (file.exists()) {
             createNewSaveData();
@@ -316,13 +293,13 @@ public class DemoGame extends Game {
         API.Instance().register(SaveData.class, saveData);
     }
 
-    private void createNewSaveData() {
+    private void createNewSaveData () {
         final SaveData saveData = new SaveData();
         API.Instance().register(SaveData.class, saveData);
         savePlayerData();
     }
 
-    public void savePlayerData() {
+    public void savePlayerData () {
         final SaveData saveData = API.get(SaveData.class);
 
         final Json json = new Json();
@@ -333,7 +310,7 @@ public class DemoGame extends Game {
         getPlayerDataFileHandler().writeString(dataToPersist, false);
     }
 
-    private FileHandle getPlayerDataFileHandler() {
+    private FileHandle getPlayerDataFileHandler () {
         final FileHandle playerDataFile = Gdx.files.local("usercache").child("player-data");
         // check if file exists; if not, create an empty file
         if (!playerDataFile.exists()) {
@@ -343,7 +320,7 @@ public class DemoGame extends Game {
     }
 
     @Override
-    public void dispose() {
+    public void dispose () {
         super.dispose();
         API.Instance().dispose();
         Gdx.app.exit();

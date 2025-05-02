@@ -11,14 +11,14 @@ public class MilitaryGearsSaveData implements Json.Serializable {
     private final ObjectMap<Slot, MilitaryGearSaveData> militaries = new ObjectMap<>();
 
     @Override
-    public void write(Json json) {
+    public void write (Json json) {
         for (ObjectMap.Entry<Slot, MilitaryGearSaveData> entry : militaries.entries()) {
             json.writeValue(entry.key.name(), entry.value);
         }
     }
 
     @Override
-    public void read(Json json, JsonValue jsonValue) {
+    public void read (Json json, JsonValue jsonValue) {
         militaries.clear();
 
         for (JsonValue entry : jsonValue) {

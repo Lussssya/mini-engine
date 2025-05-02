@@ -13,14 +13,14 @@ public class TacticalsSaveData implements Json.Serializable {
     private final IntMap<String> equipped = new IntMap<>();
 
     @Override
-    public void write(Json json) {
+    public void write (Json json) {
         for (ObjectMap.Entry<String, TacticalSaveData> entry : inventory.entries()) {
             json.writeValue(entry.key, entry.value);
         }
     }
 
     @Override
-    public void read(Json json, JsonValue jsonValue) {
+    public void read (Json json, JsonValue jsonValue) {
         inventory.clear();
 
         for (JsonValue item : jsonValue) {

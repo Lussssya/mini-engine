@@ -1,36 +1,47 @@
-# demo
+# Loot Page – IDLE Outpost UI Copy
 
-A [libGDX](https://libgdx.com/) project generated with [gdx-liftoff](https://github.com/libgdx/gdx-liftoff).
+This project recreates the **Looting Page** UI from the mobile game **IDLE Outpost** by *Rockbite Games*. It mimics the original layout and user interactions, while introducing gameplay concepts such as **Game Data**, **Save Data**, and basic **stat computation**.
 
-This project was generated with a template including simple application launchers and an `ApplicationAdapter` extension that draws a simple GUI on the screen.
+---
 
-## Platforms
+## 🧩 Functionality
 
-- `core`: Main module with the application logic shared by all platforms.
-- `lwjgl3`: Primary desktop platform using LWJGL3; was called 'desktop' in older docs.
-- `android`: Android mobile platform. Needs Android SDK.
-- `ios`: iOS mobile platform using RoboVM.
+* 🛡️ **Gear Display** – Military gear items are displayed in slot-specific containers.
+* 🖱️ **Gear Info Dialog** – Clicking a gear opens a dialog showing its level, tier, rarity, and stats.
+* 📈 **Stat Calculation** – Player's overall stats are computed by the `MissionsManager` using gear data.
+* 🔘 **Expandable UI** – The layout includes buttons reserved for future functionality.
+* 🖼️ **Visual Representation** – Icons and backgrounds are loaded from the `rows/lootPage` assets folder.
 
-## Gradle
+---
 
-This project uses [Gradle](https://gradle.org/) to manage dependencies.
-The Gradle wrapper was included, so you can run Gradle tasks using `gradlew.bat` or `./gradlew` commands.
-Useful Gradle tasks and flags:
+## 🧱 Project Structure
 
-- `--continue`: when using this flag, errors will not stop the tasks from running.
-- `--daemon`: thanks to this flag, Gradle daemon will be used to run chosen tasks.
-- `--offline`: when using this flag, cached dependency archives will be used.
-- `--refresh-dependencies`: this flag forces validation of all dependencies. Useful for snapshot versions.
-- `android:lint`: performs Android project validation.
-- `build`: builds sources and archives of every project.
-- `cleanEclipse`: removes Eclipse project data.
-- `cleanIdea`: removes IntelliJ project data.
-- `clean`: removes `build` folders, which store compiled classes and built archives.
-- `eclipse`: generates Eclipse project data.
-- `idea`: generates IntelliJ project data.
-- `lwjgl3:jar`: builds application's runnable jar, which can be found at `lwjgl3/build/libs`.
-- `lwjgl3:run`: starts the application.
-- `test`: runs unit tests (if any).
+* `MissionsPage` – The main page that builds the UI and sets data for each gear slot.
+* `MilitaryGearDialog` – Displays gear information in a popup dialog.
+* `MissionsManager` – Handles computing the player's total stats.
+* `data.game.*` – Contains static, predefined game data (e.g., gear definitions).
+* `data.save.*` – Holds save-state information tied to the player's progress.
+* `rows/lootPage` – Stores all image assets used in the UI.
 
-Note that most tasks that are not specific to a single project can be run with `name:` prefix, where the `name` should be replaced with the ID of a specific project.
-For example, `core:clean` removes `build` folder only from the `core` project.
+---
+
+## 🚀 How to Run
+
+1. Open the file:
+   ```
+   lwjgl3/src/main/java/com/bootcamp/demo/lwjgl3/Lwjgl3Launcher.java
+   ```
+2. Run `Lwjgl3Launcher.java`.
+3. Once the game launches, press **M** on your keyboard to open the Loot Page.
+
+---
+
+## ✅ Status
+
+* Core UI layout completed.
+* Gear detail dialog implemented.
+* Future features can be added via existing buttons and structure.
+
+---
+
+## 👾 Enjoy!

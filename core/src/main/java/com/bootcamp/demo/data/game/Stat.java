@@ -18,7 +18,7 @@ public enum Stat {
     @Getter
     private final StatType type;
 
-    Stat(String title, StatType type) {
+    Stat (String title, StatType type) {
         this.title = title;
         this.type = type;
     }

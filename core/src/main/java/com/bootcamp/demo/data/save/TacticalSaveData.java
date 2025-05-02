@@ -26,7 +26,7 @@ public class TacticalSaveData implements Json.Serializable {
     private StatsSaveData tacticalStats = new StatsSaveData();
 
     @Override
-    public void write(Json json) {
+    public void write (Json json) {
         json.writeValue("n", name);
         json.writeValue("l", level);
         json.writeValue("sc", starCount);
@@ -35,7 +35,7 @@ public class TacticalSaveData implements Json.Serializable {
     }
 
     @Override
-    public void read(Json json, JsonValue jsonValue) {
+    public void read (Json json, JsonValue jsonValue) {
         name = jsonValue.getString("n", "shuriken");
         level = jsonValue.getInt("l", 0);
         starCount = jsonValue.getInt("sc", 0);

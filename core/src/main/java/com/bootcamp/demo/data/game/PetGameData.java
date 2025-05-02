@@ -12,7 +12,7 @@ public class PetGameData implements IGameData {
     private Drawable icon;
 
     @Override
-    public void load(XmlReader.Element rootXml) {
+    public void load (XmlReader.Element rootXml) {
         name = rootXml.getAttribute("name");
         icon = Resources.getDrawable(rootXml.getAttribute("icon"));
     }

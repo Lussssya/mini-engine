@@ -7,19 +7,21 @@ import lombok.Setter;
 
 
 public class FlagSaveData implements Json.Serializable {
-    @Getter @Setter
+    @Getter
+    @Setter
     private String name;
-    @Getter @Setter
+    @Getter
+    @Setter
     private StatsSaveData flagStats = new StatsSaveData();
 
     @Override
-    public void write(Json json) {
+    public void write (Json json) {
         json.writeValue("n", name);
         json.writeValue("s", flagStats);
     }
 
     @Override
-    public void read(Json json, JsonValue jsonValue) {
+    public void read (Json json, JsonValue jsonValue) {
         name = jsonValue.getString("n");
         flagStats = json.readValue(StatsSaveData.class, jsonValue.get("s"));
     }

@@ -32,18 +32,20 @@ public class MilitaryGearGameData implements IGameData {
         @Getter
         private final String backgroundHex;
 
-        Rarity(String backgroundHex) {
+        Rarity (String backgroundHex) {
             this.backgroundHex = backgroundHex;
         }
     }
 
-    @Getter @Setter
+    @Getter
+    @Setter
     private String name;
-    @Getter @Setter
+    @Getter
+    @Setter
     private Drawable icon;
 
     @Override
-    public void load(XmlReader.Element rootXml) {
+    public void load (XmlReader.Element rootXml) {
         name = rootXml.getAttribute("name");
         icon = Resources.getDrawable(rootXml.getAttribute("icon"));
     }

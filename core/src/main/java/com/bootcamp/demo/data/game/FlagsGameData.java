@@ -10,7 +10,7 @@ public class FlagsGameData implements IGameData {
     private final ObjectMap<String, FlagGameData> flags = new ObjectMap<>();
 
     @Override
-    public void load(XmlReader.Element rootXml) {
+    public void load (XmlReader.Element rootXml) {
         flags.clear();
 
         final Array<XmlReader.Element> flagsXml = rootXml.getChildrenByName("flag");

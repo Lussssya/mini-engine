@@ -14,7 +14,17 @@ public class MissionsManager {
 
     private final StatsSaveData statsContainer = new StatsSaveData();
 
-    public StatsSaveData updateStatsContainer() {
+    public void initializeStatsContainer () {
+        statsContainer.getStats().clear();
+        for (Stat stat : Stat.values()) {
+            StatSaveData statSaveData = new StatSaveData(); // create new instance each time
+            statSaveData.setName(stat);
+            statSaveData.setValue(0);
+            statsContainer.getStats().put(stat, statSaveData);
+        }
+    }
+
+    public StatsSaveData updateStatsContainer () {
         for (MilitaryGearGameData.Slot name : militaryGearsSaveData.getMilitaries().keys()) {
             MilitaryGearSaveData militaryGearSaveData = militaryGearsSaveData.getMilitaries().get(name);
             for (Stat stat : Stat.values()) {
@@ -46,14 +56,14 @@ public class MissionsManager {
         return statsContainer;
     }
 
-    private void mergeStats(ObjectMap<Stat, StatSaveData> sourceStats) {
+    private void mergeStats (ObjectMap<Stat, StatSaveData> sourceStats) {
         for (ObjectMap.Entry<Stat, StatSaveData> entry : sourceStats.entries()) {
             Stat stat = entry.key;
             statsContainer.getStats().put(stat, addStats(statsContainer.getStats().get(stat), entry.value));
         }
     }
 
-    private StatSaveData addStats(StatSaveData base, StatSaveData other) {
+    private StatSaveData addStats (StatSaveData base, StatSaveData other) {
         if (base == null) return other;
         if (other == null) return base;
 

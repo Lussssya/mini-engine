@@ -33,7 +33,7 @@ public class MilitaryGearSaveData implements Json.Serializable {
     private StatsSaveData gearStats = new StatsSaveData();
 
     @Override
-    public void write(Json json) {
+    public void write (Json json) {
         json.writeValue("n", name);
         json.writeValue("s", slot.name());
         json.writeValue("sr", starCount);
@@ -44,7 +44,7 @@ public class MilitaryGearSaveData implements Json.Serializable {
     }
 
     @Override
-    public void read(Json json, JsonValue jsonValue) {
+    public void read (Json json, JsonValue jsonValue) {
         name = jsonValue.getString("n", "angel-bow");
         slot = Slot.valueOf(jsonValue.getString("s").toUpperCase(Locale.ENGLISH));
         starCount = jsonValue.getInt("sr", 0);

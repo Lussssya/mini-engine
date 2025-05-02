@@ -9,20 +9,22 @@ import lombok.Setter;
 import java.util.Locale;
 
 public class StatSaveData implements Json.Serializable {
-    @Setter @Getter
+    @Setter
+    @Getter
     private Stat name;
-    @Setter @Getter
+    @Setter
+    @Getter
     private float value;
 
     @Override
-    public void write(Json json) {
+    public void write (Json json) {
         json.writeValue("n", name.name());
         json.writeValue("v", value);
     }
 
     @Override
-    public void read(Json json, JsonValue jsonValue) {
-        name = Stat.valueOf(jsonValue.getString("n").toUpperCase(Locale.ENGLISH));
-        value = jsonValue.getFloat("v");
+    public void read (Json json, JsonValue jsonValue) {
+        name = Stat.valueOf(jsonValue.getString("n", "stat").toUpperCase(Locale.ENGLISH));
+        value = jsonValue.getFloat("v", 0f);
     }
 }

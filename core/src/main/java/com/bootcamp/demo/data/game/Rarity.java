@@ -12,7 +12,7 @@ public enum Rarity {
     @Getter
     private final String backgroundHex;
 
-    Rarity(String backgroundHex) {
+    Rarity (String backgroundHex) {
         this.backgroundHex = backgroundHex;
     }
 }

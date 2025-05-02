@@ -19,6 +19,7 @@ public class TestDialog extends ADialog {
         final DialogManager dialogManager = API.get(DialogManager.class);
         final TestDialog dialog = API.get(DialogManager.class).getDialog(TestDialog.class);
 
+
         dialogManager.show(TestDialog.class);
 
         final Table currentGear = this.cloneToTable();
