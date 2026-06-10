@@ -4,24 +4,22 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.XmlReader;
 import lombok.Getter;
 
+@Getter
 public class GameData {
-    @Getter
     private final XmlReader xmlReader = new XmlReader();
 
-    @Getter
     private final TacticalsGameData tacticalsGameData;
-    @Getter
     private final MilitaryGearsGameData militaryGearsGameData;
-    @Getter
     private final PetsGameData petsGameData;
-    @Getter
     private final FlagsGameData flagsGameData;
+    private final SpecializationsGameData specializationsGameData;
 
     public GameData () {
         tacticalsGameData = new TacticalsGameData();
         militaryGearsGameData = new MilitaryGearsGameData();
         petsGameData = new PetsGameData();
         flagsGameData = new FlagsGameData();
+        specializationsGameData = new SpecializationsGameData();
     }
 
     public void load () {
@@ -29,5 +27,6 @@ public class GameData {
         militaryGearsGameData.load(xmlReader.parse(Gdx.files.internal("data/militaries.xml")));
         petsGameData.load(xmlReader.parse(Gdx.files.internal("data/pets.xml")));
         flagsGameData.load(xmlReader.parse(Gdx.files.internal("data/flags.xml")));
+        specializationsGameData.load(xmlReader.parse(Gdx.files.internal("data/specializations.xml")));
     }
 }
