@@ -4,10 +4,12 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 
 public enum GameFont implements IFont {
+    BOLD_16("roboto-bold", 16),
     BOLD_18("roboto-bold", 18),
     BOLD_20("roboto-bold", 20),
     BOLD_22("roboto-bold", 22),
     BOLD_24("roboto-bold", 24),
+    BOLD_26("roboto-bold", 26),
     BOLD_28("roboto-bold", 28),
     BOLD_32("roboto-bold", 32),
     BOLD_36("roboto-bold", 36),
@@ -15,10 +17,25 @@ public enum GameFont implements IFont {
     BOLD_48("roboto-bold", 48),
     BOLD_50("roboto-bold", 50),
     BOLD_60("roboto-bold", 60),
-    BOLD_70("roboto-bold", 70)
+    BOLD_70("roboto-bold", 70),
+
+    STROKE_18("roboto-bold", 18, true),
+    STROKE_20("roboto-bold", 20, true),
+    STROKE_22("roboto-bold", 22, true),
+    STROKE_24("roboto-bold", 24, true),
+    STROKE_26("roboto-bold", 26, true),
+    STROKE_28("roboto-bold", 28, true),
+    STROKE_32("roboto-bold", 32, true),
+    STROKE_36("roboto-bold", 36, true),
+    STROKE_40("roboto-bold", 40, true),
+    STROKE_48("roboto-bold", 48, true),
+    STROKE_50("roboto-bold", 50, true),
+    STROKE_60("roboto-bold", 60, true),
+    STROKE_70("roboto-bold", 70, true)
     ;
 
     public static final ObjectMap<String, Array<GameFont>> typeMap = new ObjectMap<>();
+
     static {
         for (GameFont value : GameFont.values()) {
             String type = value.getFontType();
@@ -32,10 +49,16 @@ public enum GameFont implements IFont {
 
     private final String fontType;
     private final int fontSize;
+    private final boolean isStroked;
 
-    GameFont (String fontType, int fontSize) {
+    GameFont (String fontType, int fontSize, boolean isStroked) {
         this.fontType = fontType;
         this.fontSize = fontSize;
+        this.isStroked = isStroked;
+    }
+
+    GameFont (String fontType, int fontSize) {
+        this(fontType, fontSize, false);
     }
 
     @Override
@@ -50,6 +73,11 @@ public enum GameFont implements IFont {
 
     @Override
     public String getFontName () {
-        return fontType + "-" + fontSize;
+        return fontType + "-" + fontSize + (isStroked ? "-stroke" : "");
+    }
+
+    @Override
+    public boolean isStroked () {
+        return isStroked;
     }
 }
