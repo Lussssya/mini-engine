@@ -2,5 +2,5 @@
     <flag name="common" icon="lootPage/flag-common-icon"/>
     <flag name="fight" icon="lootPage/flag-fight-icon"/>
     <flag name="ghost" icon="lootPage/flag-ghost-icon"/>
-    <flag name="star" icon="lootPage/flag-star-icon"/>
+    <flag name="star" icon="lootPage/specialization-icon"/>
 </root>

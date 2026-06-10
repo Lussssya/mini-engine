@@ -18,7 +18,22 @@ allprojects {
   apply plugin: 'eclipse'
   apply plugin: 'idea'
 
-  // This allows you to "Build and run using IntelliJ IDEA", an option in IDEA's Settings.
+  repositories {
+    mavenCentral()
+    mavenLocal()
+    google()
+    maven { url 'https://s01.oss.sonatype.org' }
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+    maven { url 'https://s01.oss.sonatype.org/content/repositories/snapshots/' }
+    maven { url 'https://jitpack.io' }
+  }
+
+  configurations.configureEach {
+    resolutionStrategy {
+      force "com.badlogicgames.gdx:gdx-jnigen-loader:2.4.0"
+    }
+  }
+
   idea {
     module {
       outputDir file('build/classes/java/main')
@@ -33,13 +48,13 @@ project(":core") {
   dependencies {
     // Use 'implementation' unless this needs to be exposed to other modules
     implementation "com.badlogicgames.gdx:gdx-ai:1.8.2"
-    implementation 'com.badlogicgames.gdx:gdx-jnigen-loader:3.0.0-ANTKILLER-SNAPSHOT'
 
-    // Lombok for compile-time annotation processing
-    compileOnly 'org.projectlombok:lombok:1.18.30' // Updated to the latest version
+    // Fixed: old snapshot version was not available anymore.
+    implementation "com.badlogicgames.gdx:gdx-jnigen-loader:2.4.0"
+
+    compileOnly 'org.projectlombok:lombok:1.18.30'
     annotationProcessor 'org.projectlombok:lombok:1.18.30'
 
-    // Lombok for test-specific processing
     testCompileOnly 'org.projectlombok:lombok:1.18.30'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
   }
@@ -47,17 +62,16 @@ project(":core") {
 
 configure(subprojects - project(':android')) {
   apply plugin: 'java-library'
-  sourceCompatibility = 8
 
-  // From https://lyze.dev/2021/04/29/libGDX-Internal-Assets-List/
-  // The article can be helpful when using assets.txt in your project.
+  sourceCompatibility = 8
+  targetCompatibility = 8
+
   tasks.register('generateAssetList') {
     inputs.dir("${project.rootDir}/assets/")
-    // projectFolder/assets
+
     File assetsFolder = new File("${project.rootDir}/assets/")
-    // projectFolder/assets/assets.txt
     File assetsFile = new File(assetsFolder, "assets.txt")
-    // delete that file in case we've already created it
+
     assetsFile.delete()
 
     // iterate through all files inside that folder
@@ -75,17 +89,8 @@ configure(subprojects - project(':android')) {
 }
 
 subprojects {
-  version = '$projectVersion'
+  version = projectVersion
   ext.appName = 'demo'
-  repositories {
-    mavenCentral()
-    maven { url 'https://s01.oss.sonatype.org' }
-    // You may want to remove the following line if you have errors downloading dependencies.
-    mavenLocal()
-    maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
-    maven { url 'https://s01.oss.sonatype.org/content/repositories/snapshots/' }
-    maven { url 'https://jitpack.io' }
-  }
 }
 
 import com.badlogic.gdx.tools.texturepacker.TexturePacker
@@ -95,4 +100,4 @@ task packGameTextures() {
   }
 }
 
-eclipse.project.name = 'demo' + '-parent'
+eclipse.project.name = 'demo-parent'
