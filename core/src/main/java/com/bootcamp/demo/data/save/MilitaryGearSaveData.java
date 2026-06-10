@@ -44,13 +44,14 @@ public class MilitaryGearSaveData implements Json.Serializable {
     }
 
     @Override
-    public void read (Json json, JsonValue jsonValue) {
+    public void read(Json json, JsonValue jsonValue) {
         name = jsonValue.getString("n", "angel-bow");
         slot = Slot.valueOf(jsonValue.getString("s").toUpperCase(Locale.ENGLISH));
         starCount = jsonValue.getInt("sr", 0);
         level = jsonValue.getInt("l", 0);
         tier = jsonValue.getChar("t", 'F');
         rarity = Rarity.valueOf(jsonValue.getString("r").toUpperCase(Locale.ENGLISH));
-        gearStats = json.readValue(StatsSaveData.class, jsonValue.get("st"));
+        JsonValue statsValue = jsonValue.get("st");
+        gearStats = statsValue == null ? new StatsSaveData() : json.readValue(StatsSaveData.class, statsValue);
     }
 }

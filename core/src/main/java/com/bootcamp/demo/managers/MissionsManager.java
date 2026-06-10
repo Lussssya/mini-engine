@@ -25,6 +25,7 @@ public class MissionsManager {
     }
 
     public StatsSaveData updateStatsContainer () {
+        API.get(MissionsManager.class).initializeStatsContainer();
         for (MilitaryGearGameData.Slot name : militaryGearsSaveData.getMilitaries().keys()) {
             MilitaryGearSaveData militaryGearSaveData = militaryGearsSaveData.getMilitaries().get(name);
             for (Stat stat : Stat.values()) {
@@ -83,5 +84,22 @@ public class MissionsManager {
 
         base.setValue(resultValue);
         return base;
+    }
+
+    public static float computeCumulativePower (StatsSaveData statsSaveData) {
+        float additive = 0;
+        float percent = 0;
+
+        for (StatSaveData statData: statsSaveData.getStats().values()) {
+            if (statData.getName().getType() == Stat.StatType.ADDITIVE){
+                additive += statData.getValue();
+            }
+            else {
+                percent += statData.getValue();
+            }
+        }
+        return additive > 0
+            ? additive * (1 + percent / 100f)
+            : percent;
     }
 }
