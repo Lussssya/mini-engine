@@ -1,66 +1,45 @@
 package com.bootcamp.demo.managers;
 
-import com.badlogic.gdx.utils.IntMap;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.bootcamp.demo.data.game.MilitaryGearGameData;
-import com.bootcamp.demo.data.game.Stat;
+import com.bootcamp.demo.data.game.*;
 import com.bootcamp.demo.data.save.*;
 
 public class MissionsManager {
     MilitaryGearsSaveData militaryGearsSaveData = API.get(SaveData.class).getMilitariesSaveData();
-    TacticalsSaveData tacticalsSaveData = API.get(SaveData.class).getTacticalsSaveData();
-    PetsSaveData petsSaveData = API.get(SaveData.class).getPetsSaveData();
-    FlagsSaveData flagsSaveData = API.get(SaveData.class).getFlagsSaveData();
+    AccessoryGearsSaveData accessoryGearsSaveData = API.get(SaveData.class).getAccessoryGearsSaveData();
 
     private final StatsSaveData statsContainer = new StatsSaveData();
 
     public void initializeStatsContainer () {
         statsContainer.getStats().clear();
-        for (Stat stat : Stat.values()) {
-            StatSaveData statSaveData = new StatSaveData(); // create new instance each time
-            statSaveData.setName(stat);
+        for (PLayerStat PLayerStat : PLayerStat.values()) {
+            final StatSaveData statSaveData = new StatSaveData(); // create new instance each time
+            statSaveData.setName(PLayerStat);
             statSaveData.setValue(0);
-            statsContainer.getStats().put(stat, statSaveData);
+            statsContainer.getStats().put(PLayerStat, statSaveData);
         }
     }
 
     public StatsSaveData updateStatsContainer () {
-        API.get(MissionsManager.class).initializeStatsContainer();
-        for (MilitaryGearGameData.Slot name : militaryGearsSaveData.getMilitaries().keys()) {
-            MilitaryGearSaveData militaryGearSaveData = militaryGearsSaveData.getMilitaries().get(name);
-            for (Stat stat : Stat.values()) {
-                if (militaryGearSaveData.getGearStats().getStats().containsKey(stat)) {
-                    mergeStats(militaryGearSaveData.getGearStats().getStats());
-                }
-            }
-        }
-        for (IntMap.Entry<String> entry : tacticalsSaveData.getEquipped()) {
-            TacticalSaveData tacticalSaveData = tacticalsSaveData.getInventory().get(tacticalsSaveData.getEquipped().get(entry.key));
-            for (Stat stat : Stat.values()) {
-                if (tacticalSaveData.getTacticalStats().getStats().containsKey(stat)) {
-                    mergeStats(tacticalSaveData.getTacticalStats().getStats());
-                }
-            }
+        initializeStatsContainer();
+
+        for (MilitaryGearSaveData militaryGearSaveData : militaryGearsSaveData.getMilitaries().values()) {
+            mergeStats(militaryGearSaveData.getGearStats().getStats());
         }
 
-        PetSaveData petSaveData = petsSaveData.getInventory().get(petsSaveData.getEquipped());
-        FlagSaveData flagSaveData = flagsSaveData.getInventory().get(flagsSaveData.getEquipped());
-        for (Stat stat : Stat.values()) {
-            if (petSaveData.getPetStats().getStats().containsKey(stat)) {
-                mergeStats(petSaveData.getPetStats().getStats());
-            }
-            if (flagSaveData.getFlagStats().getStats().containsKey(stat)) {
-                mergeStats(flagSaveData.getFlagStats().getStats());
-            }
+        for (AccessoryGearSaveData accessoryGearSaveData : accessoryGearsSaveData.getAccessories().values()) {
+            mergeStats(accessoryGearSaveData.getGearStats().getStats());
         }
+
+        applySpecializationEffects();
 
         return statsContainer;
     }
 
-    private void mergeStats (ObjectMap<Stat, StatSaveData> sourceStats) {
-        for (ObjectMap.Entry<Stat, StatSaveData> entry : sourceStats.entries()) {
-            Stat stat = entry.key;
-            statsContainer.getStats().put(stat, addStats(statsContainer.getStats().get(stat), entry.value));
+    private void mergeStats (ObjectMap<PLayerStat, StatSaveData> sourceStats) {
+        for (ObjectMap.Entry<PLayerStat, StatSaveData> entry : sourceStats.entries()) {
+            final PLayerStat PLayerStat = entry.key;
+            statsContainer.getStats().put(PLayerStat, addStats(statsContainer.getStats().get(PLayerStat), entry.value));
         }
     }
 
@@ -68,14 +47,14 @@ public class MissionsManager {
         if (base == null) return other;
         if (other == null) return base;
 
-        Stat.StatType typeA = base.getName().getType();
-        Stat.StatType typeB = other.getName().getType();
+        final PLayerStat.StatType typeA = base.getName().getType();
+        final PLayerStat.StatType typeB = other.getName().getType();
 
         float resultValue;
         if (typeA == typeB) {
             resultValue = base.getValue() + other.getValue();
         } else {
-            if (typeA == Stat.StatType.ADDITIVE) {
+            if (typeA == PLayerStat.StatType.ADDITIVE) {
                 resultValue = base.getValue() + base.getValue() * other.getValue();
             } else {
                 resultValue = other.getValue() + other.getValue() * base.getValue();
@@ -86,12 +65,36 @@ public class MissionsManager {
         return base;
     }
 
+    private void applySpecializationEffects () {
+        final SpecializationGameData.SpecializationType specializationType = API.get(SaveData.class).getSpecializationSaveData().getSpecializationType();
+        if (specializationType == null) {
+            return;
+        }
+
+        final SpecializationGameData specialization = API.get(GameData.class).getSpecializationsGameData().getSpecializations().get(specializationType);
+
+        for (SpecializationGameData.PassiveEffectData effect : specialization.getEffects()) {
+            final PLayerStat stat = effect.getStat();
+            StatSaveData statSaveData = statsContainer.getStats().get(stat);
+
+            if (statSaveData == null) {
+                statSaveData = new StatSaveData();
+                statSaveData.setName(stat);
+                statSaveData.setValue(0);
+
+                statsContainer.getStats().put(stat, statSaveData);
+            }
+
+            statSaveData.setValue(statSaveData.getValue() + effect.getValue());
+        }
+    }
+
     public static float computeCumulativePower (StatsSaveData statsSaveData) {
         float additive = 0;
         float percent = 0;
 
         for (StatSaveData statData: statsSaveData.getStats().values()) {
-            if (statData.getName().getType() == Stat.StatType.ADDITIVE){
+            if (statData.getName().getType() == PLayerStat.StatType.ADDITIVE){
                 additive += statData.getValue();
             }
             else {

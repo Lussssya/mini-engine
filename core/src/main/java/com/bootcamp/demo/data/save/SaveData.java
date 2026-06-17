@@ -12,6 +12,8 @@ public class SaveData {
 
     private MilitaryGearsSaveData militariesSaveData = new MilitaryGearsSaveData();
 
+    private AccessoryGearsSaveData accessoryGearsSaveData = new AccessoryGearsSaveData();
+
     private PetsSaveData petsSaveData = new PetsSaveData();
 
     private FlagsSaveData flagsSaveData = new FlagsSaveData();

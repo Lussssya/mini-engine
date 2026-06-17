@@ -8,15 +8,15 @@ import com.bootcamp.demo.engine.Labels;
 import com.bootcamp.demo.engine.Squircle;
 import com.bootcamp.demo.engine.widgets.WidgetsContainer;
 import com.bootcamp.demo.localization.GameFont;
-import com.bootcamp.demo.viewmodels.MilitaryGearViewModel;
+import com.bootcamp.demo.viewmodels.GearViewModel;
 
-public class MilitaryGearDialog extends ADialog {
+public class GearDialog extends ADialog {
     private Label name;
     private Label rarityType;
     private Label typeValue;
     private Label powerValueLabel;
 
-    public void setData (MilitaryGearViewModel viewModel) {
+    public void setData (GearViewModel viewModel) {
         name.setText(viewModel.getName());
         rarityType.setText(viewModel.getRarity());
         typeValue.setText(viewModel.getType());

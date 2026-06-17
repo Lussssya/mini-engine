@@ -10,6 +10,7 @@ public class GameData {
 
     private final TacticalsGameData tacticalsGameData;
     private final MilitaryGearsGameData militaryGearsGameData;
+    private final AccessoryGearsGameData accessoryGearsGameData;
     private final PetsGameData petsGameData;
     private final FlagsGameData flagsGameData;
     private final SpecializationsGameData specializationsGameData;
@@ -17,6 +18,7 @@ public class GameData {
     public GameData () {
         tacticalsGameData = new TacticalsGameData();
         militaryGearsGameData = new MilitaryGearsGameData();
+        accessoryGearsGameData = new AccessoryGearsGameData();
         petsGameData = new PetsGameData();
         flagsGameData = new FlagsGameData();
         specializationsGameData = new SpecializationsGameData();
@@ -25,6 +27,7 @@ public class GameData {
     public void load () {
         tacticalsGameData.load(xmlReader.parse(Gdx.files.internal("data/tacticals.xml")));
         militaryGearsGameData.load(xmlReader.parse(Gdx.files.internal("data/militaries.xml")));
+        accessoryGearsGameData.load(xmlReader.parse(Gdx.files.internal("data/accessories.xml")));
         petsGameData.load(xmlReader.parse(Gdx.files.internal("data/pets.xml")));
         flagsGameData.load(xmlReader.parse(Gdx.files.internal("data/flags.xml")));
         specializationsGameData.load(xmlReader.parse(Gdx.files.internal("data/specializations.xml")));

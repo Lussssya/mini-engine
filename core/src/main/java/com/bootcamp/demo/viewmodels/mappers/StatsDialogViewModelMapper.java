@@ -1,6 +1,7 @@
 package com.bootcamp.demo.viewmodels.mappers;
 
-import com.bootcamp.demo.data.game.Stat;
+import com.bootcamp.demo.data.game.PLayerStat;
+import com.bootcamp.demo.data.game.PLayerStat.StatType;
 import com.bootcamp.demo.data.save.StatSaveData;
 import com.bootcamp.demo.data.save.StatsSaveData;
 import com.bootcamp.demo.viewmodels.StatRowViewModel;
@@ -11,24 +12,24 @@ public class StatsDialogViewModelMapper {
     public static StatsDialogViewModel map (StatsSaveData data) {
         final StatsDialogViewModel viewModel = new StatsDialogViewModel();
 
-        for (Stat stat : Stat.values()) {
-            final StatSaveData statData = data.getStats().get(stat);
+        for (PLayerStat PLayerStat : PLayerStat.values()) {
+            final StatSaveData statData = data.getStats().get(PLayerStat);
 
             if (statData == null) {
                 continue;
             }
 
-            viewModel.getRows().add(mapRow(stat, statData));
+            viewModel.getRows().add(mapRow(PLayerStat, statData));
         }
 
         return viewModel;
     }
 
-    private static StatRowViewModel mapRow (Stat stat, StatSaveData statData) {
+    private static StatRowViewModel mapRow (PLayerStat PLayerStat, StatSaveData statData) {
         final StatRowViewModel row = new StatRowViewModel();
-        row.setTitle(stat.getTitle());
+        row.setTitle(PLayerStat.getDisplayName());
 
-        if (stat.getType() == Stat.StatType.ADDITIVE) {
+        if (PLayerStat.getType() == StatType.ADDITIVE) {
             row.setValue(formatAdditive(statData.getValue()));
         } else {
             row.setValue(String.format("%.2f%%", statData.getValue()));
