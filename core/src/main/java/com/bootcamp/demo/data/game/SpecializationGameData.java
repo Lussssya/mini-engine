@@ -38,8 +38,6 @@ public class SpecializationGameData implements IGameData {
     }
 
     @Getter
-    private SpecializationType specializationType;
-    @Getter
     private int atkWeight;
     @Getter
     private int hpWeight;
@@ -56,7 +54,6 @@ public class SpecializationGameData implements IGameData {
 
     @Override
     public void load (Element rootXml) {
-        specializationType = SpecializationType.valueOf(rootXml.getAttribute("name"));
         final Element weightsXml = rootXml.getChildByName("weights");
 
         atkWeight = weightsXml.getIntAttribute("atk");
@@ -71,18 +68,18 @@ public class SpecializationGameData implements IGameData {
 
         for (int i = 0; i < effectsXml.size; i++) {
             final Element effectXml = effectsXml.get(i);
-            PassiveEffectData current = new PassiveEffectData(effectXml.getAttribute("label"), effectXml.getIntAttribute("value"));
+            final PassiveEffectData current = new PassiveEffectData(PLayerStat.valueOf(effectXml.getAttribute("label")), effectXml.getIntAttribute("value"));
             effects.add(current);
         }
     }
 
     @Getter
     public static class PassiveEffectData {
-        private final String label;
+        private final PLayerStat stat;
         private final int value;
 
-        public PassiveEffectData (String label, int value) {
-            this.label = label;
+        public PassiveEffectData (PLayerStat stat, int value) {
+            this.stat = stat;
             this.value = value;
         }
     }

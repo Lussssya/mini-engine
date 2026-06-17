@@ -5,8 +5,8 @@
 
         <effect label="CRIT" value="19"/>
         <effect label="COMBO" value="18"/>
-        <effect label="ANTI REGEN" value="22"/>
-        <effect label="ANTI STEAL" value="14"/>
+        <effect label="ANTI_REGEN" value="22"/>
+        <effect label="ANTI_STEAL" value="14"/>
     </specialization>
 
     <specialization name="DENIER">
@@ -14,15 +14,15 @@
 
         <effect label="STUN" value="20"/>
         <effect label="DODGE" value="13"/>
-        <effect label="ANTI COMBO" value="8"/>
+        <effect label="ANTI_COMBO" value="8"/>
     </specialization>
 
     <specialization name="SURVIVOR">
         <weights atk="20" hp="50" def="30"/>
 
         <effect label="STEAL" value="25"/>
-        <effect label="ANTI DODGE" value="16"/>
-        <effect label="ANTI STUN" value="21"/>
+        <effect label="ANTI_DODGE" value="16"/>
+        <effect label="ANTI_STUN" value="21"/>
     </specialization>
 
 </specializations>

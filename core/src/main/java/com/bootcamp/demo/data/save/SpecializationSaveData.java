@@ -2,7 +2,8 @@ package com.bootcamp.demo.data.save;
 
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
-import com.bootcamp.demo.data.game.Rarity;
+import com.bootcamp.demo.data.game.PLayerStat;
+import com.bootcamp.demo.data.game.SpecializationGameData.Rarity;
 import com.bootcamp.demo.data.game.SpecializationGameData;
 import com.bootcamp.demo.data.game.SpecializationGameData.SpecializationType;
 import lombok.Getter;
@@ -11,21 +12,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class SpecializationSaveData implements Json.Serializable {
-    @Getter
-    public enum StatType {
-        ATK("lootPage/attack-icon", "ATK"),
-        HP("lootPage/hp-icon", "HP"),
-        DEF("lootPage/def-icon", "DEF");
-
-        private final String iconPath;
-        private final String label;
-
-        StatType (String iconPath, String label) {
-            this.iconPath = iconPath;
-            this.label = label;
-        }
-    }
-
     private SpecializationGameData.SpecializationType specializationType;
     private int rollPoints;
 
@@ -34,7 +20,7 @@ public class SpecializationSaveData implements Json.Serializable {
     private double defBonus;
 
     private double currentBonus;
-    private StatType currentStatType;
+    private PLayerStat currentStatType;
     private Rarity currentRarity;
 
     @Override
@@ -61,7 +47,7 @@ public class SpecializationSaveData implements Json.Serializable {
         defBonus = jsonValue.getDouble("defBonus", 0);
 
         currentBonus = jsonValue.getDouble("currentBonus", 0);
-        currentStatType = json.readValue(StatType.class, jsonValue.get("currentStat"));
+        currentStatType = json.readValue(PLayerStat.class, jsonValue.get("currentStat"));
         currentRarity = json.readValue(Rarity.class, jsonValue.get("currentRarity"));
     }
 

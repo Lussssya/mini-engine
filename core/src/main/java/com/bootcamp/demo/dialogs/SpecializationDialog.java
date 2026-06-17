@@ -10,7 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Slider.SliderStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Scaling;
-import com.bootcamp.demo.data.save.SpecializationSaveData.StatType;
+import com.bootcamp.demo.data.game.PLayerStat;
 import com.bootcamp.demo.dialogs.ChooseSpecializationDialog.PassiveEffectsContainer;
 import com.bootcamp.demo.dialogs.core.ADialog;
 import com.bootcamp.demo.dialogs.core.DialogManager;
@@ -86,9 +86,9 @@ public class SpecializationDialog extends ADialog {
         final JuicyButton resetButton = constructResetButton();
         final JuicyButton helpButton = constructHelpButton();
 
-        final ActiveStatWrapper atkBonus = new ActiveStatWrapper(StatType.ATK, viewModel.getAtkBonus());
-        final ActiveStatWrapper hpBonus = new ActiveStatWrapper(StatType.HP, viewModel.getHpBonus());
-        final ActiveStatWrapper defBonus = new ActiveStatWrapper(StatType.DEF, viewModel.getDefBonus());
+        final ActiveStatWrapper atkBonus = new ActiveStatWrapper(PLayerStat.ATK, viewModel.getAtkBonus());
+        final ActiveStatWrapper hpBonus = new ActiveStatWrapper(PLayerStat.HP, viewModel.getHpBonus());
+        final ActiveStatWrapper defBonus = new ActiveStatWrapper(PLayerStat.DEF, viewModel.getDefBonus());
 
         final Table firstRow = new Table();
         firstRow.padLeft(30).padRight(30);
@@ -177,7 +177,7 @@ public class SpecializationDialog extends ADialog {
     private Table constructCurrentStatSegment () {
         final Label rarity = Labels.make(GameFont.STROKE_22, Color.valueOf(viewModel.getCurrentRarityColor()), viewModel.getCurrentRarity());
         final Image icon = new Image(Resources.getDrawable(viewModel.getCurrentStatIcon()));
-        final Label bonusType = Labels.make(GameFont.STROKE_20, viewModel.getCurrentStatLabel() + ":");
+        final Label bonusType = Labels.make(GameFont.STROKE_20, viewModel.getCurrentStatLabel());
         final Label bonusValue = Labels.make(GameFont.STROKE_24, Color.valueOf("#6dc536"), String.format("+%.2f%%", viewModel.getCurrentBonus()));
 
         final Table iconBonusWrapper = new Table();
@@ -323,9 +323,9 @@ public class SpecializationDialog extends ADialog {
         final Label statTitle;
         final Label valueLabel;
 
-        public ActiveStatWrapper (StatType statType, double value) {
+        public ActiveStatWrapper (PLayerStat statType, double value) {
             this.icon = new Image(Resources.getDrawable(statType.getIconPath()));
-            this.statTitle = Labels.make(GameFont.STROKE_26, statType.getLabel() + ":");
+            this.statTitle = Labels.make(GameFont.STROKE_26, statType.getDisplayName());
             this.valueLabel = Labels.make(GameFont.STROKE_26, Color.valueOf("#6dc536"), "");
 
             updateValue(value);

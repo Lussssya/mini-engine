@@ -6,7 +6,7 @@ import lombok.Getter;
 public enum PLayerStat {
     HP("HP:", StatType.ADDITIVE),
     ATK("ATK:", StatType.ADDITIVE),
-    DEF("DEF:", StatType.MULTIPLICATIVE),
+    DEF("DEF:", StatType.ADDITIVE),
     DODGE("DODGE:", StatType.MULTIPLICATIVE),
     COMBO("COMBO:", StatType.MULTIPLICATIVE),
     CRIT("CRIT:", StatType.MULTIPLICATIVE),

@@ -56,7 +56,7 @@ public class SpecializationViewModel {
             this.currentRarity = saveData.getCurrentRarity().toString().toLowerCase(Locale.ENGLISH);
             this.currentRarityColor = saveData.getCurrentRarity().getLabelColor();
 
-            this.currentStatLabel = saveData.getCurrentStatType().getLabel();
+            this.currentStatLabel = saveData.getCurrentStatType().getDisplayName();
             this.currentStatIcon = saveData.getCurrentStatType().getIconPath();
 
             this.currentBonus = saveData.getCurrentBonus();

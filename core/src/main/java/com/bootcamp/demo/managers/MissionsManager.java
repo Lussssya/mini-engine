@@ -5,41 +5,67 @@ import com.bootcamp.demo.data.game.*;
 import com.bootcamp.demo.data.save.*;
 
 public class MissionsManager {
-    MilitaryGearsSaveData militaryGearsSaveData = API.get(SaveData.class).getMilitariesSaveData();
-    AccessoryGearsSaveData accessoryGearsSaveData = API.get(SaveData.class).getAccessoryGearsSaveData();
-
     private final StatsSaveData statsContainer = new StatsSaveData();
-
-    public void initializeStatsContainer () {
-        statsContainer.getStats().clear();
-        for (PLayerStat PLayerStat : PLayerStat.values()) {
-            final StatSaveData statSaveData = new StatSaveData(); // create new instance each time
-            statSaveData.setName(PLayerStat);
-            statSaveData.setValue(0);
-            statsContainer.getStats().put(PLayerStat, statSaveData);
-        }
-    }
 
     public StatsSaveData updateStatsContainer () {
         initializeStatsContainer();
 
-        for (MilitaryGearSaveData militaryGearSaveData : militaryGearsSaveData.getMilitaries().values()) {
-            mergeStats(militaryGearSaveData.getGearStats().getStats());
-        }
+        mergeMilitaryGearStats();
+        mergeAccessoryGearStats();
 
-        for (AccessoryGearSaveData accessoryGearSaveData : accessoryGearsSaveData.getAccessories().values()) {
-            mergeStats(accessoryGearSaveData.getGearStats().getStats());
-        }
-
+        applySpecializationStats();
         applySpecializationEffects();
 
         return statsContainer;
     }
 
+    public void initializeStatsContainer () {
+        statsContainer.getStats().clear();
+        for (PLayerStat stat : PLayerStat.values()) {
+            final StatSaveData statSaveData = new StatSaveData(); // create new instance each time
+            statSaveData.setName(stat);
+            statSaveData.setValue(0);
+            statsContainer.getStats().put(stat, statSaveData);
+        }
+    }
+
+    private void applySpecializationStats () {
+        final SpecializationSaveData specialization = API.get(SaveData.class).getSpecializationSaveData();
+
+        addSpecializationStat(PLayerStat.ATK, specialization.getAtkBonus());
+        addSpecializationStat(PLayerStat.HP, specialization.getHpBonus());
+        addSpecializationStat(PLayerStat.DEF, specialization.getDefBonus());
+    }
+
+    private void addSpecializationStat (PLayerStat stat, double value) {
+        final StatSaveData statSaveData = statsContainer.getStats().get(stat);
+        if (statSaveData == null) {
+            return;
+        }
+
+        statSaveData.setValue(statSaveData.getValue() + (float) value);
+    }
+
+    private void mergeAccessoryGearStats () {
+        final AccessoryGearsSaveData accessoryGearsSaveData = API.get(SaveData.class).getAccessoryGearsSaveData();
+
+        for (AccessoryGearSaveData accessoryGearSaveData : accessoryGearsSaveData.getAccessories().values()) {
+            mergeStats(accessoryGearSaveData.getGearStats().getStats());
+        }
+    }
+
+    private void mergeMilitaryGearStats () {
+        final MilitaryGearsSaveData militaryGearsSaveData = API.get(SaveData.class).getMilitariesSaveData();
+
+        for (MilitaryGearSaveData militaryGearSaveData : militaryGearsSaveData.getMilitaries().values()) {
+            mergeStats(militaryGearSaveData.getGearStats().getStats());
+        }
+    }
+
     private void mergeStats (ObjectMap<PLayerStat, StatSaveData> sourceStats) {
         for (ObjectMap.Entry<PLayerStat, StatSaveData> entry : sourceStats.entries()) {
-            final PLayerStat PLayerStat = entry.key;
-            statsContainer.getStats().put(PLayerStat, addStats(statsContainer.getStats().get(PLayerStat), entry.value));
+            final PLayerStat stat = entry.key;
+            statsContainer.getStats().put(stat, addStats(statsContainer.getStats().get(stat), entry.value));
         }
     }
 

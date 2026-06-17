@@ -6,13 +6,13 @@
 		"sc": 1,
 		"r": "COMMON",
 		"s": {
-			"HP": {
-				"n": "HP",
-				"v": 586
-			},
 			"ATK": {
 				"n": "ATK",
 				"v": 202
+			},
+			"HP": {
+				"n": "HP",
+				"v": 586
 			}
 		}
 	},
@@ -22,13 +22,13 @@
 		"sc": 2,
 		"r": "EXOTIC",
 		"s": {
-			"HP": {
-				"n": "HP",
-				"v": 713
-			},
 			"ATK": {
 				"n": "ATK",
 				"v": 261
+			},
+			"HP": {
+				"n": "HP",
+				"v": 713
 			}
 		}
 	},
@@ -38,13 +38,13 @@
 		"sc": 1,
 		"r": "EPIC",
 		"s": {
-			"HP": {
-				"n": "HP",
-				"v": 648
-			},
 			"ATK": {
 				"n": "ATK",
 				"v": 226
+			},
+			"HP": {
+				"n": "HP",
+				"v": 648
 			}
 		}
 	},
@@ -54,13 +54,13 @@
 		"sc": 1,
 		"r": "LEGENDARY",
 		"s": {
-			"HP": {
-				"n": "HP",
-				"v": 586
-			},
 			"ATK": {
 				"n": "ATK",
 				"v": 202
+			},
+			"HP": {
+				"n": "HP",
+				"v": 586
 			}
 		}
 	}
@@ -82,9 +82,9 @@
 		"t": "D",
 		"r": "ELITE",
 		"st": {
-			"HP": {
-				"n": "HP",
-				"v": 2.5
+			"ATK": {
+				"n": "ATK",
+				"v": 918
 			},
 			"DODGE": {
 				"n": "DODGE",
@@ -98,35 +98,9 @@
 				"n": "POISON",
 				"v": 5.67
 			},
-			"ATK": {
-				"n": "ATK",
-				"v": 918
-			}
-		}
-	},
-	"MELEE": {
-		"n": "hard-armor",
-		"s": "MELEE",
-		"l": 2,
-		"t": "D",
-		"r": "HARDENED",
-		"st": {
-			"REGEN": {
-				"n": "REGEN",
-				"v": 1.5
-			}
-		}
-	},
-	"HEAD": {
-		"n": "magic-ring",
-		"s": "HEAD",
-		"l": 1,
-		"t": "A",
-		"r": "OBLIVION",
-		"st": {
-			"COMBO": {
-				"n": "COMBO",
-				"v": 2
+			"HP": {
+				"n": "HP",
+				"v": 2.5
 			}
 		}
 	},
@@ -143,6 +117,19 @@
 			}
 		}
 	},
+	"HEAD": {
+		"n": "magic-ring",
+		"s": "HEAD",
+		"l": 1,
+		"t": "A",
+		"r": "OBLIVION",
+		"st": {
+			"COMBO": {
+				"n": "COMBO",
+				"v": 2
+			}
+		}
+	},
 	"GLOVES": {
 		"n": "bloody-grail",
 		"s": "GLOVES",
@@ -155,9 +142,34 @@
 				"v": 2.5
 			}
 		}
+	},
+	"MELEE": {
+		"n": "hard-armor",
+		"s": "MELEE",
+		"l": 2,
+		"t": "D",
+		"r": "HARDENED",
+		"st": {
+			"REGEN": {
+				"n": "REGEN",
+				"v": 1.5
+			}
+		}
 	}
 },
 "accessoryGearsSaveData": {
+	"WRIST": {
+		"n": "thor-hammer",
+		"s": "WRIST",
+		"l": 1,
+		"r": "NUCLEAR",
+		"st": {
+			"DODGE": {
+				"n": "DODGE",
+				"v": 3
+			}
+		}
+	},
 	"BELT": {
 		"n": "elf-staff",
 		"s": "BELT",
@@ -182,31 +194,19 @@
 			}
 		}
 	},
-	"WRIST": {
-		"n": "thor-hammer",
-		"s": "WRIST",
-		"l": 1,
-		"r": "NUCLEAR",
-		"st": {
-			"DODGE": {
-				"n": "DODGE",
-				"v": 3
-			}
-		}
-	},
 	"NECK": {
 		"n": "pink-cape",
 		"s": "NECK",
 		"l": 2,
 		"r": "ELITE",
 		"st": {
-			"COMBO": {
-				"n": "COMBO",
-				"v": 4.5
-			},
 			"ATK": {
 				"n": "ATK",
 				"v": 750
+			},
+			"COMBO": {
+				"n": "COMBO",
+				"v": 4.5
 			}
 		}
 	}
@@ -218,17 +218,17 @@
 		"sc": 0,
 		"r": "LEGENDARY",
 		"s": {
-			"HP": {
-				"n": "HP",
-				"v": 300
+			"ATK": {
+				"n": "ATK",
+				"v": 700
 			},
 			"CRIT": {
 				"n": "CRIT",
 				"v": 8
 			},
-			"ATK": {
-				"n": "ATK",
-				"v": 700
+			"HP": {
+				"n": "HP",
+				"v": 300
 			}
 		}
 	},
@@ -238,17 +238,17 @@
 		"sc": 1,
 		"r": "EPIC",
 		"s": {
-			"HP": {
-				"n": "HP",
-				"v": 5.79
+			"ATK": {
+				"n": "ATK",
+				"v": 2.39
 			},
 			"DODGE": {
 				"n": "DODGE",
 				"v": 16.5
 			},
-			"ATK": {
-				"n": "ATK",
-				"v": 2.39
+			"HP": {
+				"n": "HP",
+				"v": 5.79
 			}
 		}
 	},
@@ -258,17 +258,17 @@
 		"sc": 2,
 		"r": "EXOTIC",
 		"s": {
-			"HP": {
-				"n": "HP",
-				"v": 600
+			"ATK": {
+				"n": "ATK",
+				"v": 875
 			},
 			"COMBO": {
 				"n": "COMBO",
 				"v": 10.3
 			},
-			"ATK": {
-				"n": "ATK",
-				"v": 875
+			"HP": {
+				"n": "HP",
+				"v": 600
 			}
 		}
 	}
@@ -277,13 +277,13 @@
 	"common": {
 		"n": "common",
 		"s": {
-			"HP": {
-				"n": "HP",
-				"v": 2.14
-			},
 			"ATK": {
 				"n": "ATK",
 				"v": 345
+			},
+			"HP": {
+				"n": "HP",
+				"v": 2.14
 			}
 		}
 	},
@@ -298,25 +298,25 @@
 	"fight": {
 		"n": "fight",
 		"s": {
-			"HP": {
-				"n": "HP",
-				"v": 2.14
-			},
 			"ATK": {
 				"n": "ATK",
 				"v": 345
+			},
+			"HP": {
+				"n": "HP",
+				"v": 2.14
 			}
 		}
 	}
 },
 "specializationSaveData": {
 	"speciality": "DENIER",
-	"rollPoints": 0,
+	"rollPoints": 1,
 	"atkBonus": 0,
 	"hpBonus": 0,
-	"defBonus": 0,
-	"currentBonus": 0,
-	"currentStat": null,
-	"currentRarity": null
+	"defBonus": 4,
+	"currentBonus": 3.67,
+	"currentStat": "HP",
+	"currentRarity": "GOOD"
 }
 }

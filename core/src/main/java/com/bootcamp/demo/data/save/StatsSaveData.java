@@ -24,9 +24,9 @@ public class StatsSaveData implements Json.Serializable {
         stats.clear();
 
         for (JsonValue value : jsonValue) {
-            final PLayerStat statType = PLayerStat.valueOf(value.name().toUpperCase(Locale.ENGLISH));
+            final PLayerStat stat = PLayerStat.valueOf(value.name().toUpperCase(Locale.ENGLISH));
             final StatSaveData statSaveData = json.readValue(StatSaveData.class, value);
-            stats.put(statType, statSaveData);
+            stats.put(stat, statSaveData);
         }
     }
 }

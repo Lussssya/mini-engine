@@ -10,11 +10,11 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.bootcamp.demo.data.game.GameData;
+import com.bootcamp.demo.data.game.PLayerStat;
 import com.bootcamp.demo.data.game.SpecializationGameData;
 import com.bootcamp.demo.data.game.SpecializationGameData.PassiveEffectData;
 import com.bootcamp.demo.data.game.SpecializationGameData.SpecializationType;
 import com.bootcamp.demo.data.save.SaveData;
-import com.bootcamp.demo.data.save.SpecializationSaveData.StatType;
 import com.bootcamp.demo.dialogs.core.ADialog;
 import com.bootcamp.demo.engine.Labels;
 import com.bootcamp.demo.engine.Resources;
@@ -111,7 +111,7 @@ public class ChooseSpecializationDialog extends ADialog {
         segment.row();
         segment.add(statsSection).grow();
 
-        final Image tick = new Image(Resources.getDrawable("ui/checked-speciality"));
+        final Image tick = new Image(Resources.getDrawable("ui/checked-specializationType"));
         ticks.put(specializationType, tick);
         tick.setVisible(false);
 
@@ -140,9 +140,9 @@ public class ChooseSpecializationDialog extends ADialog {
         final int defWeight = specializationGameData.getDefWeight();
         final int maxWeight = Math.max(atkWeight, Math.max(hpWeight, defWeight));
 
-        final Table atkWrapper = constructBiasRow(StatType.ATK, atkWeight, maxWeight);
-        final Table hpWrapper = constructBiasRow(StatType.HP, hpWeight, maxWeight);
-        final Table defWrapper = constructBiasRow(StatType.DEF, defWeight, maxWeight);
+        final Table atkWrapper = constructBiasRow(PLayerStat.ATK, atkWeight, maxWeight);
+        final Table hpWrapper = constructBiasRow(PLayerStat.HP, hpWeight, maxWeight);
+        final Table defWrapper = constructBiasRow(PLayerStat.DEF, defWeight, maxWeight);
 
         final Table section = new Table();
         section.pad(20).defaults().expandX().uniformX().spaceLeft(10);
@@ -153,9 +153,9 @@ public class ChooseSpecializationDialog extends ADialog {
         return section;
     }
 
-    private Table constructBiasRow (StatType statType, int value, int maxValue) {
+    private Table constructBiasRow (PLayerStat statType, int value, int maxValue) {
         final Image icon = new Image(Resources.getDrawable(statType.getIconPath()));
-        final Label title = Labels.make(GameFont.STROKE_24, statType.getLabel());
+        final Label title = Labels.make(GameFont.STROKE_24, statType.getDisplayName());
         final Label valueLabel = Labels.make(GameFont.STROKE_24, "+" + value);
 
         if (value == maxValue) {
@@ -217,7 +217,7 @@ public class ChooseSpecializationDialog extends ADialog {
             defaults().growX().space(20, 100, 20, 100);
 
             for (int i = 0; i < effects.size; i++) {
-                final Label effectTitle = Labels.make(GameFont.STROKE_22, effects.get(i).getLabel());
+                final Label effectTitle = Labels.make(GameFont.STROKE_22, effects.get(i).getStat().getDisplayName());
                 final Label effectValue = Labels.make(GameFont.STROKE_22, "+" + effects.get(i).getValue());
 
                 final Table widget = new Table();

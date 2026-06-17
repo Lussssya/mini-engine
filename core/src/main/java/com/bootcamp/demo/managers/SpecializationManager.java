@@ -1,11 +1,11 @@
 package com.bootcamp.demo.managers;
 
 import com.bootcamp.demo.data.game.GameData;
+import com.bootcamp.demo.data.game.PLayerStat;
 import com.bootcamp.demo.data.game.SpecializationGameData;
 import com.bootcamp.demo.data.save.SaveData;
 import com.bootcamp.demo.data.save.SpecializationSaveData;
 import com.bootcamp.demo.data.game.SpecializationGameData.Rarity;
-import com.bootcamp.demo.data.save.SpecializationSaveData.StatType;
 
 import java.util.Random;
 
@@ -20,15 +20,15 @@ public class SpecializationManager {
     }
 
     public void reroll () {
-        final StatType statType = getRandomStat();
+        final PLayerStat stat = getRandomStat();
 
         final Rarity rarity = rollRarity();
         final double value = calculateRollBonus(rarity);
 
-        setCurrentRoll(statType, value, rarity);
+        setCurrentRoll(stat, value, rarity);
     }
 
-    private StatType getRandomStat () {
+    private PLayerStat getRandomStat () {
         final int atkWeight = specialization.getAtkWeight();
         final int hpWeight = specialization.getHpWeight();
         final int defWeight = specialization.getDefWeight();
@@ -37,12 +37,12 @@ public class SpecializationManager {
         final int roll = rand.nextInt(totalWeight);
 
         if (roll < atkWeight) {
-            return StatType.ATK;
+            return PLayerStat.ATK;
         }
         if (roll < atkWeight + hpWeight) {
-            return StatType.HP;
+            return PLayerStat.HP;
         }
-        return StatType.DEF;
+        return PLayerStat.DEF;
     }
 
     private Rarity rollRarity () {
@@ -81,7 +81,7 @@ public class SpecializationManager {
         return 0.95 + rand.nextDouble() * 0.10;
     }
 
-    private void setCurrentRoll (StatType statType, double bonus, Rarity rarity) {
+    private void setCurrentRoll (PLayerStat statType, double bonus, Rarity rarity) {
         saveData.setCurrentStatType(statType);
         saveData.setCurrentBonus(bonus);
         saveData.setCurrentRarity(rarity);
@@ -96,8 +96,8 @@ public class SpecializationManager {
         saveData.setCurrentStatType(getRandomStatExcept(saveData.getCurrentStatType()));
     }
 
-    private StatType getRandomStatExcept (StatType excludedStat) {
-        StatType next;
+    private PLayerStat getRandomStatExcept (PLayerStat excludedStat) {
+        PLayerStat next;
 
         do {
             next = getRandomStat();
