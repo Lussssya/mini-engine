@@ -48,9 +48,7 @@ public class GameUI extends ScreenAdapter implements Disposable, EventListener {
         stage.act(delta);
         stage.draw();
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
-            API.get(PageManager.class).show(MissionsPage.class);
-        }
+        API.get(PageManager.class).show(MissionsPage.class);
     }
 
     @Override
