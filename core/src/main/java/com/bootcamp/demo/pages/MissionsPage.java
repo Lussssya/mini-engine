@@ -34,23 +34,13 @@ public class MissionsPage extends APage {
     protected void constructContent (Table content) {
         setBackground(Resources.getDrawable("basics/white-pixel", Color.valueOf("#e09e6b")));
 
-        final Table gameUIOverlay = constructGameUIOverlay();
         final Table mainUISegment = constructMainUISegment();
         final Table buttonsSegment = constructButtonsSegment();
 
         // assemble
-        content.add(gameUIOverlay).grow();
-        content.row();
-        content.add(mainUISegment).growX().padBottom(-22);
+        content.add(mainUISegment).growX().expandY().bottom().padBottom(-22);
         content.row();
         content.add(buttonsSegment).growX();
-    }
-
-    private Table constructGameUIOverlay () {
-        final Table upperSegment = new Table();
-        upperSegment.add().expandY().bottom();
-
-        return upperSegment;
     }
 
     private Table constructMainUISegment () {
@@ -469,8 +459,6 @@ public class MissionsPage extends APage {
             final AccessoryGearsGameData accessoriesGameData = API.get(GameData.class).getAccessoryGearsGameData();
             final AccessoryGearGameData accessoryGameData = accessoriesGameData.getAccessories().get(saveData.getName());
 
-            System.out.println("Looking for: " + saveData.getName());
-            System.out.println(accessoriesGameData.getAccessories().keys().toArray());
             icon.setDrawable(accessoryGameData.getIcon());
             levelLabel.setText("Lv." + saveData.getLevel());
         }
