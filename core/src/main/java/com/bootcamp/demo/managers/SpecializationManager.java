@@ -30,9 +30,10 @@ public class SpecializationManager {
         final PLayerStat stat = getRandomStat();
 
         final Rarity rarity = rollRarity();
-        final double value = calculateRollBonus(rarity, stat);
+        final double rollBaseValue = calculateRollBaseValue(rarity);
+        final double value = calculateRollBonus(rollBaseValue, stat);
 
-        setCurrentRoll(stat, value, rarity);
+        setCurrentRoll(stat, value, rollBaseValue, rarity);
     }
 
     private PLayerStat getRandomStat () {
@@ -92,9 +93,14 @@ public class SpecializationManager {
         return Rarity.GOOD;
     }
 
-    private double calculateRollBonus (Rarity rarity, PLayerStat statType) {
+    private double calculateRollBaseValue (Rarity rarity) {
         final double base = calculateBaseValue();
-        final double finalValue = base * rarity.getMultiplier() * getStatValueMultiplier(statType) * randomVariance() / 100.0;
+
+        return base * rarity.getMultiplier() * randomVariance() / 100.0;
+    }
+
+    private double calculateRollBonus (double rollBaseValue, PLayerStat statType) {
+        final double finalValue = rollBaseValue * getStatValueMultiplier(statType);
         final double remainingBonus = getRemainingBonus(statType);
 
         if (finalValue >= remainingBonus) {
@@ -135,10 +141,11 @@ public class SpecializationManager {
         }
     }
 
-    private void setCurrentRoll (PLayerStat statType, double bonus, Rarity rarity) {
+    private void setCurrentRoll (PLayerStat statType, double bonus, double rollBaseValue, Rarity rarity) {
         saveData.setCurrentStatType(statType);
         saveData.setOriginalCurrentStatType(statType);
         saveData.setCurrentBonus(bonus);
+        saveData.setCurrentRollBaseValue(rollBaseValue);
         saveData.setCurrentRarity(rarity);
     }
 
@@ -146,6 +153,7 @@ public class SpecializationManager {
         saveData.setCurrentStatType(null);
         saveData.setOriginalCurrentStatType(null);
         saveData.setCurrentBonus(0);
+        saveData.setCurrentRollBaseValue(0);
         saveData.setCurrentRarity(null);
     }
 
@@ -166,7 +174,15 @@ public class SpecializationManager {
         }
 
         saveData.setCurrentStatType(stat);
-        saveData.setCurrentBonus(calculateRollBonus(saveData.getCurrentRarity(), stat));
+        saveData.setCurrentBonus(calculateRollBonus(getCurrentRollBaseValue(), stat));
+    }
+
+    private double getCurrentRollBaseValue () {
+        if (saveData.getCurrentRollBaseValue() > 0) {
+            return saveData.getCurrentRollBaseValue();
+        }
+
+        return saveData.getCurrentBonus() / getStatValueMultiplier(saveData.getCurrentStatType());
     }
 
     private PLayerStat getRandomStatExceptOriginal () {
