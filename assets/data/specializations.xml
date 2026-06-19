@@ -1,6 +1,6 @@
 <specializations>
 
-    <specialization name="GUNNER">
+    <specialization name="GUNNER" maxRollPoints="500">
         <weights atk="50" hp="25" def="25"/>
 
         <effect label="CRIT" value="19"/>
@@ -9,7 +9,7 @@
         <effect label="ANTI_STEAL" value="14"/>
     </specialization>
 
-    <specialization name="DENIER">
+    <specialization name="DENIER" maxRollPoints="500">
         <weights atk="25" hp="40" def="35"/>
 
         <effect label="STUN" value="20"/>
@@ -17,7 +17,7 @@
         <effect label="ANTI_COMBO" value="8"/>
     </specialization>
 
-    <specialization name="SURVIVOR">
+    <specialization name="SURVIVOR" maxRollPoints="500">
         <weights atk="20" hp="50" def="30"/>
 
         <effect label="STEAL" value="25"/>

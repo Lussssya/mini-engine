@@ -25,6 +25,7 @@ public class SpecializationSaveData implements Json.Serializable {
 
     private double currentBonus;
     private PLayerStat currentStatType;
+    private PLayerStat originalCurrentStatType;
     private Rarity currentRarity;
 
     @Override
@@ -39,6 +40,7 @@ public class SpecializationSaveData implements Json.Serializable {
 
         json.writeValue("currentBonus", currentBonus);
         json.writeValue("currentStat", currentStatType);
+        json.writeValue("originalCurrentStat", originalCurrentStatType);
         json.writeValue("currentRarity", currentRarity);
     }
 
@@ -54,6 +56,7 @@ public class SpecializationSaveData implements Json.Serializable {
 
         currentBonus = jsonValue.getDouble("currentBonus", 0);
         currentStatType = json.readValue(PLayerStat.class, jsonValue.get("currentStat"));
+        originalCurrentStatType = jsonValue.has("originalCurrentStat") ? json.readValue(PLayerStat.class, jsonValue.get("originalCurrentStat")) : currentStatType;
         currentRarity = json.readValue(Rarity.class, jsonValue.get("currentRarity"));
     }
 
@@ -68,6 +71,7 @@ public class SpecializationSaveData implements Json.Serializable {
 
         currentBonus = 0;
         currentStatType = null;
+        originalCurrentStatType = null;
         currentRarity = null;
     }
 
