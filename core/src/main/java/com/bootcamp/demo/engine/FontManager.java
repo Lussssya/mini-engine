@@ -2,7 +2,6 @@ package com.bootcamp.demo.engine;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -55,12 +54,9 @@ public class FontManager {
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(filePath));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = font.getFontSize() * 2;
-        parameter.kerning = true;
-        parameter.minFilter = Texture.TextureFilter.Nearest;
-        parameter.hinting = FreeTypeFontGenerator.Hinting.Full;
-        if (font.getFontType().contains("stroke")) {
+        if (font.isStroked()) {
             parameter.borderWidth = 4f;
-            parameter.borderColor = Color.valueOf("8e1a5bff");
+            parameter.borderColor = Color.valueOf("#000000");
         }
         BitmapFont bitmapFont = generator.generateFont(parameter);
         generator.dispose();
