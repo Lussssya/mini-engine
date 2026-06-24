@@ -8,25 +8,16 @@ import lombok.Getter;
 public class GameData {
     private final XmlReader xmlReader = new XmlReader();
 
-    private final TacticalsGameData tacticalsGameData;
     private final MilitaryGearsGameData militaryGearsGameData;
     private final AccessoryGearsGameData accessoryGearsGameData;
-    private final PetsGameData petsGameData;
-    private final FlagsGameData flagsGameData;
 
     public GameData () {
-        tacticalsGameData = new TacticalsGameData();
         militaryGearsGameData = new MilitaryGearsGameData();
         accessoryGearsGameData = new AccessoryGearsGameData();
-        petsGameData = new PetsGameData();
-        flagsGameData = new FlagsGameData();
     }
 
     public void load () {
-        tacticalsGameData.load(xmlReader.parse(Gdx.files.internal("data/tacticals.xml")));
         militaryGearsGameData.load(xmlReader.parse(Gdx.files.internal("data/militaries.xml")));
         accessoryGearsGameData.load(xmlReader.parse(Gdx.files.internal("data/accessories.xml")));
-        petsGameData.load(xmlReader.parse(Gdx.files.internal("data/pets.xml")));
-        flagsGameData.load(xmlReader.parse(Gdx.files.internal("data/flags.xml")));
     }
 }
