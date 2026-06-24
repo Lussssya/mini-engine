@@ -1,7 +1,5 @@
 package com.bootcamp.demo.presenters;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
@@ -12,7 +10,6 @@ import com.bootcamp.demo.events.core.EventListener;
 import com.bootcamp.demo.events.core.EventModule;
 import com.bootcamp.demo.managers.API;
 import com.bootcamp.demo.pages.MissionsPage;
-import com.bootcamp.demo.pages.TestPage;
 import com.bootcamp.demo.pages.core.APage;
 import com.bootcamp.demo.pages.core.PageManager;
 import lombok.Getter;
@@ -41,16 +38,13 @@ public class GameUI extends ScreenAdapter implements Disposable, EventListener {
 
         // construct
         mainPageCell = rootUI.add().grow();
+        API.get(PageManager.class).show(MissionsPage.class);
     }
 
     @Override
     public void render (float delta) {
         stage.act(delta);
         stage.draw();
-
-        if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
-            API.get(PageManager.class).show(MissionsPage.class);
-        }
     }
 
     @Override

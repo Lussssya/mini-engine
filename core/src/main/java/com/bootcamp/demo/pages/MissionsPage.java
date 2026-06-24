@@ -4,335 +4,300 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.utils.*;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Null;
+import com.badlogic.gdx.utils.ObjectMap;
+import com.badlogic.gdx.utils.Scaling;
 import com.bootcamp.demo.data.game.*;
 import com.bootcamp.demo.data.save.*;
-import com.bootcamp.demo.dialogs.MilitaryGearDialog;
+import com.bootcamp.demo.dialogs.*;
 import com.bootcamp.demo.dialogs.core.DialogManager;
 import com.bootcamp.demo.engine.Labels;
 import com.bootcamp.demo.engine.Resources;
 import com.bootcamp.demo.engine.Squircle;
-import com.bootcamp.demo.engine.widgets.BorderedTable;
-import com.bootcamp.demo.engine.widgets.OffsetButton;
-import com.bootcamp.demo.engine.widgets.WidgetsContainer;
+import com.bootcamp.demo.engine.widgets.*;
 import com.bootcamp.demo.localization.GameFont;
 import com.bootcamp.demo.managers.API;
-import com.bootcamp.demo.managers.MissionsManager;
 import com.bootcamp.demo.pages.core.APage;
-import com.sun.tools.javac.util.DefinedBy;
-import lombok.Getter;
-import lombok.Setter;
-
-import java.util.Locale;
+import com.bootcamp.demo.viewmodels.*;
+import com.bootcamp.demo.viewmodels.mappers.GearViewModelMapper;
 
 public class MissionsPage extends APage {
-    @Getter
-    private static StatsContainer statsContainer;
     private MilitaryGearsContainer militaryGearsContainer;
-    private TacticalsContainer tacticalsContainer;
-    private PetContainer petContainer;
-    private FlagContainer flagContainer;
+    private AccessoryGearsContainer accessoryGearsContainer;
 
     @Override
     protected void constructContent (Table content) {
         setBackground(Resources.getDrawable("basics/white-pixel", Color.valueOf("#e09e6b")));
 
-        final Table gameUIOverlay = constructGameUIOverlay();
         final Table mainUISegment = constructMainUISegment();
+        final Table buttonsSegment = constructButtonsSegment();
 
         // assemble
-        content.add(gameUIOverlay).grow();
+        content.add(mainUISegment).growX().expandY().bottom().padBottom(-22);
         content.row();
-        content.add(mainUISegment).growX();
-    }
-
-    private Table constructGameUIOverlay () {
-        final Table powerSegment = constructPowerSegment();
-
-        final Table upperSegment = new Table();
-        upperSegment.add(powerSegment).expandY().bottom();
-
-        return upperSegment;
-    }
-
-    private Table constructPowerSegment () {
-        final Table powerBorder = new Table();
-        powerBorder.setBackground(Squircle.SQUIRCLE_35_BORDER_TOP.getDrawable(Color.valueOf("#f5eae3")));
-        powerBorder.setFillParent(true);
-
-        final Image powerImage = new Image(Resources.getDrawable("lootPage/punch-icon"));
-
-        final Label totalPower = Labels.make(GameFont.BOLD_32, Color.valueOf("#f5eae3"));
-        totalPower.setText("217k");
-
-        final Table power = new Table();
-        power.setBackground(Squircle.SQUIRCLE_35_TOP.getDrawable(Color.valueOf("#a18d7b")));
-        power.addActor(powerBorder);
-        power.add(powerImage).size(75).space(20);
-        power.add(totalPower);
-
-        final Table segment = new Table();
-        segment.add(power).width(600).height(125);
-        return segment;
+        content.add(buttonsSegment).growX();
     }
 
     private Table constructMainUISegment () {
-        final Table statsSegment = constructStatsSegment();
+        final Table upgradeSegment = constructUpgradeSegment();
         final Table equipmentsSegment = constructMilitariesSegment();
-        final Table buttonsSegment = constructButtonsSegment();
 
         final Table segment = new Table();
-        segment.setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#f5eae3")));
+        segment.setBackground(Squircle.SQUIRCLE_35_TOP.getDrawable(Color.valueOf("#f5eae3")));
         segment.pad(30).defaults().space(30).growX();
-        segment.add(statsSegment);
+        segment.add(upgradeSegment);
         segment.row();
         segment.add(equipmentsSegment);
-        segment.row();
-        segment.add(buttonsSegment);
+
         return segment;
     }
 
-    private Table constructStatsSegment () {
-        statsContainer = new StatsContainer();
+    private Table constructUpgradeSegment () {
+        final PressableImageLabel tacticalButton = new PressableImageLabel("lootPage/tactical-icon", "Tactical", 170);
+        final PressableImageLabel petButton = new PressableImageLabel("lootPage/pets-icon", "Pets", 170);
 
-        final Image infoButtonImage = new Image(Resources.getDrawable("lootPage/stats-button"));
-        infoButtonImage.setScaling(Scaling.fit);
+        final PressableImageLabel specializationButton = new PressableImageLabel("lootPage/specialization-icon", "Specialization", 180);
 
-        final BorderedTable statsDetailedInfoButton = new BorderedTable();
-        statsDetailedInfoButton.setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#cfb6a3")));
-        statsDetailedInfoButton.add(infoButtonImage).size(100);
+        final PressableImageLabel droneButton = new PressableImageLabel("lootPage/drone-icon", "Drone", 170);
+        final PressableImageLabel soonButton = new PressableImageLabel("lootPage/lock-icon", "Soon", 100);
 
         final Table segment = new Table();
-        segment.setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#b6a89c")));
-        segment.pad(30).defaults().space(30);
-        segment.add(statsContainer).growX();
-        segment.add(statsDetailedInfoButton).size(150);
+        segment.setBackground(Squircle.SQUIRCLE_50.getDrawable(Color.valueOf("#d1c2bc")));
+        segment.defaults().expandX().space(30);
+        segment.add(tacticalButton).size(150);
+        segment.add(petButton).size(150);
+        segment.add(specializationButton).size(150);
+        segment.add(droneButton).size(150);
+        segment.add(soonButton).padLeft(10).size(80);
         return segment;
+    }
+
+    private Table constructInfoButtonsSegment () {
+        final Image skinImage = new Image(Resources.getDrawable("lootPage/sets-icon"));
+        skinImage.setColor(0, 0, 0, 0.3f);
+        skinImage.setScaling(Scaling.fit);
+
+        final BorderedTable skinsInfoButton = new BorderedTable();
+        skinsInfoButton.setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#cfb6a3")));
+        skinsInfoButton.add(skinImage).size(100);
+
+        final BorderedTable statsInfoButton = constructStatsInfoButton();
+
+        final Table segment = new Table();
+        segment.add(skinsInfoButton).expand();
+        segment.row();
+        segment.add(statsInfoButton).expand();
+
+        return segment;
+    }
+
+    private BorderedTable constructStatsInfoButton () {
+        final Image image = new Image(Resources.getDrawable("lootPage/stats-icon"));
+        image.setColor(0, 0, 0, 0.3f);
+        image.setScaling(Scaling.fit);
+
+        final BorderedTable button = new BorderedTable();
+        button.setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#cfb6a3")));
+        button.add(image).size(100);
+
+        return button;
     }
 
     private Table constructMilitariesSegment () {
-        final Table militaryGearsSegment = constructMilitaryGearsSegment();
-        final Table secondaryGearSegment = constructSecondaryGearSegment();
+        final Table militaryTitle = constructSetInfoSegment();
+        final Table accessoryTitle = constructLoadoutTitleSegment();
+        final Table militaryContent = constructMilitaryGearsSegment();
+        final Table accessoryContent = constructAccessoryGearsSegment();
+        final Table infoSection = constructInfoButtonsSegment();
+
+        final Table headers = new Table();
+        headers.defaults().space(30);
+        headers.defaults().padBottom(-25).growX();
+        headers.add(militaryTitle).padRight(170);
+        headers.add(accessoryTitle).height(80);
+
+        final Table contents = new Table();
+        contents.defaults().space(30).grow();
+        contents.add(militaryContent);
+        contents.add(accessoryContent);
+
+        final Image dots = new Image(Resources.getDrawable("lootPage/vertical-dashed-line"));
+        dots.setColor(0, 0, 0, 0.2f);
+        dots.setScaling(Scaling.fillY);
 
         final Table segment = new Table();
-        segment.setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#f5eae3")));
-        segment.pad(30).defaults().space(30);
+        segment.add(headers).growX();
+        segment.row();
+        segment.add(contents).grow();
+        segment.add(dots).growY().padLeft(10).padRight(10);
+        segment.add(infoSection).fillY().expand();
 
-        segment.add(militaryGearsSegment).grow();
-        segment.add(secondaryGearSegment).grow();
         return segment;
     }
 
     private Table constructMilitaryGearsSegment () {
-        final Table setInfoSegment = constructSetInfoSegment();
-
         militaryGearsContainer = new MilitaryGearsContainer();
 
         final Table segment = new Table();
-        segment.setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#d1cecc")));
-        segment.pad(30).defaults().space(30);
+        segment.setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#d1c2bc")));
 
-        segment.add(setInfoSegment).fillX().height(60);
-        segment.row();
-        segment.add(militaryGearsContainer);
+        segment.pad(30);
+        segment.add(militaryGearsContainer).grow();
+
+        return segment;
+    }
+
+    private Table constructAccessoryGearsSegment () {
+        accessoryGearsContainer = new AccessoryGearsContainer();
+
+        final Table segment = new Table();
+
+        segment.pad(30);
+        segment.add(accessoryGearsContainer).grow();
+
         return segment;
     }
 
     private Table constructSetInfoSegment () {
-        final Label infoSegmentText = Labels.make(GameFont.BOLD_20, Color.valueOf("#483f3a"));
+        final Label infoSegmentText = Labels.make(GameFont.BOLD_20, Color.valueOf("#7c6d67"));
         infoSegmentText.setText("Incomplete Set");
 
-        final Image infoButtonImage = new Image(Resources.getDrawable("lootPage/stats-button"));
-        infoButtonImage.setScaling(Scaling.fit);
+        final Table title = new Table();
+        title.setBackground(Squircle.SQUIRCLE_35_TOP.getDrawable(Color.valueOf("#d1c2bc")));
 
-        final BorderedTable button = new BorderedTable();
-        button.setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#cfb6a3")));
-        button.add(infoButtonImage).size(60);
+        title.add(infoSegmentText).height(infoSegmentText.getPrefHeight() * 1.9f).expand().top().left().padLeft(100);
 
-        final Table setInformationButton = new Table();
-        setInformationButton.setFillParent(true);
-        setInformationButton.add(button).expand().right().size(80);
-
-        final Table setTitleWrapper = new Table();
-        setTitleWrapper.setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#a9a29c")));
-        setTitleWrapper.addActor(setInformationButton);
-        setTitleWrapper.add(infoSegmentText);
-
-        return setTitleWrapper;
+        return title;
     }
 
-    private Table constructSecondaryGearSegment () {
-        tacticalsContainer = new TacticalsContainer();
-        petContainer = new PetContainer();
-        flagContainer = new FlagContainer();
+    private Table constructLoadoutTitleSegment () {
+        final Image refreshIcon = new Image(Resources.getDrawable("lootPage/refresh-icon"));
+        refreshIcon.setScaling(Scaling.fit);
 
-        final Table tacticalsFlagWrapper = new Table();
-        tacticalsFlagWrapper.defaults().space(30);
-        tacticalsFlagWrapper.add(tacticalsContainer).size(200);
-        tacticalsFlagWrapper.row();
-        tacticalsFlagWrapper.add(flagContainer).size(200);
+        final BorderedTable button = new BorderedTable(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#3eb0f3")), Squircle.SQUIRCLE_35_BORDER.getDrawable(Color.valueOf("#2467a1")));
+        button.add(refreshIcon).pad(2);
 
-        final Table secondaryGearSegment = new Table();
-        secondaryGearSegment.defaults().space(30);
-        secondaryGearSegment.add(tacticalsFlagWrapper);
-        secondaryGearSegment.add(petContainer).fillY().width(200);
+        final Label text = Labels.make(GameFont.BOLD_20, Color.valueOf("#7c6d67"));
+        text.setText("Loadout 1");
 
-        return secondaryGearSegment;
+        final Table title = new Table();
+        title.setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#d1c2bc")));
+        title.add(text).expandX();
+        title.add(button).size(100);
+
+        return title;
     }
 
     private Table constructButtonsSegment () {
-        final OffsetButton upgradeButton = constructUpgradeButton();
-        final OffsetButton lootButton = constructLootButton();
-        final OffsetButton autoLootButton = constructAutoLootButton();
+        final JuicyButton homeButton = constructHomeButton();
+        final JuicyButton autoLootButton = constructAutoLootButton();
+        final JuicyButton lootButton = constructLootButton();
+        final Table upgradeButtonSegment = constructUpgradeButtonSegment();
 
         final Table segment = new Table();
-        segment.setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#f5eae3")));
+        segment.setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#383331")));
 
-        segment.pad(30).defaults().uniform().space(30).height(150).growX();
-        segment.add(upgradeButton);
-        segment.add(lootButton);
-        segment.add(autoLootButton);
+        final Table front = new Table();
+        front.setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#453e3d")));
+        front.pad(10, 40, 40, 40);
+        front.defaults().pad(10);
+
+        front.add(homeButton).size(180);
+        front.add(autoLootButton).size(180);
+        front.add(lootButton).size(540, 180).expandX();
+        front.add(upgradeButtonSegment).height(180);
+
+        segment.add(front).grow().padBottom(90).padTop(120);
+
         return segment;
     }
 
-    private OffsetButton constructUpgradeButton () {
-        final Label bladeText = Labels.make(GameFont.BOLD_20, Color.valueOf("#f5eae3"));
-        bladeText.setText("Lvl 17");
+    private JuicyButton constructHomeButton () {
+        final Image homeIcon = new Image(Resources.getDrawable("lootPage/home-icon"));
+        homeIcon.setScaling(Scaling.fit);
 
-        final Label handleText = Labels.make(GameFont.BOLD_20, Color.valueOf("#f5eae3"));
-        handleText.setText("Lvl 3");
+        return new JuicyButton(JuicyButton.Style.ORANGE_35) {
+            protected void buildInner (Table container) {
+                super.buildInner(container);
+                container.add(homeIcon).pad(5);
+            }
+        };
+    }
 
-        final Table bladeLevel = new Table();
-        bladeLevel.setBackground(Squircle.SQUIRCLE_15.getDrawable(Color.valueOf("#9c7e5a")));
-        bladeLevel.add(bladeText);
+    private JuicyButton constructAutoLootButton () {
+        final Image shovel = new Image(Resources.getDrawable("lootPage/shovel-icon"));
+        shovel.setScaling(Scaling.fit);
 
-        final Table handleLevel = new Table();
-        handleLevel.setBackground(Squircle.SQUIRCLE_15.getDrawable(Color.valueOf("#9c7e5a")));
-        handleLevel.add(handleText);
+        return new JuicyButton(JuicyButton.Style.BLUE_35) {
+            protected void buildInner (Table container) {
+                super.buildInner(container);
+                container.add(shovel).pad(5);
+            }
+        };
+    }
 
-        final Table bladeHandleWrapper = new Table();
-        bladeHandleWrapper.defaults().space(10).height(45).growX();
-        bladeHandleWrapper.add(bladeLevel);
-        bladeHandleWrapper.row();
-        bladeHandleWrapper.add(handleLevel);
+    private JuicyButton constructLootButton () {
+        final Label lootButtonText = Labels.make(GameFont.STROKE_24, Color.valueOf("#f5eae3"), "LOOT");
+
+        final Table iconTextWrapper = new IconTextWrapper("lootPage/shovel-icon", "2.07k");
+
+        return new JuicyButton(JuicyButton.Style.GREEN_35) {
+            protected void buildInner (Table container) {
+                super.buildInner(container);
+                container.add(lootButtonText).expand();
+                container.row();
+                container.add(iconTextWrapper).expandX().height(50).width(220).padBottom(10);
+            }
+        };
+    }
+
+    private Table constructUpgradeButtonSegment () {
+        final Table segment = new Table();
 
         final Image shovel = new Image(Resources.getDrawable("lootPage/shovel-icon"));
         shovel.setScaling(Scaling.fit);
 
-        return new OffsetButton(OffsetButton.Style.ORANGE_35) {
+        final JuicyButton button = new JuicyButton(JuicyButton.Style.BLUE_35) {
             @Override
             protected void buildInner (Table container) {
                 super.buildInner(container);
                 container.pad(10);
-                container.add(shovel);
-                container.add(bladeHandleWrapper).growX().padRight(10);
+                container.add(shovel).pad(5);
             }
         };
-    }
 
-    private OffsetButton constructLootButton () {
-        final Label lootButtonText = Labels.make(GameFont.BOLD_22, Color.valueOf("#f5eae3"), "LOOT");
+        // example data
+        final Label bladeText = Labels.make(GameFont.STROKE_20, Color.valueOf("#f5eae3"));
+        bladeText.setText("lv. 17");
 
-        final Image shovel = new Image(Resources.getDrawable("lootPage/shovel-icon"));
-        shovel.setScaling(Scaling.fit);
+        final Label handleText = Labels.make(GameFont.STROKE_20, Color.valueOf("#f5eae3"));
+        handleText.setText("lv. 3");
 
-        return new OffsetButton(OffsetButton.Style.GREEN_35) {
-            protected void buildInner (Table container) {
-                super.buildInner(container);
-                container.add(lootButtonText).expandX().right();
-                container.add(shovel);
-            }
-        };
-    }
+        final PassiveBorderedTable bladeLevel = new PassiveBorderedTable(Squircle.SQUIRCLE_35_RIGHT.getDrawable(Color.valueOf("#f7bb5a")), Squircle.SQUIRCLE_35_BORDER_RIGHT.getDrawable(Color.valueOf("#97602d")));
+        bladeLevel.add(bladeText).pad(20, 10, 20, 30);
 
-    private OffsetButton constructAutoLootButton () {
-        final Label autoLootButtonText = Labels.make(GameFont.BOLD_22, Color.valueOf("#f5eae3"), "Auto Loot");
+        final PassiveBorderedTable handleLevel = new PassiveBorderedTable(Squircle.SQUIRCLE_35_RIGHT.getDrawable(Color.valueOf("#f7bb5a")), Squircle.SQUIRCLE_35_BORDER_RIGHT.getDrawable(Color.valueOf("#97602d")));
+        handleLevel.add(handleText).pad(20, 10, 20, 30);
 
-        final Image shovel = new Image(Resources.getDrawable("lootPage/shovel-icon"));
-        shovel.setScaling(Scaling.fit);
+        final Table bladeHandleWrapper = new Table();
+        bladeHandleWrapper.defaults().height(60).growX();
+        bladeHandleWrapper.add(bladeLevel);
+        bladeHandleWrapper.row();
+        bladeHandleWrapper.add(handleLevel);
 
-        return new OffsetButton(OffsetButton.Style.ORANGE_35) {
-            protected void buildInner (Table container) {
-                super.buildInner(container);
-                container.add(autoLootButtonText);
-                container.add(shovel);
-            }
-        };
+        segment.add(button).padRight(-5).size(180);
+        segment.add(bladeHandleWrapper).growX();
+
+        return segment;
     }
 
     @Override
     public void show (Runnable onComplete) {
         super.show(onComplete);
-        API.get(MissionsManager.class).initializeStatsContainer();
-        statsContainer.setData(API.get(MissionsManager.class).updateStatsContainer());
 
         militaryGearsContainer.setData(API.get(SaveData.class).getMilitariesSaveData());
-        tacticalsContainer.setData(API.get(SaveData.class).getTacticalsSaveData());
-        petContainer.setData(API.get(SaveData.class).getPetsSaveData());
-        flagContainer.setData(API.get(SaveData.class).getFlagsSaveData());
-    }
-
-    public static class StatsContainer extends WidgetsContainer<StatWidget> {
-
-        public StatsContainer () {
-            super(3);
-            pad(15).defaults().space(30).height(60).growX();
-
-            for (int i = 0; i < PLayerStat.values().length; i++) {
-                final StatWidget widget = new StatWidget();
-                add(widget);
-            }
-        }
-
-        public void setData (StatsSaveData statsSaveData) {
-            final Array<StatWidget> widgets = getWidgets();
-
-            int i = 0;
-            for (PLayerStat type : PLayerStat.values()) {
-                final StatSaveData statSaveData = statsSaveData.getStats().get(type);
-                final StatWidget widget = widgets.get(i++);
-
-                widget.setData(statSaveData);
-            }
-        }
-    }
-
-    public static class StatWidget extends Table {
-        private final Label title = Labels.make(GameFont.BOLD_24, Color.valueOf("#52483f"));
-        private final Label value = Labels.make(GameFont.BOLD_24, Color.valueOf("#f5eae3"));
-
-        public StatWidget () {
-            add(title).expandX().left();
-            add(value);
-        }
-
-        public void setData (@Null StatSaveData statSaveData) {
-            if (statSaveData == null) {
-                setEmpty();
-                return;
-            }
-
-            final PLayerStat type = statSaveData.getName();
-
-            title.setText(type.getDisplayName());
-            if (type.getType() == PLayerStat.StatType.ADDITIVE) {
-                value.setText(formatAdditive(statSaveData.getValue()));
-            } else {
-                value.setText(String.format("%.2f%%", statSaveData.getValue()));
-            }
-        }
-
-        private String formatAdditive (float value) {
-            if (value >= 1_000_000_000) return String.format("%.1fb", value / 1_000_000_000f);
-            if (value >= 1_000_000) return String.format("%.1fm", value / 1_000_000f);
-            if (value >= 1_000) return String.format("%.1fk", value / 1_000f);
-            return String.format("%.0f", value);
-        }
-
-        public void setEmpty () {
-            title.setText(null);
-            value.setText(null);
-        }
+        accessoryGearsContainer.setData(API.get(SaveData.class).getAccessoryGearsSaveData());
     }
 
     public static class MilitaryGearsContainer extends WidgetsContainer<MilitaryGearContainer> {
@@ -360,62 +325,123 @@ public class MissionsPage extends APage {
         }
     }
 
-    public static class MilitaryGearContainer extends BorderedTable {
-        private final Image icon;
-        private final Label levelLabel;
-        private final Label tierLabel;
-        private final StarContainer starContainer = new StarContainer();
+    public static class MilitaryGearContainer extends GearContainer<MilitaryGearSaveData> {
+        private final Label tierLabel = Labels.make(GameFont.BOLD_18, Color.valueOf("#f5eae3"));
 
         public MilitaryGearContainer () {
-            icon = new Image();
-            icon.setScaling(Scaling.fit);
+            final Table tierLayout = new Table();
+            tierLayout.add(tierLabel).pad(15, 20, 15, 15).expand().top().left();
+            tierLayout.setFillParent(true);
 
-            levelLabel = Labels.make(GameFont.BOLD_18, Color.valueOf("#f5eae3"));
-            tierLabel = Labels.make(GameFont.BOLD_18, Color.valueOf("#f5eae3"));
+            addActor(tierLayout);
+        }
+
+        @Override
+        protected void applyData (MilitaryGearSaveData saveData) {
+            setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf(saveData.getRarity().getBackgroundHex())));
+
+            final MilitaryGearsGameData militariesGameData = API.get(GameData.class).getMilitaryGearsGameData();
+            final MilitaryGearGameData militaryGameData = militariesGameData.getMilitaries().get(saveData.getName());
+
+            icon.setDrawable(militaryGameData.getIcon());
+            levelLabel.setText("Lv." + saveData.getLevel());
+            tierLabel.setText(String.valueOf(saveData.getTier()));
+        }
+
+        @Override
+        protected GearViewModel mapViewModel (MilitaryGearSaveData saveData) {
+            return GearViewModelMapper.map(saveData);
+        }
+
+        @Override
+        public void setEmpty () {
+            super.setEmpty();
+            levelLabel.setText("");
+        }
+    }
+
+    public static class AccessoryGearsContainer extends WidgetsContainer<AccessoryGearContainer> {
+        public AccessoryGearsContainer () {
+            super(2);
+            defaults().space(30).size(200);
+
+            for (int i = 0; i < 4; i++) {
+                final AccessoryGearContainer widget = new AccessoryGearContainer();
+                add(widget);
+            }
+        }
+
+        public void setData (AccessoryGearsSaveData accessoriesSaveData) {
+            final Array<AccessoryGearContainer> widgets = getWidgets();
+            final ObjectMap<AccessoryGearGameData.Slot, AccessoryGearSaveData> saveData = accessoriesSaveData.getAccessories();
+
+            for (int i = 0; i < widgets.size; i++) {
+                AccessoryGearContainer widget = widgets.get(i);
+                AccessoryGearGameData.Slot slot = AccessoryGearGameData.Slot.values()[i];
+
+                AccessoryGearSaveData gearSave = saveData.get(slot);
+                widget.setData(gearSave);
+            }
+        }
+    }
+
+    public static class AccessoryGearContainer extends GearContainer<AccessoryGearSaveData> {
+        @Override
+        protected void applyData (AccessoryGearSaveData saveData) {
+            setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf(saveData.getRarity().getBackgroundHex())));
+
+            final AccessoryGearsGameData accessoriesGameData = API.get(GameData.class).getAccessoryGearsGameData();
+            final AccessoryGearGameData accessoryGameData = accessoriesGameData.getAccessories().get(saveData.getName());
+
+            icon.setDrawable(accessoryGameData.getIcon());
+            levelLabel.setText("Lv." + saveData.getLevel());
+        }
+
+        @Override
+        protected GearViewModel mapViewModel (AccessoryGearSaveData saveData) {
+            return GearViewModelMapper.map(saveData);
+        }
+    }
+
+    public abstract static class GearContainer<T> extends BorderedTable {
+        protected final Image icon = new Image();
+        protected final Label levelLabel = Labels.make(GameFont.STROKE_18, Color.valueOf("#f5eae3"));
+
+        public GearContainer () {
+            icon.setScaling(Scaling.fit);
 
             add(icon);
 
-            final Table starsLayout = new Table();
-            starsLayout.pad(15).add(starContainer).expand().top().left();
-            starsLayout.setFillParent(true);
-
             final Table levelLayout = new Table();
-            levelLayout.pad(15).add(levelLabel).expand().bottom().left();
+            levelLayout.add(levelLabel).pad(15).expand().bottom().right();
             levelLayout.setFillParent(true);
 
-            final Table tierLayout = new Table();
-            tierLayout.pad(15).add(tierLabel).expand().bottom().right();
-            tierLayout.setFillParent(true);
-
-            addActor(starsLayout);
             addActor(levelLayout);
-            addActor(tierLayout);
+
             setEmpty();
         }
 
-        public void setData (@Null MilitaryGearSaveData militarySaveData) {
-            if (militarySaveData == null) {
+        public final void setData (@Null T saveData) {
+            if (saveData == null) {
                 setEmpty();
                 return;
             }
 
-            setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf(militarySaveData.getRarity().getBackgroundHex())));
+            applyData(saveData);
 
-            starContainer.setCount(militarySaveData.getStarCount());
-            starContainer.createStars();
+            setOnClick(() ->
+                showGearDialog(mapViewModel(saveData))
+            );
+        }
 
-            final MilitaryGearsGameData militariesGameData = API.get(GameData.class).getMilitaryGearsGameData();
-            final MilitaryGearGameData militaryGameData = militariesGameData.getMilitaries().get(militarySaveData.getName());
+        protected abstract void applyData (T saveData);
 
-            icon.setDrawable(militaryGameData.getIcon());
-            levelLabel.setText("Lv." + militarySaveData.getLevel());
-            tierLabel.setText(String.valueOf(militarySaveData.getTier()));
+        protected abstract GearViewModel mapViewModel (T saveData);
 
-            setOnClick(() -> {
-                final MilitaryGearDialog dialog = API.get(DialogManager.class).getDialog(MilitaryGearDialog.class);
-                dialog.setData(militarySaveData);
-                API.get(DialogManager.class).show(MilitaryGearDialog.class);
-            });
+        protected void showGearDialog (GearViewModel vm) {
+            final GearDialog dialog = API.get(DialogManager.class).getDialog(GearDialog.class);
+            dialog.setData(vm);
+            API.get(DialogManager.class).show(GearDialog.class);
         }
 
         @Override
@@ -423,178 +449,6 @@ public class MissionsPage extends APage {
             super.setEmpty();
             icon.setDrawable(Resources.getDrawable("lootPage/empty-gear"));
             levelLabel.setText("");
-            tierLabel.setText("");
-            starContainer.clear();
-        }
-    }
-
-    public static class TacticalsContainer extends BorderedTable {
-        final WidgetsContainer<TacticalContainer> container = new WidgetsContainer<>(2);
-
-        public TacticalsContainer () {
-            container.setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#c8c0b9")));
-            container.pad(20).defaults().uniform().space(20).grow();
-
-            for (int i = 0; i < 4; i++) {
-                final TacticalContainer widget = new TacticalContainer();
-                container.add(widget);
-            }
-
-            add(container);
-        }
-
-        public void setData (TacticalsSaveData tacticalsSaveData) {
-            final Array<TacticalContainer> widgets = container.getWidgets();
-
-            for (int i = 0; i < widgets.size; i++) {
-                final TacticalContainer widget = widgets.get(i);
-                final String name = tacticalsSaveData.getEquipped().get(i);
-                if (tacticalsSaveData.getInventory().containsKey(name)) {
-                    widget.setData(tacticalsSaveData.getInventory().get(name));
-                } else {
-                    widget.setEmpty();
-                }
-            }
-        }
-    }
-
-    public static class TacticalContainer extends Table {
-        private final Image icon;
-
-        public TacticalContainer () {
-            icon = new Image();
-            icon.setScaling(Scaling.fit);
-            add(icon).grow().pad(10);
-            setEmpty();
-        }
-
-        public void setData (@Null TacticalSaveData tacticalSaveData) {
-            if (tacticalSaveData == null) {
-                setEmpty();
-                return;
-            }
-
-            final TacticalsGameData tacticalsGameData = API.get(GameData.class).getTacticalsGameData();
-            final TacticalGameData tacticalGameData = tacticalsGameData.getTacticals().get(tacticalSaveData.getName());
-
-            icon.setDrawable(tacticalGameData.getIcon());
-            setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf(tacticalSaveData.getRarity().getBackgroundHex())));
-        }
-
-        private void setEmpty () {
-            icon.setDrawable(null);
-            setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.GRAY));
-        }
-    }
-
-    public static class FlagContainer extends BorderedTable {
-        private final Image icon = new Image();
-
-        public FlagContainer () {
-            icon.setScaling(Scaling.fit);
-            add(icon);
-
-            setEmpty();
-        }
-
-        public void setData (@Null FlagsSaveData flagsSaveData) {
-            if (flagsSaveData == null) {
-                setEmpty();
-                return;
-            }
-            setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#c8c0b9")));
-            final FlagsGameData flagsGameData = API.get(GameData.class).getFlagsGameData();
-            final FlagGameData flagGameData = flagsGameData.getFlags().get(flagsSaveData.getEquipped());
-            icon.setDrawable(flagGameData.getIcon());
-        }
-
-        @Override
-        public void setEmpty () {
-            super.setEmpty();
-            icon.setDrawable(null);
-            setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.GRAY));
-        }
-    }
-
-    public static class PetContainer extends BorderedTable {
-        private final Image icon;
-
-        public PetContainer () {
-            setPressedScale(0.95f);
-
-            final OffsetButton button = new OffsetButton(OffsetButton.Style.ORANGE_35) {
-                protected void buildInner (Table container) {
-                    final Image homeIcon = new Image(Resources.getDrawable("lootPage/home-icon"));
-                    homeIcon.setScaling(Scaling.fit);
-
-                    super.buildInner(container);
-                    container.add(homeIcon).size(80);
-                }
-            };
-
-            final Table buttonLayout = new Table();
-            buttonLayout.add(button).expand().bottom().growX().height(150);
-            buttonLayout.setFillParent(true);
-
-            icon = new Image();
-            icon.setScaling(Scaling.fit);
-            final Table imageLayout = new Table();
-            imageLayout.add(icon).growX();
-            imageLayout.setFillParent(true);
-
-            addActor(buttonLayout);
-            addActor(imageLayout);
-
-            setEmpty();
-        }
-
-        public void setData (@Null PetsSaveData petsSaveData) {
-            if (petsSaveData == null) {
-                setEmpty();
-                return;
-            }
-            setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#c8c0b9")));
-
-            final PetsGameData petsGameData = API.get(GameData.class).getPetsGameData();
-            final PetGameData petGameData = petsGameData.getPets().get(petsSaveData.getEquipped());
-
-            icon.setDrawable(petGameData.getIcon());
-        }
-
-        @Override
-        public void setEmpty () {
-            super.setEmpty();
-            icon.setDrawable(null);
-            setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.GRAY));
-        }
-    }
-
-    public static class StarContainer extends WidgetsContainer<StarContainer.StarIcon> {
-        @Setter
-        private int count = 0;
-
-        public StarContainer () {
-            super(Integer.MAX_VALUE);
-            reserveCells(false);
-            createStars();
-        }
-
-        public static class StarIcon extends Table {
-            Image star = new Image();
-
-            public StarIcon () {
-                star.setDrawable(Resources.getDrawable("lootPage/star-icon"));
-                star.setScaling(Scaling.fit);
-                add(star).size(30).space(10);
-            }
-        }
-
-        public void createStars () {
-            freeChildren();
-            for (int i = 0; i < count; i++) {
-                StarIcon starIcon = Pools.obtain(StarIcon.class);
-                add(starIcon);
-            }
         }
     }
 }
