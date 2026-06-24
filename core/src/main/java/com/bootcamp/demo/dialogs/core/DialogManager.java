@@ -53,6 +53,10 @@ public class DialogManager implements Disposable {
         DialogClosedEvent.fire(clazz);
     }
 
+    public void removeDialog(Class<? extends ADialog> clazz) {
+        cache.remove(clazz);
+    }
+
     @Override
     public void dispose () {
         cache.clear();

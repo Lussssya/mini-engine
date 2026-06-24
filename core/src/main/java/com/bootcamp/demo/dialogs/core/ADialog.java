@@ -6,17 +6,21 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Scaling;
 import com.bootcamp.demo.engine.Labels;
+import com.bootcamp.demo.engine.Resources;
 import com.bootcamp.demo.engine.Squircle;
+import com.bootcamp.demo.engine.widgets.OffsetButton;
 import com.bootcamp.demo.localization.GameFont;
 import com.bootcamp.demo.managers.API;
-import com.bootcamp.demo.engine.Resources;
 import lombok.Getter;
+import lombok.Setter;
 
 public abstract class ADialog extends Table {
     // title
@@ -28,8 +32,10 @@ public abstract class ADialog extends Table {
     protected Table contentWrapper;
     protected Table content;
 
-//    @Getter
-//    protected IconButton closeButton;
+    @Setter
+    private boolean closeButtonVisible;
+    @Getter
+    protected OffsetButton closeButton;
 
     @Getter
     protected Table dialog;
@@ -59,10 +65,6 @@ public abstract class ADialog extends Table {
 
         initCloseButton();
 
-        // init overlay
-        overlayTable = new Table();
-        constructOverlay(overlayTable);
-
         // init title segment
         initTitleSegment();
         constructTitleSegment(titleSegment);
@@ -70,6 +72,10 @@ public abstract class ADialog extends Table {
         // init content
         content = new Table();
         constructContent(content);
+
+        // init overlay
+        overlayTable = new Table();
+        constructOverlay(overlayTable);
 
         // wrap content
         contentWrapper = constructContentWrapper();
@@ -95,13 +101,22 @@ public abstract class ADialog extends Table {
     }
 
     protected void constructOverlay (Table overlayTable) {
-//        overlayTable.add(closeButton).expand().top().right().pad(20).padTop(18);
+        if (closeButtonVisible) {
+            overlayTable.add(closeButton).expand().top().right().pad(10, 40, 40, 40).size(100);
+        }
     }
 
     protected void initCloseButton () {
-        // init close button
-//        closeButton = WidgetLibrary.CLOSE_BUTTON_SMALL();
-//        closeButton.setOnClick(this::hide);
+        final Image icon = new Image(Resources.getDrawable("ui/close-icon"));
+        icon.setScaling(Scaling.fit);
+
+        closeButton = new OffsetButton(OffsetButton.Style.RED_35) {
+            protected void buildInner (Table container) {
+                super.buildInner(container);
+                container.add(icon).pad(5);
+            }
+        };
+        closeButton.setOnClick(() -> API.get(DialogManager.class).hide(ADialog.this.getClass()));
     }
 
     protected Table initDialogBorder (Drawable borderDrawable) {

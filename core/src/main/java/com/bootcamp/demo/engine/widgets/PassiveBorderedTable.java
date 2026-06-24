@@ -3,31 +3,33 @@ package com.bootcamp.demo.engine.widgets;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.bootcamp.demo.engine.Squircle;
 import lombok.Getter;
-import lombok.Setter;
 
-public class BorderedTable extends PressableTable {
+public class PassiveBorderedTable extends Table {
     protected Drawable emptyBorder = Squircle.SQUIRCLE_35_BORDER.getDrawable(Color.valueOf("81776e"));
     protected Drawable emptyBackground = Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("c2b8b0"));
 
     @Getter
     protected final Image borderImage;
+
     protected int borderSize = 8;
 
-    public BorderedTable () {
+    public PassiveBorderedTable () {
         this(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("c2b8b0")), Squircle.SQUIRCLE_35_BORDER.getDrawable(Color.valueOf("81776e")));
     }
 
-    public BorderedTable (Drawable backgroundDrawable, Drawable borderDrawable) {
+    public PassiveBorderedTable (Drawable backgroundDrawable, Drawable borderDrawable) {
         borderImage = new Image(borderDrawable);
         borderImage.setFillParent(true);
         borderImage.setTouchable(Touchable.disabled);
+
         addActor(borderImage);
 
         setBackground(backgroundDrawable);
-        pad(borderSize); // pad for border
+        pad(borderSize);
     }
 
     public void set (Drawable backgroundDrawable, Drawable borderDrawable) {
@@ -45,6 +47,6 @@ public class BorderedTable extends PressableTable {
     }
 
     public void bringBorderFront () {
-        getBorderImage().toFront();
+        borderImage.toFront();
     }
 }
