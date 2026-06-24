@@ -1,14 +1,20 @@
 package com.bootcamp.demo.dialogs;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Slider;
-import com.badlogic.gdx.scenes.scene2d.ui.Slider.SliderStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Scaling;
 import com.bootcamp.demo.data.game.PLayerStat;
 import com.bootcamp.demo.dialogs.ChooseSpecializationDialog.PassiveEffectsContainer;
@@ -85,6 +91,7 @@ public class SpecializationDialog extends ADialog {
     private Table constructDemonstrationSegment () {
         final JuicyButton resetButton = constructResetButton();
         final JuicyButton helpButton = constructHelpButton();
+        final Table graphicalDemonstrationSegment = constructGraphicalDemonstrationSegment();
 
         final ActiveStatWrapper atkBonus = new ActiveStatWrapper(PLayerStat.ATK, viewModel.getAtkBonus());
         final ActiveStatWrapper hpBonus = new ActiveStatWrapper(PLayerStat.HP, viewModel.getHpBonus());
@@ -105,7 +112,21 @@ public class SpecializationDialog extends ADialog {
         segment.add(firstRow);
         segment.row();
         segment.add(secondRow).padTop(20);
+        segment.row();
+        segment.add(graphicalDemonstrationSegment).height(700).growX();
+        return segment;
+    }
 
+    private Table constructGraphicalDemonstrationSegment () {
+        final Image triangleImage = new Image(Resources.getDrawable("lootPage/specialization_triangle"));
+        triangleImage.setScaling(Scaling.fill);
+
+        final Stack triangleStack = new Stack();
+        triangleStack.add(triangleImage);
+        triangleStack.add(new BonusGraphActor(viewModel.getAtkBonus(), viewModel.getHpBonus(), viewModel.getDefBonus(), viewModel.getMaximumBonus()));
+
+        final Table segment = new Table();
+        segment.add(triangleStack).grow().minSize(0);
         return segment;
     }
 
@@ -151,18 +172,21 @@ public class SpecializationDialog extends ADialog {
 
     private Table constructRollingSegment () {
         final Table progressBarSegment = constructProgressBar();
-        final Table buttonsSegment = constructButtonsSegment();
 
         final Table sliderButtonsWrapper = new Table();
         sliderButtonsWrapper.setBackground(Squircle.SQUIRCLE_35_BTM.getDrawable(Color.valueOf("#beaea6")));
         sliderButtonsWrapper.pad(30, 10, 10, 10);
         sliderButtonsWrapper.add(progressBarSegment).growX();
-        sliderButtonsWrapper.row();
-        sliderButtonsWrapper.add(buttonsSegment).growX().padTop(30);
+
+        if (!viewModel.isRollPointsMaxed()) {
+            final Table buttonsSegment = constructButtonsSegment();
+            sliderButtonsWrapper.row();
+            sliderButtonsWrapper.add(buttonsSegment).growX().padTop(30);
+        }
 
         final Table segment = new Table();
 
-        if (viewModel.getCurrentRarity() != null) {
+        if (viewModel.getCurrentRarity() != null && !viewModel.isRollPointsMaxed()) {
             final Table currentStatSegment = constructCurrentStatSegment();
 
             segment.add(currentStatSegment).width(600);
@@ -207,27 +231,13 @@ public class SpecializationDialog extends ADialog {
         titleContainer.setBackground(Squircle.SQUIRCLE_35_TOP.getDrawable(Color.valueOf("#6b5b53")));
         titleContainer.add(title).expand().top().padTop(5);
 
-        SliderStyle sliderStyle = new SliderStyle();
-        sliderStyle.background = Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#f5e7de"));
-        sliderStyle.knob = Squircle.SQUIRCLE_35.getDrawable(Color.CLEAR);
-
-        if (viewModel.getRollPoints() == 0) {
-            sliderStyle.knobBefore = Squircle.SQUIRCLE_35.getDrawable(Color.CLEAR);
-        } else {
-            sliderStyle.knobBefore = Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#7ed97b"));
-        }
-
-        final Slider progressBar = new Slider(0, viewModel.getMaxRollPoints(), 1, false, sliderStyle);
-        progressBar.setValue(viewModel.getRollPoints());
-        progressBar.setDisabled(true);
-
         final Label progressText = Labels.make(GameFont.STROKE_20, String.format("%d/%d", viewModel.getRollPoints(), viewModel.getMaxRollPoints()));
         final Table progressTextWrapper = new Table();
         progressTextWrapper.add(progressText).expand();
         progressTextWrapper.setFillParent(true);
 
         final PassiveBorderedTable progressBarWrapper = new PassiveBorderedTable(Squircle.SQUIRCLE_50.getDrawable(Color.valueOf("#f5e7de")), Squircle.SQUIRCLE_50_BORDER.getDrawable(Color.valueOf("#3a281b")));
-        progressBarWrapper.add(progressBar).grow();
+        progressBarWrapper.add(new RollPointsProgressActor(viewModel.getRollPoints(), viewModel.getMaxRollPoints())).grow().pad(8);
         progressBarWrapper.addActor(progressTextWrapper);
 
         final Table segment = new Table();
@@ -346,6 +356,159 @@ public class SpecializationDialog extends ADialog {
             setBackground(Squircle.SQUIRCLE_20.getDrawable(Color.valueOf("#00000030")));
             pad(5, 20, 5, 20);
             add(wrapper).expandX();
+        }
+    }
+
+    private static class BonusGraphActor extends Actor {
+        private static final ShapeRenderer SHAPE_RENDERER = new ShapeRenderer();
+        private static final Color FILL_COLOR = Color.valueOf("#78f477bb");
+        private static final int EDGE_SEGMENTS = 12;
+
+        private static final float CENTER_X = 0.5f;
+        private static final float CENTER_Y = 0.405f;
+        private static final float ATK_X = 0.215f;
+        private static final float ATK_Y = 0.25f;
+        private static final float HP_X = 0.5f;
+        private static final float HP_Y = 0.68f;
+        private static final float DEF_X = 0.785f;
+        private static final float DEF_Y = 0.25f;
+
+        private final float atkBonus;
+        private final float hpBonus;
+        private final float defBonus;
+        private final float maximumBonus;
+
+        private final Vector2 tmp = new Vector2();
+        private final Vector2 fillCenter = new Vector2();
+        private final Vector2[] vertices = makeVectors(3);
+        private final Vector2[] roundedPoints = makeVectors(3 * EDGE_SEGMENTS);
+
+        public BonusGraphActor (double atkBonus, double hpBonus, double defBonus, double maximumBonus) {
+            this.maximumBonus = Math.max(1f, (float) maximumBonus);
+            this.atkBonus = normalizeBonus(atkBonus);
+            this.hpBonus = normalizeBonus(hpBonus);
+            this.defBonus = normalizeBonus(defBonus);
+            setTouchable(Touchable.disabled);
+        }
+
+        private float normalizeBonus (double bonus) {
+            return Math.min(1f, Math.max(0f, (float) bonus / maximumBonus));
+        }
+
+        @Override
+        public void draw (Batch batch, float parentAlpha) {
+            final float centerX = getStageX(CENTER_X);
+            final float centerY = getStageY(CENTER_Y);
+            final float atkX = approach(centerX, getStageX(ATK_X), atkBonus);
+            final float atkY = approach(centerY, getStageY(ATK_Y), atkBonus);
+            final float hpX = approach(centerX, getStageX(HP_X), hpBonus);
+            final float hpY = approach(centerY, getStageY(HP_Y), hpBonus);
+            final float defX = approach(centerX, getStageX(DEF_X), defBonus);
+            final float defY = approach(centerY, getStageY(DEF_Y), defBonus);
+            final int pointCount = buildRoundedGraph(atkX, atkY, hpX, hpY, defX, defY);
+
+            batch.end();
+            Gdx.gl.glEnable(GL20.GL_BLEND);
+            Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+
+            SHAPE_RENDERER.setProjectionMatrix(batch.getProjectionMatrix());
+            SHAPE_RENDERER.begin(ShapeRenderer.ShapeType.Filled);
+            SHAPE_RENDERER.setColor(FILL_COLOR.r, FILL_COLOR.g, FILL_COLOR.b, FILL_COLOR.a * parentAlpha);
+            for (int i = 0; i < pointCount; i++) {
+                final Vector2 current = roundedPoints[i];
+                final Vector2 next = roundedPoints[(i + 1) % pointCount];
+                SHAPE_RENDERER.triangle(fillCenter.x, fillCenter.y, current.x, current.y, next.x, next.y);
+            }
+            SHAPE_RENDERER.end();
+
+            batch.begin();
+        }
+
+        private int buildRoundedGraph (float atkX, float atkY, float hpX, float hpY, float defX, float defY) {
+            vertices[0].set(atkX, atkY);
+            vertices[1].set(hpX, hpY);
+            vertices[2].set(defX, defY);
+            fillCenter.set(0f, 0f);
+
+            int index = 0;
+            for (int i = 0; i < vertices.length; i++) {
+                final Vector2 previous = vertices[(i + vertices.length - 1) % vertices.length];
+                final Vector2 current = vertices[i];
+                final Vector2 next = vertices[(i + 1) % vertices.length];
+                final Vector2 afterNext = vertices[(i + 2) % vertices.length];
+
+                for (int segment = 0; segment < EDGE_SEGMENTS; segment++) {
+                    final float t = segment / (float) EDGE_SEGMENTS;
+                    final Vector2 point = roundedPoints[index++];
+                    point.set(
+                        catmullRom(previous.x, current.x, next.x, afterNext.x, t),
+                        catmullRom(previous.y, current.y, next.y, afterNext.y, t)
+                    );
+                    fillCenter.add(point);
+                }
+            }
+
+            fillCenter.scl(1f / index);
+            return index;
+        }
+
+        private static float approach (float from, float to, float amount) {
+            return from + (to - from) * amount;
+        }
+
+        private static float catmullRom (float p0, float p1, float p2, float p3, float t) {
+            final float t2 = t * t;
+            final float t3 = t2 * t;
+            return 0.5f * (
+                2f * p1
+                    + (-p0 + p2) * t
+                    + (2f * p0 - 5f * p1 + 4f * p2 - p3) * t2
+                    + (-p0 + 3f * p1 - 3f * p2 + p3) * t3
+            );
+        }
+
+        private static Vector2[] makeVectors (int count) {
+            final Vector2[] vectors = new Vector2[count];
+            for (int i = 0; i < count; i++) {
+                vectors[i] = new Vector2();
+            }
+            return vectors;
+        }
+
+        private float getStageX (float normalizedX) {
+            tmp.set(getWidth() * normalizedX, 0f);
+            localToStageCoordinates(tmp);
+            return tmp.x;
+        }
+
+        private float getStageY (float normalizedY) {
+            tmp.set(0f, getHeight() * normalizedY);
+            localToStageCoordinates(tmp);
+            return tmp.y;
+        }
+    }
+
+    private static class RollPointsProgressActor extends Actor {
+        private static final float MIN_VISIBLE_PROGRESS_WIDTH = 45f;
+
+        private final int value;
+        private final int maxValue;
+        private final Drawable fillDrawable = Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#7ed97b"));
+
+        public RollPointsProgressActor (int value, int maxValue) {
+            this.value = value;
+            this.maxValue = maxValue;
+            setTouchable(Touchable.disabled);
+        }
+
+        @Override
+        public void draw (Batch batch, float parentAlpha) {
+            if (value <= 0 || maxValue <= 0) return;
+
+            final float progress = Math.min(1f, value / (float) maxValue);
+            final float fillWidth = Math.min(getWidth(), Math.max(MIN_VISIBLE_PROGRESS_WIDTH, getWidth() * progress));
+
+            fillDrawable.draw(batch, getX(), getY(), fillWidth, getHeight());
         }
     }
 }

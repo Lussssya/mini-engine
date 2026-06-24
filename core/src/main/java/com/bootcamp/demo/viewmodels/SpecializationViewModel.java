@@ -25,6 +25,8 @@ public class SpecializationViewModel {
 
     private final int rollPoints;
     private final int maxRollPoints;
+    private final double maximumBonus;
+    private final boolean rollPointsMaxed;
 
     private final String currentRarity;
     private final String currentRarityColor;
@@ -51,8 +53,10 @@ public class SpecializationViewModel {
 
         this.rollPoints = saveData.getRollPoints();
         this.maxRollPoints = gameData.getMaxRollPoints();
+        this.maximumBonus = calculateMaximumBonus(maxRollPoints);
+        this.rollPointsMaxed = rollPoints >= maxRollPoints;
 
-        if (saveData.getCurrentRarity() != null) {
+        if (saveData.getCurrentRarity() != null && !rollPointsMaxed) {
             this.currentRarity = saveData.getCurrentRarity().toString().toLowerCase(Locale.ENGLISH);
             this.currentRarityColor = saveData.getCurrentRarity().getLabelColor();
 
@@ -71,6 +75,11 @@ public class SpecializationViewModel {
         }
 
         this.passiveEffects = gameData.getEffects();
+    }
+
+    // max graph value equals the base roll value at the final roll point
+    private double calculateMaximumBonus (int maxRollPoints) {
+        return Math.round(0.0011 * Math.pow(maxRollPoints, 2.1628) + 440);
     }
 
 }

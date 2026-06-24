@@ -13,6 +13,7 @@ import com.bootcamp.demo.engine.widgets.IconTextWrapper;
 import com.bootcamp.demo.engine.widgets.JuicyButton;
 import com.bootcamp.demo.localization.GameFont;
 import com.bootcamp.demo.managers.API;
+import com.bootcamp.demo.managers.SaveManager;
 
 public class SpecializationResetDialog extends ADialog {
     private static final String RESET_TEXT = "Resetting the build will reset all roll points to 0, and stat bonuses to 0, you will be able to choose a new class, and 100% (0) of all your dice spent will be refunded.";
@@ -81,9 +82,9 @@ public class SpecializationResetDialog extends ADialog {
 
     private JuicyButton constructResetButton () {
         final Label resetButtonText = Labels.make(GameFont.STROKE_26, Color.valueOf("#f5eae3"), "Reset");
+        final SpecializationSaveData saveData = API.get(SaveData.class).getSpecializationSaveData();
 
-        // TODO: double every time (optional)
-        final Table iconTextWrapper = new IconTextWrapper("lootPage/die-icon", "20");
+        final Table iconTextWrapper = new IconTextWrapper("lootPage/die-icon", String.valueOf(saveData.getResetPrice()));
 
         final JuicyButton resetButton = new JuicyButton(JuicyButton.Style.RED_35) {
             protected void buildInner (Table container) {
@@ -101,10 +102,13 @@ public class SpecializationResetDialog extends ADialog {
     private void resetSpecialization () {
         final SpecializationSaveData saveData = API.get(SaveData.class).getSpecializationSaveData();
         saveData.reset();
+        saveData.incrementResetCount();
+        API.get(SaveManager.class).savePlayerData();
 
         final DialogManager dialogManager = API.get(DialogManager.class);
         dialogManager.hide(SpecializationResetDialog.class);
         dialogManager.hide(SpecializationDialog.class);
+        dialogManager.removeDialog(SpecializationResetDialog.class);
         dialogManager.removeDialog(SpecializationDialog.class);
 
         dialogManager.show(ChooseSpecializationDialog.class);

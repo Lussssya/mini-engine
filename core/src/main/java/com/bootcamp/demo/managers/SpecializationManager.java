@@ -10,6 +10,8 @@ import com.bootcamp.demo.data.game.SpecializationGameData.Rarity;
 import java.util.Random;
 
 public class SpecializationManager {
+    private static final double MAXIMUM_BONUS_EPSILON = 0.0001;
+
     private final SpecializationSaveData saveData;
     private final SpecializationGameData specialization;
     private final Random rand = new Random();
@@ -20,21 +22,36 @@ public class SpecializationManager {
     }
 
     public void reroll () {
+        if (isRollPointsMaxed()) {
+            clearCurrentRoll();
+            return;
+        }
+
         final PLayerStat stat = getRandomStat();
 
         final Rarity rarity = rollRarity();
-        final double value = calculateRollBonus(rarity);
+        final double rollBaseValue = calculateRollBaseValue(rarity);
+        final double value = calculateRollBonus(rollBaseValue, stat);
 
-        setCurrentRoll(stat, value, rarity);
+        setCurrentRoll(stat, value, rollBaseValue, rarity);
     }
 
     private PLayerStat getRandomStat () {
-        final int atkWeight = specialization.getAtkWeight();
-        final int hpWeight = specialization.getHpWeight();
-        final int defWeight = specialization.getDefWeight();
+        final int atkWeight = getAvailableWeight(PLayerStat.ATK, specialization.getAtkWeight());
+        final int hpWeight = getAvailableWeight(PLayerStat.HP, specialization.getHpWeight());
+        final int defWeight = getAvailableWeight(PLayerStat.DEF, specialization.getDefWeight());
 
         final int totalWeight = atkWeight + hpWeight + defWeight;
-        final int roll = rand.nextInt(totalWeight);
+
+        if (totalWeight == 0) {
+            return getRandomStatIgnoringMaximum();
+        }
+
+        return rollStat(atkWeight, hpWeight, defWeight);
+    }
+
+    private PLayerStat rollStat (int atkWeight, int hpWeight, int defWeight) {
+        final int roll = rand.nextInt(atkWeight + hpWeight + defWeight);
 
         if (roll < atkWeight) {
             return PLayerStat.ATK;
@@ -43,6 +60,18 @@ public class SpecializationManager {
             return PLayerStat.HP;
         }
         return PLayerStat.DEF;
+    }
+
+    private int getAvailableWeight (PLayerStat statType, int weight) {
+        return getRemainingBonus(statType) > MAXIMUM_BONUS_EPSILON ? weight : 0;
+    }
+
+    private PLayerStat getRandomStatIgnoringMaximum () {
+        final int atkWeight = specialization.getAtkWeight();
+        final int hpWeight = specialization.getHpWeight();
+        final int defWeight = specialization.getDefWeight();
+
+        return rollStat(atkWeight, hpWeight, defWeight);
     }
 
     private Rarity rollRarity () {
@@ -64,16 +93,28 @@ public class SpecializationManager {
         return Rarity.GOOD;
     }
 
-    private double calculateRollBonus (Rarity rarity) {
+    private double calculateRollBaseValue (Rarity rarity) {
         final double base = calculateBaseValue();
-        final double finalValue = base * rarity.getMultiplier() * randomVariance() / 100.0;
+
+        return base * rarity.getMultiplier() * randomVariance() / 100.0;
+    }
+
+    private double calculateRollBonus (double rollBaseValue, PLayerStat statType) {
+        final double finalValue = rollBaseValue * getStatValueMultiplier(statType);
+        final double remainingBonus = getRemainingBonus(statType);
+
+        if (finalValue >= remainingBonus) {
+            return remainingBonus;
+        }
 
         return roundTo2Decimals(finalValue);
     }
 
     private double calculateBaseValue () {
-        final int rollPoints = saveData.getRollPoints();
+        return calculateBaseValue(saveData.getRollPoints());
+    }
 
+    private double calculateBaseValue (int rollPoints) {
         return Math.round(0.0011 * Math.pow(rollPoints, 2.1628) + 440);
     }
 
@@ -81,48 +122,158 @@ public class SpecializationManager {
         return 0.95 + rand.nextDouble() * 0.10;
     }
 
-    private void setCurrentRoll (PLayerStat statType, double bonus, Rarity rarity) {
+    private double getStatValueMultiplier (PLayerStat statType) {
+        final double averageWeight = (specialization.getAtkWeight() + specialization.getHpWeight() + specialization.getDefWeight()) / 3.0;
+
+        return getStatWeight(statType) / averageWeight;
+    }
+
+    private int getStatWeight (PLayerStat statType) {
+        switch (statType) {
+            case ATK:
+                return specialization.getAtkWeight();
+            case HP:
+                return specialization.getHpWeight();
+            case DEF:
+                return specialization.getDefWeight();
+            default:
+                throw new IllegalStateException("Unexpected value: " + statType);
+        }
+    }
+
+    private void setCurrentRoll (PLayerStat statType, double bonus, double rollBaseValue, Rarity rarity) {
         saveData.setCurrentStatType(statType);
+        saveData.setOriginalCurrentStatType(statType);
         saveData.setCurrentBonus(bonus);
+        saveData.setCurrentRollBaseValue(rollBaseValue);
         saveData.setCurrentRarity(rarity);
+    }
+
+    private void clearCurrentRoll () {
+        saveData.setCurrentStatType(null);
+        saveData.setOriginalCurrentStatType(null);
+        saveData.setCurrentBonus(0);
+        saveData.setCurrentRollBaseValue(0);
+        saveData.setCurrentRarity(null);
     }
 
     private double roundTo2Decimals (double value) {
         return Math.round(value * 100.0) / 100.0;
     }
 
-    // TODO: fix later
     public void rerollStat () {
-        saveData.setCurrentStatType(getRandomStatExcept(saveData.getCurrentStatType()));
+        if (saveData.getCurrentRarity() == null || isRollPointsMaxed()) {
+            clearCurrentRoll();
+            return;
+        }
+
+        final PLayerStat stat = getRandomStatExceptOriginal();
+        if (stat == null) {
+            clearCurrentRoll();
+            return;
+        }
+
+        saveData.setCurrentStatType(stat);
+        saveData.setCurrentBonus(calculateRollBonus(getCurrentRollBaseValue(), stat));
     }
 
-    private PLayerStat getRandomStatExcept (PLayerStat excludedStat) {
-        PLayerStat next;
+    private double getCurrentRollBaseValue () {
+        if (saveData.getCurrentRollBaseValue() > 0) {
+            return saveData.getCurrentRollBaseValue();
+        }
 
-        do {
-            next = getRandomStat();
-        } while (next == excludedStat);
+        return saveData.getCurrentBonus() / getStatValueMultiplier(saveData.getCurrentStatType());
+    }
 
-        return next;
+    private PLayerStat getRandomStatExceptOriginal () {
+        final PLayerStat excludedStat = saveData.getOriginalCurrentStatType() == null
+            ? saveData.getCurrentStatType()
+            : saveData.getOriginalCurrentStatType();
+        PLayerStat stat = getRandomStatExcept(excludedStat, saveData.getCurrentStatType());
+
+        if (stat == null) {
+            stat = getRandomStatExcept(excludedStat, null);
+        }
+
+        return stat;
+    }
+
+    private PLayerStat getRandomStatExcept (PLayerStat excludedStat, PLayerStat secondExcludedStat) {
+        final int atkWeight = isExcluded(PLayerStat.ATK, excludedStat, secondExcludedStat) ? 0 : getAvailableWeight(PLayerStat.ATK, specialization.getAtkWeight());
+        final int hpWeight = isExcluded(PLayerStat.HP, excludedStat, secondExcludedStat) ? 0 : getAvailableWeight(PLayerStat.HP, specialization.getHpWeight());
+        final int defWeight = isExcluded(PLayerStat.DEF, excludedStat, secondExcludedStat) ? 0 : getAvailableWeight(PLayerStat.DEF, specialization.getDefWeight());
+        final int totalWeight = atkWeight + hpWeight + defWeight;
+
+        if (totalWeight > 0) {
+            return rollStat(atkWeight, hpWeight, defWeight);
+        }
+
+        return null;
+    }
+
+    private boolean isExcluded (PLayerStat statType, PLayerStat excludedStat, PLayerStat secondExcludedStat) {
+        return statType == excludedStat || statType == secondExcludedStat;
     }
 
     public void acceptRollAndNext () {
         switch (saveData.getCurrentStatType()) {
             case ATK:
-                saveData.setAtkBonus(saveData.getAtkBonus() + saveData.getCurrentBonus());
+                saveData.setAtkBonus(addBonus(saveData.getAtkBonus(), saveData.getCurrentBonus()));
                 break;
             case HP:
-                saveData.setHpBonus(saveData.getHpBonus() + saveData.getCurrentBonus());
+                saveData.setHpBonus(addBonus(saveData.getHpBonus(), saveData.getCurrentBonus()));
                 break;
             case DEF:
-                saveData.setDefBonus(saveData.getDefBonus() + saveData.getCurrentBonus());
+                saveData.setDefBonus(addBonus(saveData.getDefBonus(), saveData.getCurrentBonus()));
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + saveData.getCurrentStatType());
         }
 
         incrementRollPoints();
-        reroll();
+
+        if (isRollPointsMaxed()) {
+            clearCurrentRoll();
+        } else {
+            reroll();
+        }
+    }
+
+    private double addBonus (double currentBonus, double bonusToAdd) {
+        final double updatedBonus = currentBonus + bonusToAdd;
+
+        if (updatedBonus >= getMaximumBonus() - MAXIMUM_BONUS_EPSILON) {
+            return getMaximumBonus();
+        }
+
+        return updatedBonus;
+    }
+
+    private double getRemainingBonus (PLayerStat statType) {
+        switch (statType) {
+            case ATK:
+                return getRemainingBonus(saveData.getAtkBonus());
+            case HP:
+                return getRemainingBonus(saveData.getHpBonus());
+            case DEF:
+                return getRemainingBonus(saveData.getDefBonus());
+            default:
+                throw new IllegalStateException("Unexpected value: " + statType);
+        }
+    }
+
+    private double getRemainingBonus (double bonus) {
+        final double remainingBonus = getMaximumBonus() - bonus;
+
+        return remainingBonus <= MAXIMUM_BONUS_EPSILON ? 0 : remainingBonus;
+    }
+
+    private boolean isRollPointsMaxed () {
+        return saveData.getRollPoints() >= specialization.getMaxRollPoints();
+    }
+
+    private double getMaximumBonus () {
+        return calculateBaseValue(specialization.getMaxRollPoints());
     }
 
     public void incrementRollPoints () {
@@ -130,15 +281,7 @@ public class SpecializationManager {
     }
 
     public void addRollPoints (int count) {
-        final int cap = getRollPointCap(110); // player level = 110 (example)
-
-        saveData.setRollPoints(
-            Math.min(saveData.getRollPoints() + count, cap)
-        );
-    }
-
-    public int getRollPointCap (int level) {
-        return (int) Math.round(0.15015 * Math.pow(level - 100, 2) + 9.68655 * (level - 100) + 30);
+        saveData.setRollPoints(Math.min(saveData.getRollPoints() + count, specialization.getMaxRollPoints()));
     }
 
 }
