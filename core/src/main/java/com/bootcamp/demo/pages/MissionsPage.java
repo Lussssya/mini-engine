@@ -1,9 +1,11 @@
 package com.bootcamp.demo.pages;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Null;
 import com.badlogic.gdx.utils.ObjectMap;
@@ -18,9 +20,11 @@ import com.bootcamp.demo.engine.Squircle;
 import com.bootcamp.demo.engine.widgets.*;
 import com.bootcamp.demo.localization.GameFont;
 import com.bootcamp.demo.managers.API;
+import com.bootcamp.demo.managers.MissionsManager;
 import com.bootcamp.demo.pages.core.APage;
 import com.bootcamp.demo.viewmodels.*;
 import com.bootcamp.demo.viewmodels.mappers.GearViewModelMapper;
+import com.bootcamp.demo.viewmodels.mappers.StatsDialogViewModelMapper;
 
 public class MissionsPage extends APage {
     private MilitaryGearsContainer militaryGearsContainer;
@@ -100,6 +104,18 @@ public class MissionsPage extends APage {
         final BorderedTable button = new BorderedTable();
         button.setBackground(Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#cfb6a3")));
         button.add(image).size(100);
+
+        button.addListener(new ClickListener() {
+            @Override
+            public void clicked (InputEvent event, float x, float y) {
+                final StatsSaveData data = API.get(MissionsManager.class).updateStatsContainer();
+                final StatsDialogViewModel viewModel = StatsDialogViewModelMapper.map(data);
+                final StatsDialog dialog = API.get(DialogManager.class).getDialog(StatsDialog.class);
+                dialog.setData(viewModel);
+
+                API.get(DialogManager.class).show(StatsDialog.class);
+            }
+        });
 
         return button;
     }
@@ -298,6 +314,45 @@ public class MissionsPage extends APage {
 
         militaryGearsContainer.setData(API.get(SaveData.class).getMilitariesSaveData());
         accessoryGearsContainer.setData(API.get(SaveData.class).getAccessoryGearsSaveData());
+    }
+
+    public static class StatsContainer extends WidgetsContainer<StatWidget> {
+
+        public StatsContainer (int widgetPerRow) {
+            super(widgetPerRow);
+            defaults().height(60).grow();
+
+            for (int i = 0; i < PLayerStat.values().length; i++) {
+                final StatWidget widget = new StatWidget(i);
+                add(widget);
+            }
+        }
+
+        public void setData (StatsDialogViewModel viewModel) {
+            final Array<StatWidget> widgets = getWidgets();
+
+            for (int i = 0; i < widgets.size; i++) {
+                widgets.get(i).setData(viewModel.getRows().get(i));
+            }
+        }
+    }
+
+    public static class StatWidget extends Table {
+        private final Label title = Labels.make(GameFont.BOLD_20, Color.valueOf("#52483f"));
+        private final Label value = Labels.make(GameFont.BOLD_20, Color.valueOf("#fff9f2"));
+
+        public StatWidget (int index) {
+            final Color backgroundColor = index % 2 == 0 ? Color.valueOf("#dbcbc3") : Color.valueOf("#e6d6ce");
+            setBackground(Resources.getDrawable("basics/white-pixel", backgroundColor));
+
+            add(title).expandX().left().padLeft(20);
+            add(value).padRight(20);
+        }
+
+        public void setData (StatRowViewModel viewModel) {
+            title.setText(viewModel.getTitle());
+            value.setText(viewModel.getValue());
+        }
     }
 
     public static class MilitaryGearsContainer extends WidgetsContainer<MilitaryGearContainer> {
