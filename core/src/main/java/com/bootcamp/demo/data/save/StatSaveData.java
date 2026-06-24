@@ -2,7 +2,7 @@ package com.bootcamp.demo.data.save;
 
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
-import com.bootcamp.demo.data.game.Stat;
+import com.bootcamp.demo.data.game.PLayerStat;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,7 +11,7 @@ import java.util.Locale;
 public class StatSaveData implements Json.Serializable {
     @Setter
     @Getter
-    private Stat name;
+    private PLayerStat name;
     @Setter
     @Getter
     private float value;
@@ -24,7 +24,7 @@ public class StatSaveData implements Json.Serializable {
 
     @Override
     public void read (Json json, JsonValue jsonValue) {
-        name = Stat.valueOf(jsonValue.getString("n", "stat").toUpperCase(Locale.ENGLISH));
+        name = PLayerStat.valueOf(jsonValue.getString("n", "stat").toUpperCase(Locale.ENGLISH));
         value = jsonValue.getFloat("v", 0f);
     }
 }

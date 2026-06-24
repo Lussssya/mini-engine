@@ -3,16 +3,12 @@ package com.bootcamp.demo.dialogs;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.utils.ObjectMap;
-import com.bootcamp.demo.data.game.Stat;
 import com.bootcamp.demo.data.save.MilitaryGearSaveData;
-import com.bootcamp.demo.data.save.StatSaveData;
 import com.bootcamp.demo.dialogs.core.ADialog;
 import com.bootcamp.demo.engine.Labels;
 import com.bootcamp.demo.engine.Squircle;
 import com.bootcamp.demo.engine.widgets.WidgetsContainer;
 import com.bootcamp.demo.localization.GameFont;
-import com.bootcamp.demo.pages.MissionsPage;
 
 import java.util.Locale;
 

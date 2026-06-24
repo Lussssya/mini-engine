@@ -27,19 +27,17 @@ public class DemoGame extends Game {
         API.get(SaveManager.class).loadSaveData();
 
         setupMilitaryGears();
-        setupTacticals();
-        setupPets();
-        setupFlags();
+        setupAccessoryGears();
 
         setScreen(new GameScreen());
         API.get(EventModule.class).fireEvent(GameStartedEvent.class);
     }
 
-    private void setupMilitaryGears () {
+    private static void setupMilitaryGears () {
         final MilitaryGearsSaveData militariesSaveData = new MilitaryGearsSaveData();
 
-        MilitaryGearSaveData gear1 = createMilitary("angel-bow", Slot.WEAPON, 1, 28, 'D', MilitaryGearGameData.Rarity.ELITE);
-        setMilitaryStats(gear1, new Object[][]{
+        MilitaryGearSaveData gear1 = createMilitary("angel-bow", Slot.WEAPON, 1, 'D', GearRarity.ELITE);
+        setGearStats(gear1.getGearStats(), new Object[][]{
             {"hp", 2.5f},
             {"atk", 918f},
             {"dodge", 5.67f},
@@ -47,27 +45,27 @@ public class DemoGame extends Game {
             {"poison", 5.67f}
         });
 
-        MilitaryGearSaveData gear2 = createMilitary("hard-armor", Slot.MELEE, 2, 28, 'D', MilitaryGearGameData.Rarity.HARDENED);
-        setMilitaryStats(gear2, new Object[][]{
+        MilitaryGearSaveData gear2 = createMilitary("hard-armor", Slot.MELEE, 2, 'D', GearRarity.HARDENED);
+        setGearStats(gear2.getGearStats(), new Object[][]{
             {"regen", 1.5f}
         });
 
-        MilitaryGearSaveData gear3 = createMilitary("magic-ring", Slot.HEAD, 1, 25, 'A', MilitaryGearGameData.Rarity.OBLIVION);
-        setMilitaryStats(gear3, new Object[][]{
+        MilitaryGearSaveData gear3 = createMilitary("magic-ring", Slot.HEAD, 1, 'A', GearRarity.OBLIVION);
+        setGearStats(gear3.getGearStats(), new Object[][]{
             {"combo", 2f}
         });
 
-        MilitaryGearSaveData gear4 = createMilitary("star-staff", Slot.BODY, 1, 29, 'C', MilitaryGearGameData.Rarity.ETHEREAL);
-        setMilitaryStats(gear4, new Object[][]{
+        MilitaryGearSaveData gear4 = createMilitary("star-staff", Slot.BODY, 1, 'C', GearRarity.ETHEREAL);
+        setGearStats(gear4.getGearStats(), new Object[][]{
             {"stun", 2f}
         });
 
-        MilitaryGearSaveData gear5 = createMilitary("bloody-grail", Slot.GLOVES, 1, 23, 'C', MilitaryGearGameData.Rarity.NUCLEAR);
-        setMilitaryStats(gear5, new Object[][]{
+        MilitaryGearSaveData gear5 = createMilitary("bloody-grail", Slot.GLOVES, 1, 'C', GearRarity.NUCLEAR);
+        setGearStats(gear5.getGearStats(), new Object[][]{
             {"dodge", 2.5f}
         });
 
-        MilitaryGearSaveData gear6 = createMilitary("mystic-staff", Slot.SHOES, 2, 24, 'B', MilitaryGearGameData.Rarity.JUGGERNAUT);
+        MilitaryGearSaveData gear6 = createMilitary("mystic-staff", Slot.SHOES, 2, 'B', GearRarity.JUGGERNAUT);
 
         militariesSaveData.getMilitaries().put(Slot.WEAPON, gear1);
         militariesSaveData.getMilitaries().put(Slot.MELEE, gear2);
@@ -79,198 +77,72 @@ public class DemoGame extends Game {
         API.get(SaveData.class).setMilitariesSaveData(militariesSaveData);
     }
 
-    private MilitaryGearSaveData createMilitary (String name, Slot slot, int starCount, int level, char tier, MilitaryGearGameData.Rarity rarity) {
+    private static MilitaryGearSaveData createMilitary (String name, Slot slot, int level, char tier, GearRarity rarity) {
         MilitaryGearSaveData military = new MilitaryGearSaveData();
         military.setName(name);
         military.setSlot(slot);
-        military.setStarCount(starCount);
         military.setLevel(level);
         military.setTier(tier);
         military.setRarity(rarity);
         return military;
     }
 
-    private void setMilitaryStats (MilitaryGearSaveData gear, Object[][] values) {
+    private static void setupAccessoryGears () {
+        final AccessoryGearsSaveData accessoriesSaveData = new AccessoryGearsSaveData();
+
+        AccessoryGearSaveData accessory1 =
+            createAccessory("pink-cape", AccessoryGearGameData.Slot.NECK, 2, GearRarity.ELITE);
+        setGearStats(accessory1.getGearStats(), new Object[][]{
+            {"atk", 750f},
+            {"combo", 4.5f}
+        });
+
+        AccessoryGearSaveData accessory2 =
+            createAccessory("thor-hammer", AccessoryGearGameData.Slot.WRIST, 1, GearRarity.NUCLEAR);
+        setGearStats(accessory2.getGearStats(), new Object[][]{
+            {"dodge", 3f}
+        });
+
+        AccessoryGearSaveData accessory3 =
+            createAccessory("dragon-ring", AccessoryGearGameData.Slot.PANTS, 3, GearRarity.HARDENED);
+        setGearStats(accessory3.getGearStats(), new Object[][]{
+            {"hp", 1500f}
+        });
+
+        AccessoryGearSaveData accessory4 =
+            createAccessory("elf-staff", AccessoryGearGameData.Slot.BELT, 2, GearRarity.JUGGERNAUT);
+        setGearStats(accessory4.getGearStats(), new Object[][]{
+            {"regen", 2f}
+        });
+
+        accessoriesSaveData.getAccessories().put(AccessoryGearGameData.Slot.NECK, accessory1);
+        accessoriesSaveData.getAccessories().put(AccessoryGearGameData.Slot.WRIST, accessory2);
+        accessoriesSaveData.getAccessories().put(AccessoryGearGameData.Slot.PANTS, accessory3);
+        accessoriesSaveData.getAccessories().put(AccessoryGearGameData.Slot.BELT, accessory4);
+
+        API.get(SaveData.class).setAccessoryGearsSaveData(accessoriesSaveData);
+    }
+
+    private static AccessoryGearSaveData createAccessory (String name, AccessoryGearGameData.Slot slot, int level, GearRarity rarity) {
+        final AccessoryGearSaveData accessory = new AccessoryGearSaveData();
+
+        accessory.setName(name);
+        accessory.setSlot(slot);
+        accessory.setLevel(level);
+        accessory.setRarity(rarity);
+        return accessory;
+    }
+
+    private static void setGearStats (StatsSaveData stats, Object[][] values) {
         for (Object[] pair : values) {
-            Stat statType = Stat.valueOf(((String) pair[0]).toUpperCase(Locale.ENGLISH));
+            PLayerStat statType = PLayerStat.valueOf(((String) pair[0]).toUpperCase(Locale.ENGLISH));
             float value = (float) pair[1];
 
             StatSaveData statSaveData = new StatSaveData();
             statSaveData.setName(statType);
             statSaveData.setValue(value);
 
-            gear.getGearStats().getStats().put(statType, statSaveData);
-        }
-    }
-
-    private void setupTacticals () {
-        final TacticalsSaveData tacticalsSaveData = new TacticalsSaveData();
-
-        TacticalSaveData tactical1 = createTactical("chidori", 4, 1, Rarity.EPIC);
-        setTacticalStats(tactical1, new Object[][]{
-            {"hp", 648f},
-            {"atk", 226f}
-        });
-
-        TacticalSaveData tactical2 = createTactical("rassengan", 3, 1, Rarity.COMMON);
-        setTacticalStats(tactical2, new Object[][]{
-            {"hp", 586f},
-            {"atk", 202f}
-        });
-
-        TacticalSaveData tactical3 = createTactical("kunai", 6, 2, Rarity.EXOTIC);
-        setTacticalStats(tactical3, new Object[][]{
-            {"hp", 713f},
-            {"atk", 261f}
-        });
-
-        TacticalSaveData tactical4 = createTactical("shuriken", 3, 1, Rarity.LEGENDARY);
-        setTacticalStats(tactical4, new Object[][]{
-            {"hp", 586f},
-            {"atk", 202f}
-        });
-
-        tacticalsSaveData.getInventory().put(tactical1.getName(), tactical1);
-        tacticalsSaveData.getInventory().put(tactical2.getName(), tactical2);
-        tacticalsSaveData.getInventory().put(tactical3.getName(), tactical3);
-        tacticalsSaveData.getInventory().put(tactical4.getName(), tactical4);
-
-        tacticalsSaveData.getEquipped().put(0, tactical1.getName());
-        tacticalsSaveData.getEquipped().put(1, tactical2.getName());
-        tacticalsSaveData.getEquipped().put(2, tactical3.getName());
-        tacticalsSaveData.getEquipped().put(3, tactical4.getName());
-
-        API.get(SaveData.class).setTacticalsSaveData(tacticalsSaveData);
-    }
-
-    private TacticalSaveData createTactical (String name, int level, int starCount, Rarity rarity) {
-        TacticalSaveData tactical = new TacticalSaveData();
-        tactical.setName(name);
-        tactical.setLevel(level);
-        tactical.setStarCount(starCount);
-        tactical.setRarity(rarity);
-        return tactical;
-    }
-
-    private void setTacticalStats (TacticalSaveData tactical, Object[][] values) {
-        for (Object[] pair : values) {
-            Stat statType = Stat.valueOf(((String) pair[0]).toUpperCase(Locale.ENGLISH));
-            float value = (float) pair[1];
-
-            StatSaveData statSaveData = new StatSaveData();
-            statSaveData.setName(statType);
-            statSaveData.setValue(value);
-
-            tactical.getTacticalStats().getStats().put(statType, statSaveData);
-        }
-    }
-
-    private void setupPets () {
-        final PetsSaveData petsSaveData = new PetsSaveData();
-
-        PetSaveData pet1 = createPet("cat", 24, 1, Rarity.EPIC);
-        petsSaveData.getInventory().put("cat", pet1);
-        setPetStats(pet1, new Object[][]{
-            {"hp", 5.79f},
-            {"atk", 2.39f},
-            {"dodge", 16.5f}
-        });
-
-        PetSaveData pet2 = createPet("beetle", 36, 2, Rarity.EXOTIC);
-        petsSaveData.getInventory().put("beetle", pet2);
-        setPetStats(pet2, new Object[][]{
-            {"hp", 600f},
-            {"atk", 875f},
-            {"combo", 10.3f}
-        });
-
-        final PetSaveData pet3 = createPet("dragon", 19, 0, Rarity.LEGENDARY);
-        petsSaveData.getInventory().put("dragon", pet3);
-        setPetStats(pet3, new Object[][]{
-            {"hp", 300f},
-            {"atk", 700f},
-            {"crit", 8f}
-        });
-
-        petsSaveData.setEquipped("dragon");
-
-        API.get(SaveData.class).setPetsSaveData(petsSaveData);
-    }
-
-    private PetSaveData createPet (String name, int level, int starCount, Rarity rarity) {
-        PetSaveData pet = new PetSaveData();
-        pet.setName(name);
-        pet.setLevel(level);
-        pet.setStarCount(starCount);
-        pet.setRarity(rarity);
-        return pet;
-    }
-
-    private void setPetStats (PetSaveData pet, Object[][] values) {
-        for (Object[] pair : values) {
-            Stat statType = Stat.valueOf(((String) pair[0]).toUpperCase(Locale.ENGLISH));
-            float value = (float) pair[1];
-
-            StatSaveData statSaveData = new StatSaveData();
-            statSaveData.setName(statType);
-            statSaveData.setValue(value);
-
-            pet.getPetStats().getStats().put(statType, statSaveData);
-        }
-    }
-
-    private void setupFlags () {
-        final FlagsSaveData flagsSaveData = new FlagsSaveData();
-
-        final FlagSaveData common = createFlag("common");
-        flagsSaveData.getInventory().put("common", common);
-        setFlagStats(common, new Object[][]{
-            {"hp", 2.14f},
-            {"atk", 345f}
-        });
-
-        final FlagSaveData fight = createFlag("fight");
-        flagsSaveData.getInventory().put("fight", fight);
-        setFlagStats(fight, new Object[][]{
-            {"hp", 2.14f},
-            {"atk", 345f}
-        });
-
-        final FlagSaveData ghost = createFlag("ghost");
-        flagsSaveData.getInventory().put("ghost", ghost);
-        setFlagStats(common, new Object[][]{
-            {"hp", 2.14f},
-            {"atk", 345f}
-        });
-
-        final FlagSaveData star = createFlag("star");
-        flagsSaveData.getInventory().put("star", star);
-        setFlagStats(common, new Object[][]{
-            {"hp", 2.14f},
-            {"atk", 345f}
-        });
-
-        flagsSaveData.setEquipped("star");
-
-        API.get(SaveData.class).setFlagsSaveData(flagsSaveData);
-    }
-
-    private FlagSaveData createFlag (String name) {
-        FlagSaveData flag = new FlagSaveData();
-        flag.setName(name);
-        return flag;
-    }
-
-    private void setFlagStats (FlagSaveData flag, Object[][] values) {
-        for (Object[] pair : values) {
-            Stat statType = Stat.valueOf(((String) pair[0]).toUpperCase(Locale.ENGLISH));
-            float value = (float) pair[1];
-
-            StatSaveData statSaveData = new StatSaveData();
-            statSaveData.setName(statType);
-            statSaveData.setValue(value);
-
-            flag.getFlagStats().getStats().put(statType, statSaveData);
+            stats.getStats().put(statType, statSaveData);
         }
     }
 
