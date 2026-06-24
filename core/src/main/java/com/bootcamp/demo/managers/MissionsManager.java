@@ -13,6 +13,9 @@ public class MissionsManager {
         mergeMilitaryGearStats();
         mergeAccessoryGearStats();
 
+        applySpecializationStats();
+        applySpecializationEffects();
+
         return statsContainer;
     }
 
@@ -24,6 +27,23 @@ public class MissionsManager {
             statSaveData.setValue(0);
             statsContainer.getStats().put(stat, statSaveData);
         }
+    }
+
+    private void applySpecializationStats () {
+        final SpecializationSaveData specialization = API.get(SaveData.class).getSpecializationSaveData();
+
+        addSpecializationStat(PLayerStat.ATK, specialization.getAtkBonus());
+        addSpecializationStat(PLayerStat.HP, specialization.getHpBonus());
+        addSpecializationStat(PLayerStat.DEF, specialization.getDefBonus());
+    }
+
+    private void addSpecializationStat (PLayerStat stat, double value) {
+        final StatSaveData statSaveData = statsContainer.getStats().get(stat);
+        if (statSaveData == null) {
+            return;
+        }
+
+        statSaveData.setValue(statSaveData.getValue() + (float) value);
     }
 
     private void mergeAccessoryGearStats () {
@@ -69,6 +89,30 @@ public class MissionsManager {
 
         base.setValue(resultValue);
         return base;
+    }
+
+    private void applySpecializationEffects () {
+        final SpecializationGameData.SpecializationType specializationType = API.get(SaveData.class).getSpecializationSaveData().getSpecializationType();
+        if (specializationType == null) {
+            return;
+        }
+
+        final SpecializationGameData specialization = API.get(GameData.class).getSpecializationsGameData().getSpecializations().get(specializationType);
+
+        for (SpecializationGameData.PassiveEffectData effect : specialization.getEffects()) {
+            final PLayerStat stat = effect.getStat();
+            StatSaveData statSaveData = statsContainer.getStats().get(stat);
+
+            if (statSaveData == null) {
+                statSaveData = new StatSaveData();
+                statSaveData.setName(stat);
+                statSaveData.setValue(0);
+
+                statsContainer.getStats().put(stat, statSaveData);
+            }
+
+            statSaveData.setValue(statSaveData.getValue() + effect.getValue());
+        }
     }
 
     public static float computeCumulativePower (StatsSaveData statsSaveData) {
