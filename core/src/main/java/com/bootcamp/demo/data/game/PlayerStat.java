@@ -3,7 +3,7 @@ package com.bootcamp.demo.data.game;
 import lombok.Getter;
 
 @Getter
-public enum PLayerStat {
+public enum PlayerStat {
     HP("HP:", StatType.ADDITIVE),
     ATK("ATK:", StatType.ADDITIVE),
     DEF("DEF:", StatType.MULTIPLICATIVE),
@@ -24,7 +24,7 @@ public enum PLayerStat {
     private final String displayName;
     private final StatType type;
 
-    PLayerStat (String displayName, StatType type) {
+    PlayerStat (String displayName, StatType type) {
         this.displayName = displayName;
         this.type = type;
     }

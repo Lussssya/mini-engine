@@ -278,7 +278,7 @@ public class MissionsPage extends APage {
             super(3);
             pad(15).defaults().space(30).height(60).growX();
 
-            for (int i = 0; i < PLayerStat.values().length; i++) {
+            for (int i = 0; i < PlayerStat.values().length; i++) {
                 final StatWidget widget = new StatWidget();
                 add(widget);
             }
@@ -288,7 +288,7 @@ public class MissionsPage extends APage {
             final Array<StatWidget> widgets = getWidgets();
 
             int i = 0;
-            for (PLayerStat type : PLayerStat.values()) {
+            for (PlayerStat type : PlayerStat.values()) {
                 final StatSaveData statSaveData = statsSaveData.getStats().get(type);
                 final StatWidget widget = widgets.get(i++);
 
@@ -312,10 +312,10 @@ public class MissionsPage extends APage {
                 return;
             }
 
-            final PLayerStat type = statSaveData.getName();
+            final PlayerStat type = statSaveData.getStat();
 
             title.setText(type.getDisplayName());
-            if (type.getType() == PLayerStat.StatType.ADDITIVE) {
+            if (type.getType() == PlayerStat.StatType.ADDITIVE) {
                 value.setText(formatAdditive(statSaveData.getValue()));
             } else {
                 value.setText(String.format("%.2f%%", statSaveData.getValue()));

@@ -135,11 +135,11 @@ public class DemoGame extends Game {
 
     private static void setGearStats (StatsSaveData stats, Object[][] values) {
         for (Object[] pair : values) {
-            PLayerStat statType = PLayerStat.valueOf(((String) pair[0]).toUpperCase(Locale.ENGLISH));
+            PlayerStat statType = PlayerStat.valueOf(((String) pair[0]).toUpperCase(Locale.ENGLISH));
             float value = (float) pair[1];
 
             StatSaveData statSaveData = new StatSaveData();
-            statSaveData.setName(statType);
+            statSaveData.setStat(statType);
             statSaveData.setValue(value);
 
             stats.getStats().put(statType, statSaveData);
