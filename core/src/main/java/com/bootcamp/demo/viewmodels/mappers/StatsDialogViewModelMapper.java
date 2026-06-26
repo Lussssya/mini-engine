@@ -1,5 +1,6 @@
 package com.bootcamp.demo.viewmodels.mappers;
 
+import com.badlogic.gdx.utils.Pools;
 import com.bootcamp.demo.data.game.PLayerStat;
 import com.bootcamp.demo.data.game.PLayerStat.StatType;
 import com.bootcamp.demo.data.save.StatSaveData;
@@ -26,7 +27,7 @@ public class StatsDialogViewModelMapper {
     }
 
     private static StatRowViewModel mapRow (PLayerStat PLayerStat, StatSaveData statData) {
-        final StatRowViewModel row = new StatRowViewModel();
+        final StatRowViewModel row = Pools.obtain(StatRowViewModel.class);
         row.setTitle(PLayerStat.getDisplayName());
 
         if (PLayerStat.getType() == StatType.ADDITIVE) {

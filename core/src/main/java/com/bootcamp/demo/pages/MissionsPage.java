@@ -112,6 +112,7 @@ public class MissionsPage extends APage {
                 final StatsDialogViewModel viewModel = StatsDialogViewModelMapper.map(data);
                 final StatsDialog dialog = API.get(DialogManager.class).getDialog(StatsDialog.class);
                 dialog.setData(viewModel);
+                viewModel.freeRows();
 
                 API.get(DialogManager.class).show(StatsDialog.class);
             }
