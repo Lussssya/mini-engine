@@ -62,6 +62,17 @@ public class MissionsPage extends APage {
         final PressableImageLabel petButton = new PressableImageLabel("lootPage/pets-icon", "Pets", 170);
 
         final PressableImageLabel specializationButton = new PressableImageLabel("lootPage/specialization-icon", "Specialization", 180);
+        specializationButton.addListener(new ClickListener() {
+            @Override
+            public void clicked (InputEvent event, float x, float y) {
+                final SpecializationSaveData saveData = API.get(SaveData.class).getSpecializationSaveData();
+                if (saveData.getSpecializationType() == null) {
+                    API.get(DialogManager.class).show(ChooseSpecializationDialog.class);
+                } else {
+                    API.get(DialogManager.class).show(SpecializationDialog.class);
+                }
+            }
+        });
 
         final PressableImageLabel droneButton = new PressableImageLabel("lootPage/drone-icon", "Drone", 170);
         final PressableImageLabel soonButton = new PressableImageLabel("lootPage/lock-icon", "Soon", 100);

@@ -10,14 +10,17 @@ public class GameData {
 
     private final MilitaryGearsGameData militaryGearsGameData;
     private final AccessoryGearsGameData accessoryGearsGameData;
+    private final SpecializationsGameData specializationsGameData;
 
     public GameData () {
         militaryGearsGameData = new MilitaryGearsGameData();
         accessoryGearsGameData = new AccessoryGearsGameData();
+        specializationsGameData = new SpecializationsGameData();
     }
 
     public void load () {
         militaryGearsGameData.load(xmlReader.parse(Gdx.files.internal("data/militaries.xml")));
         accessoryGearsGameData.load(xmlReader.parse(Gdx.files.internal("data/accessories.xml")));
+        specializationsGameData.load(xmlReader.parse(Gdx.files.internal("data/specializations.xml")));
     }
 }
