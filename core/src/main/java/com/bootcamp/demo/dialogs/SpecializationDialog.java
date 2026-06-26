@@ -39,8 +39,10 @@ public class SpecializationDialog extends ADialog {
     protected void constructContent (Table content) {
         final Table statSegment = constructStatSegment();
 
+        final Table demonstrationSegment = constructDemonstrationSegment();
+
         demonstrationContainer = new Table();
-        demonstrationContainer.add(constructDemonstrationSegment()).grow();
+        demonstrationContainer.add(demonstrationSegment).grow();
 
         rollingContainer = new Table();
         rollingContainer.add(constructRollingSegment()).grow();
@@ -207,19 +209,7 @@ public class SpecializationDialog extends ADialog {
         titleContainer.setBackground(Squircle.SQUIRCLE_35_TOP.getDrawable(Color.valueOf("#6b5b53")));
         titleContainer.add(title).expand().top().padTop(5);
 
-        SliderStyle sliderStyle = new SliderStyle();
-        sliderStyle.background = Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#f5e7de"));
-        sliderStyle.knob = Squircle.SQUIRCLE_35.getDrawable(Color.CLEAR);
-
-        if (viewModel.getRollPoints() == 0) {
-            sliderStyle.knobBefore = Squircle.SQUIRCLE_35.getDrawable(Color.CLEAR);
-        } else {
-            sliderStyle.knobBefore = Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#7ed97b"));
-        }
-
-        final Slider progressBar = new Slider(0, viewModel.getMaxRollPoints(), 1, false, sliderStyle);
-        progressBar.setValue(viewModel.getRollPoints());
-        progressBar.setDisabled(true);
+        final Slider progressBar = buildRollPointsSlider();
 
         final Label progressText = Labels.make(GameFont.STROKE_20, String.format("%d/%d", viewModel.getRollPoints(), viewModel.getMaxRollPoints()));
         final Table progressTextWrapper = new Table();
@@ -236,6 +226,18 @@ public class SpecializationDialog extends ADialog {
         segment.row();
         segment.add(progressBarWrapper).growX().height(90).padLeft(20).padRight(20);
         return segment;
+    }
+
+    private Slider buildRollPointsSlider () {
+        final SliderStyle sliderStyle = new SliderStyle();
+        sliderStyle.background = Squircle.SQUIRCLE_35.getDrawable(Color.valueOf("#f5e7de"));
+        sliderStyle.knob = Squircle.SQUIRCLE_35.getDrawable(Color.CLEAR);
+        sliderStyle.knobBefore = Squircle.SQUIRCLE_35.getDrawable(viewModel.getRollPoints() == 0 ? Color.CLEAR : Color.valueOf("#7ed97b"));
+
+        final Slider slider = new Slider(0, viewModel.getMaxRollPoints(), 1, false, sliderStyle);
+        slider.setValue(viewModel.getRollPoints());
+        slider.setDisabled(true);
+        return slider;
     }
 
     private Table constructButtonsSegment () {
@@ -311,8 +313,10 @@ public class SpecializationDialog extends ADialog {
 
         viewModel = factory.create();
 
+        final Table demonstrationSegment = constructDemonstrationSegment();
+
         demonstrationContainer.clearChildren();
-        demonstrationContainer.add(constructDemonstrationSegment()).grow();
+        demonstrationContainer.add(demonstrationSegment).grow();
 
         rollingContainer.clearChildren();
         rollingContainer.add(constructRollingSegment()).grow();

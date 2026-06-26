@@ -68,7 +68,7 @@ public class SpecializationGameData implements IGameData {
 
         for (int i = 0; i < effectsXml.size; i++) {
             final Element effectXml = effectsXml.get(i);
-            final PassiveEffectData current = new PassiveEffectData(PLayerStat.valueOf(effectXml.getAttribute("label")), effectXml.getIntAttribute("value"));
+            final PassiveEffectData current = new PassiveEffectData(PLayerStat.valueOf(effectXml.getAttribute("stat")), effectXml.getIntAttribute("value"));
             effects.add(current);
         }
     }
