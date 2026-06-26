@@ -6,20 +6,18 @@ import com.bootcamp.demo.engine.Resources;
 import lombok.Getter;
 import lombok.Setter;
 
-public class MilitaryGearGameData implements IGameData {
+@Getter
+public class AccessoryGearGameData implements IGameData {
     public enum Slot {
-        WEAPON,
-        MELEE,
-        HEAD,
-        BODY,
-        GLOVES,
-        SHOES
+        NECK,
+        WRIST,
+        PANTS,
+        BELT
     }
 
-    @Getter
     @Setter
     private String name;
-    @Getter
+
     @Setter
     private Drawable icon;
 
